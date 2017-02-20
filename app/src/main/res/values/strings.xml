@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Vagad News</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="feed_url_dungarpur"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=dungarpur]]></string>
+    <string name="feed_url_banswara"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=banswara]]></string>
+    <string name="feed_url_udaipur"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=udaipur]]></string>
+    <string name="feed_url_latest_news"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=latest-news]]></string>
+    <string name="feed_url_astrology"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=astrology-and-spirituality]]></string>
+    <string name="feed_url_entertainment"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=entertainment]]></string>
+    <string name="feed_url_sport"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=sports]]></string>
+    <string name="about_us">About Us</string>
+    <string name="favourite">Favoutites</string>
+	<!-- AdMob ad unit IDs -->
+    <string name="banner_home_footer">ca-app-pub-8430026697006000/2824055773</string>
+    <string name="interstitial_full_screen">ca-app-pub-8430026697006000/4300788971</string>
+</resources>

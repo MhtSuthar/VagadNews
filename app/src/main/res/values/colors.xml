@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#E24B4B</color>
+    <color name="colorPrimaryDark">#B53C3C</color>
+    <color name="colorAccent">#E24B4B</color>
+    <color name="tabSelectedIconColor">#ffffff</color>
+    <color name="tabUnselectedIconColor">#F1A5A5</color>
+    <color name="transparentColor">#00000000</color>
+    <color name="semiTransparentColor">#36000000</color>
+    <color name="darkTransparentColor">#88000000</color>
+    <color name="colorGreyText">#7B7A7B</color>
+</resources>
