@@ -15,8 +15,10 @@ import android.view.WindowManager;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
+import com.vagad.base.VagadApp;
 import com.vagad.dashboard.fragments.AboutUsFragment;
 import com.vagad.dashboard.fragments.FavListFragment;
 import com.vagad.dashboard.fragments.NewsListFragment;
@@ -39,6 +41,10 @@ public class HomeActivity extends BaseActivity {
         adView = (AdView) findViewById(R.id.adView);
         setPagerAdapter();
         initAdds();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("News Watch", "News Start");
+        VagadApp.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     private void initAdds() {
