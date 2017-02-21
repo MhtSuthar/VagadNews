@@ -1,5 +1,6 @@
 package com.vagad.dashboard.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.vagad.R;
 import com.vagad.base.BaseFragment;
+import com.vagad.dashboard.HomeActivity;
 import com.vagad.dashboard.NewsDetailActivity;
 import com.vagad.model.RSSItem;
 import com.vagad.utils.Constants;
@@ -74,11 +76,26 @@ public class HeaderNewsFragment extends BaseFragment {
         intent.putParcelableArrayListExtra(Constants.Bundle_Feed_Item, (ArrayList<? extends Parcelable>) list);
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(getActivity(), imgCover, "profile");
-        startActivity(intent, options.toBundle());
+        startActivityForResult(intent, Constants.REQUEST_CODE_NEWS_DETAIL, options.toBundle());
     }
 
     public void setList(List<RSSItem> list) {
         if(this.list == null)
             this.list = list;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK){
+            if(requestCode == Constants.REQUEST_CODE_NEWS_DETAIL){
+                if(((HomeActivity)getActivity()).newsListFragment != null){
+                    ((HomeActivity)getActivity()).newsListFragment.setAllNewsForHeaderFavChanges();
+                }
+                /*if(((HomeActivity)getActivity()).favListFragment != null){
+                    ((HomeActivity)getActivity()).favListFragment.setAdapter();
+                }*/
+            }
+        }
     }
 }

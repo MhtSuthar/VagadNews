@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by Admin on 15-Feb-17.
+ * Created by Mohit on 15-Feb-17.
  */
 
 public class NewsListFragment extends BaseFragment {
@@ -87,6 +87,18 @@ public class NewsListFragment extends BaseFragment {
             setViewPagerAdapter(viewPager);
         }else{
             imgNoData.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setAllNewsForHeaderFavChanges() {
+        mNewsList = rssDatabaseHandler.getAllSites();
+        if(mNewsList.size() > 0){
+            imgNoData.setVisibility(View.GONE);
+            setRecyclerAdapter();
+            setViewPagerAdapter(viewPager);
+        }
+        if(((HomeActivity)getActivity()).favListFragment != null){
+            ((HomeActivity)getActivity()).favListFragment.setAdapter();
         }
     }
 
@@ -152,8 +164,9 @@ public class NewsListFragment extends BaseFragment {
 
     public void openNewsDetail(RSSItem rssItem, ImageView imageView, int position) {
         Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-        intent.putExtra(Constants.Bundle_Which_Page, position);
-        intent.putParcelableArrayListExtra(Constants.Bundle_Feed_Item, (ArrayList<? extends Parcelable>) mNewsList);
+        intent.putExtra(Constants.Bundle_Is_From_News_List, true);
+        intent.putExtra(Constants.Bundle_Feed_Item, rssItem);
+        //intent.putParcelableArrayListExtra(Constants.Bundle_Feed_Item, (ArrayList<? extends Parcelable>) mNewsList);
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(getActivity(), imageView, "profile");
         startActivityForResult(intent, Constants.REQUEST_CODE_NEWS_DETAIL, options.toBundle());
@@ -171,12 +184,24 @@ public class NewsListFragment extends BaseFragment {
     }
 
     private void changeInFav(Intent data) {
-        mNewsList = data.getParcelableArrayListExtra(Constants.Bundle_Feed_List);
+        RSSItem rssItem = data.getParcelableExtra(Constants.Bundle_Feed_Item);
+        for (int i = 0; i < mNewsList.size(); i++) {
+            if(mNewsList.get(i).getId() == rssItem.getId()){
+                mNewsList.set(i, rssItem);
+                break;
+            }
+        }
+        newsRecyclerAdapter.notifyDataSetChanged();
+        if(((HomeActivity)getActivity()).favListFragment != null){
+            ((HomeActivity)getActivity()).favListFragment.setAdapter();
+        }
+
+       /* mNewsList = data.getParcelableArrayListExtra(Constants.Bundle_Feed_List);
         newsRecyclerAdapter.notifyDataSetChanged();
         setViewPagerAdapter(viewPager);
         if(((HomeActivity)getActivity()).favListFragment != null){
             ((HomeActivity)getActivity()).favListFragment.setAdapter();
-        }
+        }*/
     }
 
     @Override
