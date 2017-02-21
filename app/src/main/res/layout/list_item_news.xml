@@ -39,7 +39,7 @@
                 android:layout_toRightOf="@+id/imgNews"
                 android:orientation="vertical">
 
-                <TextView
+                <com.vagad.utils.fonts.HindiFontTextView
                     android:id="@+id/txtTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                     android:textColor="@color/colorGreyText"
                     android:textAppearance="?android:textAppearanceSmall" />
 
-                <TextView
+                <com.vagad.utils.fonts.HindiFontTextView
                     android:id="@+id/txtDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
