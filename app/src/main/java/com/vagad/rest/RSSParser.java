@@ -149,10 +149,10 @@ public class RSSParser {
 		if(rss_url.contains(Constants.NEWS_TYPE_DUNGARPUR))
 		  return Constants.NEWS_TYPE_DUNGARPUR;
 		else if(rss_url.contains(Constants.NEWS_TYPE_BANSWARA))
-			return Constants.NEWS_TYPE_DUNGARPUR;
+			return Constants.NEWS_TYPE_BANSWARA;
 		else if(rss_url.contains(Constants.NEWS_TYPE_UDAIPUR))
 			return Constants.NEWS_TYPE_DUNGARPUR;
-		else if(rss_url.contains(Constants.NEWS_TYPE_UDAIPUR))
+		else if(rss_url.contains(Constants.NEWS_TYPE_LATEST))
 			return Constants.NEWS_TYPE_LATEST;
 		else
 			return "";
