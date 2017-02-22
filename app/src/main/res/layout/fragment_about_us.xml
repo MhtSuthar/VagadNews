@@ -71,7 +71,7 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <!--<android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget_list_view.FloatingActionButton
         android:id="@+id/flexible.example.fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
