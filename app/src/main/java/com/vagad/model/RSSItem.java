@@ -2,6 +2,7 @@ package com.vagad.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * This class handle RSS Item <item> node in rss xml

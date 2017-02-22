@@ -64,6 +64,9 @@ public class NewsListFragment extends BaseFragment {
     private int mVisiblePage = -1;
     private FragmentStatePagerAdapter mHeaderPagerAdapter;
     private ImageView imgNoData;
+    private int mStartLatestNews = 0, mEndLatestNews = 5;
+    private List<RSSItem> mLatestNewsList = new ArrayList<>();
+    private List<RSSItem> mLatestNewsListVisible = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,6 +84,7 @@ public class NewsListFragment extends BaseFragment {
 
     public void setAllNews() {
         mNewsList = rssDatabaseHandler.getAllSites();
+        mLatestNewsList = rssDatabaseHandler.getLatestNews();
         if(mNewsList.size() > 0){
             imgNoData.setVisibility(View.GONE);
             setRecyclerAdapter();
@@ -207,19 +211,34 @@ public class NewsListFragment extends BaseFragment {
     @Override
     public void onStop() {
         super.onStop();
+        //handler.removeCallbacks(runnable);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         handler.removeCallbacks(runnable);
     }
 
-
     Runnable runnable = new Runnable() {
         public void run() {
-            if (4 == mVisiblePage) {
+            if (mLatestNewsListVisible.size()-1 == mVisiblePage) {
                 mVisiblePage = 0;
+                if(mEndLatestNews > mLatestNewsList.size()){
+                    mStartLatestNews = 0;
+                    mEndLatestNews = 5;
+                }else {
+                    mStartLatestNews = mStartLatestNews + 5;
+                    mEndLatestNews = mEndLatestNews + 5;
+                }
+                handler.removeCallbacks(runnable);
+                setViewPagerAdapter(viewPager);
             } else {
                 mVisiblePage++;
+                viewPager.setCurrentItem(mVisiblePage, true);
+                handler.postDelayed(this, delay);
             }
-            viewPager.setCurrentItem(mVisiblePage, true);
-            handler.postDelayed(this, delay);
+
         }
     };
 
@@ -260,7 +279,7 @@ public class NewsListFragment extends BaseFragment {
             @Override
             public Fragment getItem(int position) {
                 HeaderNewsFragment headerNewsFragment = new HeaderNewsFragment();
-                headerNewsFragment.setList(mRandomList);
+                headerNewsFragment.setList(mLatestNewsListVisible);
                 Bundle bundle = new Bundle();
                 bundle.putInt(Constants.Bundle_Pos, position);
                 bundle.putParcelable(Constants.Bundle_Feed_Item, mRandomList.get(position));
@@ -288,11 +307,12 @@ public class NewsListFragment extends BaseFragment {
     }
 
     private List<RSSItem> getRandomList() {
-        List<RSSItem> mList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            mList.add(mNewsList.get(new Random().nextInt(mNewsList.size())));
+        mLatestNewsListVisible = new ArrayList<>();
+        for (int i = mStartLatestNews; i < mEndLatestNews; i++) {
+            if(i < mLatestNewsList.size())
+                mLatestNewsListVisible.add(mLatestNewsList.get(i));
         }
-        return mList;
+        return mLatestNewsListVisible;
     }
 
     /**
@@ -318,6 +338,7 @@ public class NewsListFragment extends BaseFragment {
                     List<RSSItem> rssFeed = rssParser.getRSSFeedItems(getString(R.string.feed_url_dungarpur));
                     rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_banswara)));
                     rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_udaipur)));
+                    rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_latest_news)));
                     for (int i = 0; i < rssFeed.size(); i++) {
                         rssDatabaseHandler.addFeed(rssFeed.get(i));
                     }
