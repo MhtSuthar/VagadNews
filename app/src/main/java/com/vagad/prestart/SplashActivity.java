@@ -61,6 +61,7 @@ public class SplashActivity extends BaseActivity {
 
     private void setAlarm() {
         if(!SharedPreferenceUtil.getBoolean(Constants.KEY_IS_ALARM_SETUP, false)){
+            AlarmUtils.setAfterFiveDaysAlarm(this);
             AlarmUtils.setAlarm(this);
         }
     }

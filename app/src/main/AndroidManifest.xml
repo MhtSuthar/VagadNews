@@ -51,6 +51,7 @@
 
         <!-- Alarm receiver-->
         <receiver android:name=".receiver.AlarmReceiver"/>
+        <receiver android:name=".receiver.AlarmReceiverDeleteNews"/>
         <!-- End -->
 		
 		<meta-data

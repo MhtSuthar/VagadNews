@@ -122,6 +122,38 @@ public class RSSDatabaseHandler extends SQLiteOpenHelper {
 	}
 
 
+	public List<RSSItem> getAllSitesWithAsc() {
+		List<RSSItem> siteList = new ArrayList<RSSItem>();
+		// Select All Query
+		String selectQuery = "SELECT  * FROM " + TABLE_RSS +" ORDER BY "+KEY_DATE+" ASC";
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				RSSItem site = new RSSItem();
+				site.setId(Integer.parseInt(cursor.getString(0)));
+				site.setTitle(cursor.getString(1));
+				site.setImage(cursor.getString(2));
+				site.setLink(cursor.getString(3));
+				site.setDescription(cursor.getString(4));
+				site.setPubdate(cursor.getString(5));
+				site.setFav(cursor.getInt(6) > 0);
+				site.set_news_type(cursor.getString(7));
+				// Adding contact to list
+				siteList.add(site);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		db.close();
+
+		// return contact list
+		return siteList;
+	}
+
+
 	public List<RSSItem> getLatestNews() {
 		List<RSSItem> siteList = new ArrayList<RSSItem>();
 		// Select All Query
@@ -207,6 +239,16 @@ public class RSSDatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.delete(TABLE_RSS, KEY_ID + " = ?",
 				new String[] { String.valueOf(site.getId())});
+		db.close();
+	}
+
+	public void deleteFeedWithList() {
+		SQLiteDatabase db = this.getWritableDatabase();
+		List<RSSItem> list = getAllSitesWithAsc();
+		for (int i = 0; i < list.size()/2; i++) {
+			db.delete(TABLE_RSS, KEY_ID + " = ?",
+					new String[] { String.valueOf(list.get(i).getId())});
+		}
 		db.close();
 	}
 
