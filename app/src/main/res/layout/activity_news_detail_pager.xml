@@ -46,24 +46,17 @@
                     android:src="@drawable/ic_back" />
 
                 <ImageView
-                    android:id="@+id/imgShare"
+                    android:id="@+id/imgFav"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:padding="@dimen/activity_horizontal_margin"
-                    android:src="@drawable/ic_share" />
+                    android:src="@drawable/ic_tab_fav"
+                    android:tag="0"
+                    />
 
             </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/imgFav"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_tab_fav"
-                android:tag="0" />
         </RelativeLayout>
 
         <LinearLayout
@@ -104,6 +97,17 @@
 
         </LinearLayout>
 
-
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_share"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:src="@drawable/ic_share"
+        android:tag="0"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible"
+        />
 </RelativeLayout>

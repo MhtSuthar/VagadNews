@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,8 @@ import com.vagad.utils.DateUtils;
 public class NewsDetailFragment extends BaseFragment {
 
     private RSSItem rssItem;
-    private ImageView imgCover, imgBack, imgShare, imgFav;
+    private ImageView imgCover, imgBack, imgFav;
+    private FloatingActionButton btnShare;
     private TextView txtTitle;
     private TextView txtDesc;
     private TextView txtTime;
@@ -80,14 +82,14 @@ public class NewsDetailFragment extends BaseFragment {
         relHeader = (RelativeLayout) view.findViewById(R.id.relHeader);
         imgBack = (ImageView) view.findViewById(R.id.imgBack);
         imgFav = (ImageView) view.findViewById(R.id.imgFav);
-        imgShare = (ImageView) view.findViewById(R.id.imgShare);
+        btnShare = (FloatingActionButton) view.findViewById(R.id.btn_share);
         if (Build.VERSION.SDK_INT >= 21) {
             getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             relHeader.setPadding(0, getStatusBarHeight(), 0, 0);
         }
 
-        imgShare.setOnClickListener(new View.OnClickListener() {
+        btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openShare();

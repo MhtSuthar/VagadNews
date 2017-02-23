@@ -44,7 +44,8 @@ import java.util.List;
 public class NewsDetailActivity extends BaseActivity {
 
     private TextView txtTitle, txtTime, txtDesc;
-    private ImageView imgCover, imgBack, imgShare, imgFav;;
+    private ImageView imgCover, imgBack, imgFav;
+    private FloatingActionButton btnShare;
     private LinearLayout linNewsDetail;
     private RelativeLayout relHeader;
     private List<RSSItem> mNewsList = new ArrayList<>();
@@ -69,10 +70,12 @@ public class NewsDetailActivity extends BaseActivity {
         initView();
         mIsFromNewsList = getIntent().getBooleanExtra(Constants.Bundle_Is_From_News_List, false);
         if(mIsFromNewsList){
+            AnimationUtils.animateScaleOut(btnShare);
             rssItem = getIntent().getParcelableExtra(Constants.Bundle_Feed_Item);
             setDataFromNewsList();
         }else {
             linNewsDetail.setVisibility(View.GONE);
+            btnShare.setVisibility(View.GONE);
             customViewPager.setVisibility(View.VISIBLE);
             mNewsList = getIntent().getParcelableArrayListExtra(Constants.Bundle_Feed_Item);
             mWhichPage = getIntent().getIntExtra(Constants.Bundle_Which_Page, 0);
@@ -146,7 +149,7 @@ public class NewsDetailActivity extends BaseActivity {
         relHeader = (RelativeLayout) findViewById(R.id.relHeader);
         imgBack = (ImageView) findViewById(R.id.imgBack);
         imgFav = (ImageView) findViewById(R.id.imgFav);
-        imgShare = (ImageView) findViewById(R.id.imgShare);
+        btnShare = (FloatingActionButton) findViewById(R.id.btn_share);
         linNewsDetail = (LinearLayout) findViewById(R.id.linNewsDetail);
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
@@ -154,7 +157,7 @@ public class NewsDetailActivity extends BaseActivity {
             relHeader.setPadding(0, getStatusBarHeight(), 0, 0);
         }
 
-        imgShare.setOnClickListener(new View.OnClickListener() {
+        btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openShare();
