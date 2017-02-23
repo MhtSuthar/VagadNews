@@ -69,6 +69,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     notificationUtils.generateNotification(context, rssItems.get(i).getTitle());
                 }
             }
+            AlarmUtils.cancelAlarm(context, AlarmUtils.ALARM_ID_FOR_NEWS);
             AlarmUtils.setAlarm(context);
         }
     }
