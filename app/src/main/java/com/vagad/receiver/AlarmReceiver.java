@@ -54,6 +54,12 @@ public class AlarmReceiver extends BroadcastReceiver {
             List<RSSItem> rssFeed = new ArrayList<>();
             try {
                 rssFeed  = rssParser.getRSSFeedItems(context.getString(R.string.feed_url_latest_news));
+                rssFeed.addAll(rssParser.getRSSFeedItems(context.getString(R.string.feed_url_banswara)));
+                rssFeed.addAll(rssParser.getRSSFeedItems(context.getString(R.string.feed_url_udaipur)));
+                rssFeed.addAll(rssParser.getRSSFeedItems(context.getString(R.string.feed_url_dungarpur)));
+                for (int i = 0; i < rssFeed.size(); i++) {
+                    rssDatabaseHandler.addFeed(rssFeed.get(i));
+                }
             }catch (Exception e){
                 e.printStackTrace();
                 return rssFeed;
