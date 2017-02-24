@@ -77,7 +77,7 @@ public class SplashActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                startActivity(new Intent(SplashActivity.this, HelpActivity.class));
                 finish();
             }
         }, SPLASH_TIMEOUT);
@@ -126,7 +126,7 @@ public class SplashActivity extends BaseActivity {
             showProgress(false);
             List<RSSItem> mNewsList = rssDatabaseHandler.getAllSites();
             if(mNewsList.size() > 0){
-                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                startActivity(new Intent(SplashActivity.this, HelpActivity.class));
                 finish();
             }
         }
