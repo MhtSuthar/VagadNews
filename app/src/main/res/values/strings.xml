@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Vagad News</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="firebase_url">https://vagad-news.firebaseio.com/</string>
     <string name="feed_url_dungarpur"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=dungarpur]]></string>
     <string name="feed_url_banswara"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=banswara]]></string>
     <string name="feed_url_udaipur"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=udaipur]]></string>

@@ -15,6 +15,7 @@ public class Constants {
     public static final String NEWS_TYPE_BANSWARA = "banswara";
     public static final String NEWS_TYPE_UDAIPUR = "udaipur";
     public static final String NEWS_TYPE_LATEST = "latest-news";
+    public static final String KEY_HELP_SCREEN_APPEAR = "help_appear";
     public static String Bundle_Which_Page = "which_page";
     public static String Bundle_Pos = "position";
     public static String Bundle_Is_From_News_List = "is_from_new_list";

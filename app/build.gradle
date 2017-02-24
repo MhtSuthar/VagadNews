@@ -36,3 +36,4 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('libs/jsoup-1.6.2.jar')
 }
+apply plugin: 'com.google.gms.google-services'
