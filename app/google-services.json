@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1018065882672",
+    "firebase_url": "https://vagad-news.firebaseio.com",
+    "project_id": "vagad-news",
+    "storage_bucket": "vagad-news.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018065882672:android:37de55629f0e9fe9",
+        "android_client_info": {
+          "package_name": "com.vagad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018065882672-1j7a52sbi2ttvou17btslll0bgmod6tq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vagad",
+            "certificate_hash": "a8645e2ef0cb32a73524bb8fc3f61c07ff2be10e"
+          }
+        },
+        {
+          "client_id": "1018065882672-rv0jge01p0e58tnn5r6g190vj7e97tob.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOIdjhQjvvzCvHpqLH7UCKeNTFEWJfr18"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1018065882672-rv0jge01p0e58tnn5r6g190vj7e97tob.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

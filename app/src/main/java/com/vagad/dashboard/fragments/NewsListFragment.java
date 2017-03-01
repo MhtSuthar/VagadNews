@@ -224,7 +224,7 @@ public class NewsListFragment extends BaseFragment {
         public void run() {
             if (mLatestNewsListVisible.size()-1 == mVisiblePage) {
                 mVisiblePage = 0;
-                if(mEndLatestNews > mLatestNewsList.size()){
+                if(mEndLatestNews >= mLatestNewsList.size()){
                     mStartLatestNews = 0;
                     mEndLatestNews = 5;
                 }else {
@@ -232,6 +232,7 @@ public class NewsListFragment extends BaseFragment {
                     mEndLatestNews = mEndLatestNews + 5;
                 }
                 handler.removeCallbacks(runnable);
+                Log.e(TAG, "end: "+mStartLatestNews+"     "+mEndLatestNews);
                 setViewPagerAdapter(viewPager);
             } else {
                 mVisiblePage++;

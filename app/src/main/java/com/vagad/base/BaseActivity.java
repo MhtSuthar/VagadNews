@@ -66,6 +66,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         return true;
     }
 
+    protected int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+
     protected void finishWithHandler(){
         new Handler().postDelayed(new Runnable() {
             @Override

@@ -25,7 +25,7 @@ import java.util.List;
 public class SplashActivity extends BaseActivity {
 
     private static final String TAG = "SplashActivity";
-    private static final int SPLASH_TIMEOUT = 2000;
+    private static int SPLASH_TIMEOUT = 2000;
     private CircleProgressBar progressBar;
     private RSSDatabaseHandler rssDatabaseHandler;
 
@@ -77,8 +77,13 @@ public class SplashActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, HelpActivity.class));
-                finish();
+                if(SharedPreferenceUtil.getBoolean(Constants.KEY_HELP_SCREEN_APPEAR, false)){
+                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                    finish();
+                }else {
+                    startActivity(new Intent(SplashActivity.this, HelpActivity.class));
+                    finish();
+                }
             }
         }, SPLASH_TIMEOUT);
     }
@@ -126,8 +131,10 @@ public class SplashActivity extends BaseActivity {
             showProgress(false);
             List<RSSItem> mNewsList = rssDatabaseHandler.getAllSites();
             if(mNewsList.size() > 0){
-                startActivity(new Intent(SplashActivity.this, HelpActivity.class));
-                finish();
+                SPLASH_TIMEOUT = 100;
+                startTimer();
+                /*startActivity(new Intent(SplashActivity.this, HelpActivity.class));
+                finish();*/
             }
         }
 
