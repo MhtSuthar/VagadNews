@@ -13,26 +13,24 @@
         android:layout_width="fill_parent"
         android:layout_height="220dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/splash_bg"
-         />
+        android:src="@drawable/splash_bg" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:text="@string/about_us"
-        android:gravity="center"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
         android:background="@color/darkTransparentColor"
-        />
+        android:gravity="center"
+        android:text="@string/about_us"
+        android:textColor="@android:color/white"
+        android:textSize="30sp" />
 
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
         android:fillViewport="true"
         android:paddingTop="220dp"
-        android:clipToPadding="false"
         android:scrollbars="none">
 
         <LinearLayout
@@ -52,7 +50,7 @@
                 app:contentPaddingLeft="16dp"
                 app:contentPaddingRight="16dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
@@ -60,13 +58,24 @@
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_above="@+id/txtMe"
+                        android:gravity="top"
                         android:text="Its vagad news for all of you, one more step towards Vagad Vikas, If you have any suggestions plz mail me.\n\nLet me know if you want to make your own app.\n\nThank You"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="@android:color/black" />
 
+                    <TextView
+                        android:id="@+id/txtMe"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:gravity="center"
+                        android:text="@string/design_and_develop"
+                        android:textColor="@color/colorGreyText"
+                        android:textSize="10sp" />
 
-                </LinearLayout>
+                </RelativeLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
@@ -75,11 +84,10 @@
         android:id="@+id/fab_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:elevation="8dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_back"
-        tools:ignore="RtlHardcoded"
-        />
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:elevation="8dp"
+        android:src="@drawable/ic_mail"
+        tools:ignore="RtlHardcoded" />
 </RelativeLayout>
