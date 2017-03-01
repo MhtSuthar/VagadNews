@@ -136,8 +136,8 @@ public class NewsListFragment extends BaseFragment {
                     case R.id.menu_about_us:
                         ((HomeActivity)getActivity()).onClickAboutUs();
                         break;
-                    case R.id.menu_setting:
-
+                    case R.id.menu_share:
+                        shareApp();
                         break;
                 }
                 return true;
@@ -169,6 +169,15 @@ public class NewsListFragment extends BaseFragment {
 
             }
         }));*/
+    }
+
+    private void shareApp() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT,
+                "Hey check out my Vagad News App at: https://play.google.com/store/apps/details?id=com.vagad");
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     }
 
     public void openNewsDetail(RSSItem rssItem, ImageView imageView, int position) {

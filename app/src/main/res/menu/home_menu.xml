@@ -11,7 +11,7 @@
             android:id="@+id/menu_about_us"
             android:title="About Us"/>
         <item
-            android:id="@+id/menu_setting"
-            android:title="Setting"/>
+            android:id="@+id/menu_share"
+            android:title="Share"/>
     </group>
 </menu>

@@ -26,6 +26,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.dashboard.fragments.HeaderNewsFragment;
@@ -60,11 +63,13 @@ public class NewsDetailActivity extends BaseActivity {
     private boolean mIsFromNewsList;
     private static final String TAG = "NewsDetailActivity";
     private RSSItem rssItem;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fullScreen();
+        setupAds();
         setContentView(R.layout.activity_news_detail_pager);
         rssDatabaseHandler = new RSSDatabaseHandler(this);
         initView();
@@ -80,6 +85,35 @@ public class NewsDetailActivity extends BaseActivity {
             mNewsList = getIntent().getParcelableArrayListExtra(Constants.Bundle_Feed_Item);
             mWhichPage = getIntent().getIntExtra(Constants.Bundle_Which_Page, 0);
             setData();
+        }
+    }
+
+    private void setupAds() {
+        mInterstitialAd = new InterstitialAd(this);
+
+        // set the ad unit ID
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+
+        /*AdRequest adRequest = new AdRequest.Builder()
+                .build();*/
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("FD6CED2CA6E0957AC9A94C05C3FCCD6F")
+                .build();
+
+        // Load ads into Interstitial Ads
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                showInterstitial();
+            }
+        });
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
         }
     }
 

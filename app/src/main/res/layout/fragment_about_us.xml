@@ -61,7 +61,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Its vagad news for one more step towards vagad vikas, If you have any suggestions plz mail me, \n Thank You"
+                        android:text="Its vagad news for all of you, one more step towards Vagad Vikas, If you have any suggestions plz mail me.\n\nLet me know if you want to make your own app.\n\nThank You"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="@android:color/black" />
 
@@ -71,15 +71,15 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <!--<android.support.design.widget_list_view.FloatingActionButton
-        android:id="@+id/flexible.example.fab"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="32dp"
+        android:layout_margin="@dimen/activity_horizontal_margin"
         android:elevation="8dp"
-        android:src="@drawable/ic_adb_24dp"
-        app:layout_anchor="@id/flexible.example.cardview"
-        app:layout_anchorGravity="top|right|end"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_back"
         tools:ignore="RtlHardcoded"
-        />-->
+        />
 </RelativeLayout>

@@ -1,16 +1,13 @@
 package com.vagad.dashboard;
 
 import android.content.res.Configuration;
-import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.google.android.gms.ads.AdRequest;
@@ -40,14 +37,14 @@ public class HomeActivity extends BaseActivity {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         adView = (AdView) findViewById(R.id.adView);
         setPagerAdapter();
-        initAdds();
+        initAds();
 
         Bundle bundle = new Bundle();
         bundle.putString("News Watch", "News Start");
         VagadApp.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
-    private void initAdds() {
+    private void initAds() {
         /*AdRequest adRequest = new AdRequest.Builder()
                 .build();*/
         AdRequest adRequest = new AdRequest.Builder()
@@ -55,6 +52,8 @@ public class HomeActivity extends BaseActivity {
                 .addTestDevice("FD6CED2CA6E0957AC9A94C05C3FCCD6F")
                 .build();
         adView.loadAd(adRequest);
+        if(!isOnline(this))
+            adView.setVisibility(View.GONE);
     }
 
     @Override
