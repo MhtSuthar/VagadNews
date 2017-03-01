@@ -5,7 +5,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
@@ -28,6 +30,7 @@ public class SplashActivity extends BaseActivity {
     private static int SPLASH_TIMEOUT = 2000;
     private CircleProgressBar progressBar;
     private RSSDatabaseHandler rssDatabaseHandler;
+    private TextView mTxtDataLoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
         rssDatabaseHandler = new RSSDatabaseHandler(this);
         progressBar = (CircleProgressBar) findViewById(R.id.progressBar);
+        mTxtDataLoad = (TextView) findViewById(R.id.txtDataLoad);
 
         fullScreen();
 
@@ -142,8 +146,10 @@ public class SplashActivity extends BaseActivity {
 
     private void showProgress(boolean b) {
         if(b){
+            mTxtDataLoad.setVisibility(View.VISIBLE);
             AnimationUtils.animateScaleOut(progressBar);
         }else{
+            mTxtDataLoad.setVisibility(View.GONE);
             AnimationUtils.animateScaleIn(progressBar);
         }
     }

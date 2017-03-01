@@ -5,6 +5,7 @@
     android:id="@+id/activity_splash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context="com.vagad.prestart.SplashActivity">
 
     <com.vagad.utils.loder.CircleProgressBar
@@ -23,4 +24,15 @@
         android:src="@drawable/splash_bg"
         android:scaleType="centerCrop"
         />
+
+    <TextView
+        android:id="@+id/txtDataLoad"
+        android:layout_width="match_parent"
+        android:text="@string/please_wait"
+        android:gravity="bottom|center"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        android:background="@color/darkTransparentColor"
+        android:layout_height="match_parent" />
 </RelativeLayout>
