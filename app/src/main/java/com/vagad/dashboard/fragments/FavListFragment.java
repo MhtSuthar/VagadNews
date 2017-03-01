@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.vagad.R;
 import com.vagad.base.BaseFragment;
@@ -58,6 +59,7 @@ public class FavListFragment extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         favNewsRecyclerAdapter = new FavNewsRecyclerAdapter(mNewsList, getActivity(), FavListFragment.this);
         recyclerView.setAdapter(favNewsRecyclerAdapter);
+
     }
 
     public void setOnItemClick(int position, ImageView imageView) {

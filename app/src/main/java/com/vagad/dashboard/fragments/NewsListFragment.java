@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.vagad.R;
 import com.vagad.base.BaseFragment;
@@ -64,9 +65,11 @@ public class NewsListFragment extends BaseFragment {
     private int mVisiblePage = -1;
     private FragmentStatePagerAdapter mHeaderPagerAdapter;
     private ImageView imgNoData;
+    private RelativeLayout mRelNoData;
     private int mStartLatestNews = 0, mEndLatestNews = 5;
     private List<RSSItem> mLatestNewsList = new ArrayList<>();
     private List<RSSItem> mLatestNewsListVisible = new ArrayList<>();
+    private int[] mImages = new int[]{R.drawable.splash_bg, R.drawable.help_two, R.drawable.help_three, R.drawable.help_four};
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -90,7 +93,8 @@ public class NewsListFragment extends BaseFragment {
             setRecyclerAdapter();
             setViewPagerAdapter(viewPager);
         }else{
-            imgNoData.setVisibility(View.VISIBLE);
+            mRelNoData.setVisibility(View.VISIBLE);
+            imgNoData.setImageResource(mImages[new Random().nextInt(mImages.length)]);
         }
     }
 
@@ -118,6 +122,7 @@ public class NewsListFragment extends BaseFragment {
         collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
         rssDatabaseHandler = new RSSDatabaseHandler(getContext());
         imgNoData = (ImageView) view.findViewById(R.id.imgNoData);
+        mRelNoData = (RelativeLayout) view.findViewById(R.id.relNoData);
 
 
         toolbar.inflateMenu(R.menu.home_menu);

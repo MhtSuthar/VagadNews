@@ -61,15 +61,8 @@ public class FavNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
             });
         } else if (holder instanceof VHHeader) {
-            if(position != 0) {
-               /* Glide.with(context).load(mNewsList.get(position).getImage()).into(((VHHeader) holder).imgCover);
-                ((VHHeader) holder).txtTitle.setText(mNewsList.get(position).getTitle());
-                ((VHHeader) holder).itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        favListFragment.setOnItemClick(mNewsList.get(position), ((VHHeader) holder).imgCover);
-                    }
-                });*/
+            if(mNewsList.size() == 0) {
+                ((VHHeader) holder).txtNoData.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -109,12 +102,12 @@ public class FavNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     class VHHeader extends RecyclerView.ViewHolder {
         ImageView imgCover;
-        TextView txtTitle;
+        TextView txtTitle, txtNoData;
         public VHHeader(View itemView) {
             super(itemView);
             imgCover = (ImageView) itemView.findViewById(R.id.imgCover);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
-
+            txtNoData = (TextView) itemView.findViewById(R.id.txtNodata);
         }
     }
 

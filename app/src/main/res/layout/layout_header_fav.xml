@@ -31,4 +31,16 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/txtNodata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textColor="@color/primary_text"
+        android:text="@string/no_fav_avail"
+        />
+
 </LinearLayout>
