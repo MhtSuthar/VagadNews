@@ -13,6 +13,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.vagad.R;
@@ -60,6 +62,7 @@ public class NewsListFragment extends BaseFragment {
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private CirclePageIndicator pageIndicator;
+    private ProgressBar mProgressBarToolbar;
     private Handler handler = new Handler();
     private int delay = 5000;
     private int mVisiblePage = -1;
@@ -123,6 +126,7 @@ public class NewsListFragment extends BaseFragment {
         rssDatabaseHandler = new RSSDatabaseHandler(getContext());
         imgNoData = (ImageView) view.findViewById(R.id.imgNoData);
         mRelNoData = (RelativeLayout) view.findViewById(R.id.relNoData);
+        mProgressBarToolbar = (ProgressBar) view.findViewById(R.id.progressBarToolbar);
 
 
         toolbar.inflateMenu(R.menu.home_menu);
@@ -135,6 +139,9 @@ public class NewsListFragment extends BaseFragment {
                         break;
                     case R.id.menu_about_us:
                         ((HomeActivity)getActivity()).onClickAboutUs();
+                        break;
+                    case R.id.menu_feedback:
+                        sendFeedback();
                         break;
                     case R.id.menu_share:
                         shareApp();
@@ -169,6 +176,17 @@ public class NewsListFragment extends BaseFragment {
 
             }
         }));*/
+    }
+
+    private void sendFeedback() {
+        ShareCompat.IntentBuilder.from(getActivity())
+                .setType("message/rfc822")
+                .addEmailTo(getString(R.string.my_email))
+                .setSubject("Vagad App Feedback")
+                .setText("")
+                //.setHtmlText(body) //If you are using HTML in your body text
+                .setChooserTitle("Your Feedback")
+                .startChooser();
     }
 
     private void shareApp() {
@@ -341,7 +359,7 @@ public class NewsListFragment extends BaseFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //showProgress(true);
+            mProgressBarToolbar.setVisibility(View.VISIBLE);
         }
 
         /**
@@ -368,8 +386,7 @@ public class NewsListFragment extends BaseFragment {
          * After completing background task Dismiss the progress dialog
          * **/
         protected void onPostExecute(String args) {
-            // dismiss the dialog after getting all products
-           // showProgress(false);
+            mProgressBarToolbar.setVisibility(View.GONE);
             mNewsList.clear();
             mNewsList.addAll(rssDatabaseHandler.getAllSites());
             if(newsRecyclerAdapter == null){

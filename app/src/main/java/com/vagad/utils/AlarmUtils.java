@@ -50,7 +50,7 @@ public class AlarmUtils {
         alarmManager.cancel(sender);
     }
 
-    public static void setAfterFiveDaysAlarm(Context context) {
+    public static void setAlarmForDeleteNews(Context context) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, 5);
         AlarmManager alarmMgr = (AlarmManager)context.getSystemService(ALARM_SERVICE);
@@ -61,5 +61,12 @@ public class AlarmUtils {
         }
         alarmMgr.set(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis(), alarmIntent);
         Log.e(TAG, "setDeleteAlarm: "+calendar.getTime());
+    }
+
+    public static boolean isAlarmOn(int mAlarmId, Context context){
+        Intent intent = new Intent(context, AlarmReceiver.class);//the same as up
+        boolean isWorking = (PendingIntent.getBroadcast(context, mAlarmId, intent, PendingIntent.FLAG_NO_CREATE) != null);//just changed the flag
+        Log.e(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
+        return isWorking;
     }
 }

@@ -2,24 +2,18 @@ package com.vagad.dashboard;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,10 +22,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
-import com.vagad.dashboard.fragments.HeaderNewsFragment;
 import com.vagad.dashboard.fragments.NewsDetailFragment;
 import com.vagad.model.RSSItem;
 import com.vagad.storage.RSSDatabaseHandler;
@@ -39,14 +33,13 @@ import com.vagad.utils.AnimationUtils;
 import com.vagad.utils.Constants;
 import com.vagad.utils.DateUtils;
 import com.vagad.utils.customviews.CustomViewPager;
-import com.vagad.utils.pageindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NewsDetailActivity extends BaseActivity {
 
-    private TextView txtTitle, txtTime, txtDesc;
+    private TextView txtTitle, txtTime, txtDesc, txt_more_read;
     private ImageView imgCover, imgBack, imgFav;
     private FloatingActionButton btnShare;
     private LinearLayout linNewsDetail;
@@ -64,15 +57,16 @@ public class NewsDetailActivity extends BaseActivity {
     private static final String TAG = "NewsDetailActivity";
     private RSSItem rssItem;
     private InterstitialAd mInterstitialAd;
+    private AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fullScreen();
-        setupAds();
         setContentView(R.layout.activity_news_detail_pager);
         rssDatabaseHandler = new RSSDatabaseHandler(this);
         initView();
+        setupAds();
         mIsFromNewsList = getIntent().getBooleanExtra(Constants.Bundle_Is_From_News_List, false);
         if(mIsFromNewsList){
             AnimationUtils.animateScaleOut(btnShare);
@@ -89,17 +83,17 @@ public class NewsDetailActivity extends BaseActivity {
     }
 
     private void setupAds() {
-        mInterstitialAd = new InterstitialAd(this);
+       /* mInterstitialAd = new InterstitialAd(this);
 
         // set the ad unit ID
         mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
 
-        /*AdRequest adRequest = new AdRequest.Builder()
-                .build();*/
         AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        *//*AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice("FD6CED2CA6E0957AC9A94C05C3FCCD6F")
-                .build();
+                .build();*//*
 
         // Load ads into Interstitial Ads
         mInterstitialAd.loadAd(adRequest);
@@ -108,7 +102,44 @@ public class NewsDetailActivity extends BaseActivity {
             public void onAdLoaded() {
                 showInterstitial();
             }
-        });
+        });*/
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        /*AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("FD6CED2CA6E0957AC9A94C05C3FCCD6F")
+                .build();*/
+        adView.loadAd(adRequest);
+
+        /*adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                Toast.makeText(getApplicationContext(), "Ad is loaded!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdClosed() {
+                Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdOpened() {
+                Toast.makeText(getApplicationContext(), "Ad is opened!", Toast.LENGTH_SHORT).show();
+            }
+        });*/
+        if(!isOnline(this))
+            adView.setVisibility(View.GONE);
     }
 
     private void showInterstitial() {
@@ -181,10 +212,12 @@ public class NewsDetailActivity extends BaseActivity {
         txtDesc = (TextView) findViewById(R.id.txtDescription);
         txtTime = (TextView) findViewById(R.id.txtTime);
         relHeader = (RelativeLayout) findViewById(R.id.relHeader);
+        txt_more_read = (TextView) findViewById(R.id.txt_more_read);
         imgBack = (ImageView) findViewById(R.id.imgBack);
         imgFav = (ImageView) findViewById(R.id.imgFav);
         btnShare = (FloatingActionButton) findViewById(R.id.btn_share);
         linNewsDetail = (LinearLayout) findViewById(R.id.linNewsDetail);
+        adView = (AdView) findViewById(R.id.adView);
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -202,6 +235,13 @@ public class NewsDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        txt_more_read.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRajasthanLink();
             }
         });
 
@@ -232,7 +272,15 @@ public class NewsDetailActivity extends BaseActivity {
         startActivity(sendIntent);
     }
 
-
+    private void openRajasthanLink() {
+        /*String url = rssItem.getLink();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);*/
+        Intent intent = new Intent(this, OpenUrlActivity.class);
+        intent.putExtra(Constants.EXTRA_URL, rssItem.getLink());
+        moveActivity(intent, this, false);
+    }
 
 
     @Override

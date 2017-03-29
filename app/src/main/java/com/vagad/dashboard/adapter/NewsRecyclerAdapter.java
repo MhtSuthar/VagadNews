@@ -45,7 +45,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ((VHItem) holder).txtTitle.setText(getItem(position).getTitle());
         ((VHItem) holder).txtDescription.setText(getItem(position).getDescription());
         ((VHItem) holder).txtTime.setText(DateUtils.convertData(getItem(position).getPubdate()));
-        Glide.with(context).load(getItem(position).getImage()).placeholder(R.drawable.ic_placeholder).into(((VHItem) holder).imgNews);
+        Glide.with(context).load(getItem(position).getImage()).placeholder(R.drawable.ic_placeholder).centerCrop().into(((VHItem) holder).imgNews);
         ((VHItem) holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

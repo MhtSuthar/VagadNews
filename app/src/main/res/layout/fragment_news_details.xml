@@ -85,6 +85,19 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textColor="@color/colorGreyText" />
 
+            <com.vagad.utils.fonts.HindiFontTextView
+                android:id="@+id/txt_more_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_margin"
+                android:gravity="center"
+                android:text="@string/more_read"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:layout_gravity="center"
+                android:background="@color/color_bg"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@android:color/black" />
+
 
         </LinearLayout>
 

@@ -11,7 +11,10 @@
             android:id="@+id/menu_about_us"
             android:title="About Us"/>
         <item
+            android:id="@+id/menu_feedback"
+            android:title="Feedback"/>
+        <item
             android:id="@+id/menu_share"
-            android:title="Share"/>
+            android:title="Share App"/>
     </group>
 </menu>

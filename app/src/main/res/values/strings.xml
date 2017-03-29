@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Vagad News</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="more_read">और पढ़े राजस्थान पत्रिका पर</string>
     <string name="firebase_url">https://vagad-news.firebaseio.com/</string>
     <string name="feed_url_dungarpur"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=dungarpur]]></string>
     <string name="feed_url_banswara"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=banswara]]></string>
@@ -9,6 +10,7 @@
     <string name="feed_url_astrology"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=astrology-and-spirituality]]></string>
     <string name="feed_url_entertainment"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=entertainment]]></string>
     <string name="feed_url_sport"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=sports]]></string>
+    <string name="feed_url_education"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=education]]></string>
     <string name="about_us">About Us</string>
     <string name="favourite">Favoutites</string>
 	<!-- AdMob ad unit IDs -->
@@ -19,4 +21,10 @@
     <string name="my_email">mht.suthar@gmail.com</string>
     <string name="design_and_develop">Design And Developed By Mohit Suthar</string>
     <string name="please_wait">Please wait a while, we are loading all news for you, It will take only one time.</string>
+    <string name="more_read_news">More read from Rajasthan Patrika</string>
+    <string name="rate_title">Rate our Vagad App</string>
+    <string name="rate_message">Hi, take a minute to rate the app and help support to improve more new features. :)</string>
+    <string name="rate_positive">Rate Now</string>
+    <string name="rate_never">No, Thanks</string>
+    <string name="rate_remind_later">Remind Me Later</string>
 </resources>

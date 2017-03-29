@@ -32,6 +32,7 @@
 
         <activity android:name=".dashboard.NewsDetailActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".prestart.HelpActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".dashboard.OpenUrlActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
             android:name=".receiver.BootReceiver"

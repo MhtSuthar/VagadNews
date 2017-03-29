@@ -1,6 +1,7 @@
 package com.vagad.dashboard.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.vagad.R;
 import com.vagad.base.BaseFragment;
 import com.vagad.dashboard.NewsDetailActivity;
+import com.vagad.dashboard.OpenUrlActivity;
 import com.vagad.model.RSSItem;
 import com.vagad.utils.Constants;
 import com.vagad.utils.DateUtils;
@@ -34,6 +36,7 @@ public class NewsDetailFragment extends BaseFragment {
     private TextView txtTitle;
     private TextView txtDesc;
     private TextView txtTime;
+    private TextView txt_more_read;
     private RelativeLayout relHeader;
 
     @Override
@@ -82,6 +85,7 @@ public class NewsDetailFragment extends BaseFragment {
         relHeader = (RelativeLayout) view.findViewById(R.id.relHeader);
         imgBack = (ImageView) view.findViewById(R.id.imgBack);
         imgFav = (ImageView) view.findViewById(R.id.imgFav);
+        txt_more_read = (TextView) view.findViewById(R.id.txt_more_read);
         btnShare = (FloatingActionButton) view.findViewById(R.id.btn_share);
         if (Build.VERSION.SDK_INT >= 21) {
             getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
@@ -103,6 +107,13 @@ public class NewsDetailFragment extends BaseFragment {
             }
         });
 
+        txt_more_read.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRajasthanLink();
+            }
+        });
+
         imgFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,6 +132,16 @@ public class NewsDetailFragment extends BaseFragment {
                 ((NewsDetailActivity)getActivity()).notifyChange();
             }
         });
+    }
+
+    private void openRajasthanLink() {
+       /* String url = rssItem.getLink();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);*/
+        Intent intent = new Intent(getActivity(), OpenUrlActivity.class);
+        intent.putExtra(Constants.EXTRA_URL, rssItem.getLink());
+        moveActivity(intent, getActivity(), false);
     }
 
     @Override

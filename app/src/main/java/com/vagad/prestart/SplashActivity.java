@@ -30,7 +30,7 @@ public class SplashActivity extends BaseActivity {
     private static int SPLASH_TIMEOUT = 2000;
     private CircleProgressBar progressBar;
     private RSSDatabaseHandler rssDatabaseHandler;
-    private TextView mTxtDataLoad;
+    private TextView mTxtDataLoad, mTxtAppName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +39,7 @@ public class SplashActivity extends BaseActivity {
         rssDatabaseHandler = new RSSDatabaseHandler(this);
         progressBar = (CircleProgressBar) findViewById(R.id.progressBar);
         mTxtDataLoad = (TextView) findViewById(R.id.txtDataLoad);
+        mTxtAppName = (TextView) findViewById(R.id.txtAppName);
 
         fullScreen();
 
@@ -65,7 +66,7 @@ public class SplashActivity extends BaseActivity {
 
     private void setAlarm() {
         if(!SharedPreferenceUtil.getBoolean(Constants.KEY_IS_ALARM_SETUP, false)){
-            AlarmUtils.setAfterFiveDaysAlarm(this);
+            AlarmUtils.setAlarmForDeleteNews(this);
             AlarmUtils.setAlarm(this);
         }
     }
@@ -78,6 +79,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     void startTimer() {
+        AnimationUtils.animateScaleOut(mTxtAppName);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -146,6 +148,7 @@ public class SplashActivity extends BaseActivity {
 
     private void showProgress(boolean b) {
         if(b){
+            mTxtAppName.setVisibility(View.GONE);
             mTxtDataLoad.setVisibility(View.VISIBLE);
             AnimationUtils.animateScaleOut(progressBar);
         }else{

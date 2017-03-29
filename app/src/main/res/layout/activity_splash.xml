@@ -35,4 +35,18 @@
         android:visibility="gone"
         android:background="@color/darkTransparentColor"
         android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/txtAppName"
+        android:layout_width="match_parent"
+        android:text="@string/app_name"
+        android:gravity="bottom|center"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        android:visibility="gone"
+        android:background="@color/darkTransparentColor"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        />
 </RelativeLayout>

@@ -32,10 +32,13 @@ public class NotificationUtils {
                 0, resultIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
-        Bitmap icon1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_back);
-        Bitmap bitmap_image = BitmapFactory.decodeResource(context.getResources(), R.drawable.splash_bg);
-        NotificationCompat.BigPictureStyle s = new NotificationCompat.BigPictureStyle().bigPicture(bitmap_image);
-        s.setSummaryText(summaryText);
+        Bitmap icon1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
+
+        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+        bigText.bigText(summaryText);
+        bigText.setBigContentTitle(context.getString(R.string.app_name));
+        //bigText.setSummaryText("");
+
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Notification notification;
@@ -47,7 +50,7 @@ public class NotificationUtils {
                         .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                         .setLargeIcon(icon1)
                         .setAutoCancel(true)
-                        .setStyle(s)
+                        .setStyle(bigText)
                         .setContentIntent(resultPendingIntent)
                         .setPriority(Notification.PRIORITY_HIGH)
                         .setDefaults(Notification.DEFAULT_SOUND).build();
@@ -62,6 +65,6 @@ public class NotificationUtils {
 
     public int getNotificationIcon() {
         boolean whiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
-        return whiteIcon ? R.drawable.ic_back : R.drawable.ic_back;
+        return whiteIcon ? R.drawable.ic_white_notification : R.drawable.ic_launcher;
     }
 }

@@ -246,8 +246,10 @@ public class RSSDatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		List<RSSItem> list = getAllSitesWithAsc();
 		for (int i = 0; i < list.size()/2; i++) {
-			db.delete(TABLE_RSS, KEY_ID + " = ?",
-					new String[] { String.valueOf(list.get(i).getId())});
+			if(!list.get(i).isFav()) {
+				db.delete(TABLE_RSS, KEY_ID + " = ?",
+						new String[]{String.valueOf(list.get(i).getId())});
+			}
 		}
 		db.close();
 	}

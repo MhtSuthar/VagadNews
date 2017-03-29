@@ -154,6 +154,8 @@ public class RSSParser {
 			return Constants.NEWS_TYPE_UDAIPUR;
 		else if(rss_url.contains(Constants.NEWS_TYPE_LATEST))
 			return Constants.NEWS_TYPE_LATEST;
+		else if(rss_url.contains(Constants.NEWS_TYPE_EDUCATION))
+			return Constants.NEWS_TYPE_EDUCATION;
 		else
 			return "";
 	}

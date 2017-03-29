@@ -7,7 +7,7 @@ android {
         applicationId "com.vagad"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 1
+        versionCode 4
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
