@@ -1,6 +1,8 @@
 package com.vagad.base;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.vagad.storage.SharedPreferenceUtil;
@@ -18,6 +20,12 @@ public class VagadApp extends Application {
         super.onCreate();
         this.mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         SharedPreferenceUtil.init(getApplicationContext());
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(base);
     }
 
     public static FirebaseAnalytics getFirebaseAnalytics() {
