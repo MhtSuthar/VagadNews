@@ -12,7 +12,7 @@
     <string name="feed_url_sport"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=sports]]></string>
     <string name="feed_url_education"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=education]]></string>
     <string name="about_us">About Us</string>
-    <string name="favourite">Favoutites</string>
+    <string name="favourite">Favourites</string>
 	<!-- AdMob ad unit IDs -->
     <string name="banner_home_footer">ca-app-pub-8430026697006000/2824055773</string>
     <string name="interstitial_full_screen">ca-app-pub-8430026697006000/4300788971</string>

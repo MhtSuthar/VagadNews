@@ -17,6 +17,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.base.VagadApp;
@@ -57,6 +59,18 @@ public class HomeActivity extends BaseActivity {
          * Showing Rating Dialog
          */
         RateItDialogFragment.show(this, getSupportFragmentManager());
+
+        firebase();
+    }
+
+    private void firebase() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+        myRef.setValue("Hello, World!");
+    }
+
+    class Person{
+
     }
 
     private void initAds() {
