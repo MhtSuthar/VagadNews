@@ -1,31 +1,33 @@
 package com.vagad.dashboard;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.vagad.BuildConfig;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.base.VagadApp;
 import com.vagad.dashboard.fragments.AboutUsFragment;
 import com.vagad.dashboard.fragments.FavListFragment;
 import com.vagad.dashboard.fragments.NewsListFragment;
-import com.vagad.utils.AlarmUtils;
-import com.vagad.utils.AppUtils;
-import com.vagad.utils.NotificationUtils;
+import com.vagad.storage.SharedPreferenceUtil;
+import com.vagad.utils.Constants;
 import com.vagad.utils.rating.RateItDialogFragment;
 
 public class HomeActivity extends BaseActivity {
@@ -44,6 +46,7 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         fullScreen();
         setContentView(R.layout.activity_home);
+
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         adView = (AdView) findViewById(R.id.adView);
         setPagerAdapter();
@@ -57,6 +60,28 @@ public class HomeActivity extends BaseActivity {
          * Showing Rating Dialog
          */
         RateItDialogFragment.show(this, getSupportFragmentManager());
+
+        /**
+         * Check forcefully Update
+         */
+        checkUpdateAvail();
+    }
+
+    private void checkUpdateAvail() {
+        if(Double.parseDouble(SharedPreferenceUtil.getString(Constants.KEY_APP_VERSION, "1.0")) > Double.parseDouble(BuildConfig.VERSION_NAME)){
+            AlertDialog.Builder builder =
+                    new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+            builder.setTitle(getString(R.string.update_avail));
+            builder.setCancelable(false);
+            builder.setMessage(getString(R.string.update_message));
+            builder.setPositiveButton("GO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName())));
+                }
+            });
+            builder.show();
+        }
     }
 
     private void initAds() {
@@ -99,8 +124,7 @@ public class HomeActivity extends BaseActivity {
 
     private void fullScreen() {
         if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
 
