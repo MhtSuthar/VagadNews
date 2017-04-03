@@ -27,4 +27,6 @@
     <string name="rate_positive">Rate Now</string>
     <string name="rate_never">No, Thanks</string>
     <string name="rate_remind_later">Remind Me Later</string>
+    <string name="update_avail">Vagad News Update!</string>
+    <string name="update_message">Press GO to download latest version of the app and enjoy.</string>
 </resources>

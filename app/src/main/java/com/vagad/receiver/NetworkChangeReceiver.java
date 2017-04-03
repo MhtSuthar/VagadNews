@@ -4,14 +4,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.vagad.R;
 import com.vagad.model.RSSItem;
 import com.vagad.rest.RSSParser;
 import com.vagad.storage.RSSDatabaseHandler;
+import com.vagad.storage.SharedPreferenceUtil;
 import com.vagad.utils.AlarmUtils;
 import com.vagad.utils.AppUtils;
+import com.vagad.utils.Constants;
 
 import java.util.List;
 
@@ -23,6 +31,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     private RSSParser rssParser = new RSSParser();
     private Context mContext;
+    private static final String TAG = "NetworkChangeReceiver";
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -37,6 +46,27 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
         if(AppUtils.isOnline(mContext))
             new LoadRSSFeed().execute();
+
+        checkAnyUpdate();
+    }
+
+    private void checkAnyUpdate() {
+        if(AppUtils.isOnline(mContext)){
+            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_VERSION);
+            mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    SharedPreferenceUtil.putValue(Constants.KEY_APP_VERSION, ""+dataSnapshot.getValue());
+                    SharedPreferenceUtil.save();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.e(TAG, "Failed to read value.", error.toException());
+                }
+            });
+        }
     }
 
     /**
