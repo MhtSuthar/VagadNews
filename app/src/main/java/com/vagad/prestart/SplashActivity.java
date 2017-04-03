@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.dashboard.HomeActivity;
+import com.vagad.dashboard.NewsListActivity;
 import com.vagad.model.RSSItem;
 import com.vagad.rest.RSSParser;
 import com.vagad.storage.RSSDatabaseHandler;
@@ -84,7 +85,7 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void run() {
                 if(SharedPreferenceUtil.getBoolean(Constants.KEY_HELP_SCREEN_APPEAR, false)){
-                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                    startActivity(new Intent(SplashActivity.this, NewsListActivity.class));
                     finish();
                 }else {
                     startActivity(new Intent(SplashActivity.this, HelpActivity.class));

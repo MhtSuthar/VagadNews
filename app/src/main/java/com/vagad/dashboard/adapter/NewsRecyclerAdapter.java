@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.vagad.R;
+import com.vagad.dashboard.NewsListActivity;
 import com.vagad.dashboard.fragments.NewsListFragment;
 import com.vagad.model.RSSItem;
 import com.vagad.utils.DateUtils;
@@ -24,6 +25,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private List<RSSItem> mNewsList;
     private Context context;
+    private NewsListActivity newsListActivity;
     private NewsListFragment newsListFragment;
     private static final String TAG = "NewsRecyclerAdapter";
 
@@ -31,6 +33,12 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.mNewsList = data;
         this.context = context;
         this.newsListFragment = newsListFragment;
+    }
+
+    public NewsRecyclerAdapter(List<RSSItem> mNewsList, NewsListActivity context, NewsListActivity newsListActivity) {
+        this.mNewsList = mNewsList;
+        this.context = context;
+        this.newsListActivity = newsListActivity;
     }
 
     @Override
@@ -49,7 +57,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ((VHItem) holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newsListFragment.openNewsDetail(getItem(position), ((VHItem) holder).imgNews, position);
+                newsListActivity.openNewsDetail(getItem(position), ((VHItem) holder).imgNews, position);
             }
         });
 

@@ -17,6 +17,7 @@ import com.vagad.R;
 import com.vagad.base.BaseFragment;
 import com.vagad.dashboard.HomeActivity;
 import com.vagad.dashboard.NewsDetailActivity;
+import com.vagad.dashboard.NewsListActivity;
 import com.vagad.model.RSSItem;
 import com.vagad.utils.Constants;
 
@@ -89,12 +90,7 @@ public class HeaderNewsFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK){
             if(requestCode == Constants.REQUEST_CODE_NEWS_DETAIL){
-                if(((HomeActivity)getActivity()).newsListFragment != null){
-                    ((HomeActivity)getActivity()).newsListFragment.setAllNewsForHeaderFavChanges();
-                }
-                /*if(((HomeActivity)getActivity()).favListFragment != null){
-                    ((HomeActivity)getActivity()).favListFragment.setAdapter();
-                }*/
+                ((NewsListActivity)getActivity()).setAllNewsForHeaderFavChanges();
             }
         }
     }

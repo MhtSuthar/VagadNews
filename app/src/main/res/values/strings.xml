@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Vagad News</string>
     <string name="title_activity_home">HomeActivity</string>
-    <string name="more_read">और पढ़े राजस्थान पत्रिका पर</string>
+    <string name="more_read_old">और पढ़े राजस्थान पत्रिका पर</string>
+    <string name="more_read">और पढ़े वागड़ पर</string>
     <string name="firebase_url">https://vagad-news.firebaseio.com/</string>
     <string name="feed_url_dungarpur"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=dungarpur]]></string>
     <string name="feed_url_banswara"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=banswara]]></string>

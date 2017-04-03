@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.vagad.R;
+import com.vagad.dashboard.FavListActivity;
 import com.vagad.dashboard.fragments.FavListFragment;
 import com.vagad.model.RSSItem;
 import com.vagad.utils.DateUtils;
@@ -25,11 +26,18 @@ public class FavNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private List<RSSItem> mNewsList;
     private Context context;
     private FavListFragment favListFragment;
+    private FavListActivity favListActivity;
 
     public FavNewsRecyclerAdapter(List<RSSItem> data, Context context, FavListFragment favListFragment) {
         this.mNewsList = data;
         this.context = context;
         this.favListFragment = favListFragment;
+    }
+
+    public FavNewsRecyclerAdapter(List<RSSItem> mNewsList, FavListActivity context, FavListActivity favListActivity) {
+        this.mNewsList = mNewsList;
+        this.context = context;
+        this.favListActivity = favListActivity;
     }
 
     @Override
@@ -57,7 +65,7 @@ public class FavNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ((VHItem) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    favListFragment.setOnItemClick(position, ((VHItem) holder).imgNews);
+                    favListActivity.setOnItemClick(position, ((VHItem) holder).imgNews);
                 }
             });
         } else if (holder instanceof VHHeader) {
