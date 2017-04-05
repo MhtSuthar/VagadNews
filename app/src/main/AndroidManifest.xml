@@ -24,17 +24,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".dashboard.HomeActivity"
-            android:label="@string/title_activity_home"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".dashboard.NewsDetailActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".prestart.HelpActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".dashboard.OpenUrlActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".dashboard.NewsListActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".dashboard.NewsListActivity" android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".dashboard.FavListActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".dashboard.AboutUsActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
             android:name=".receiver.BootReceiver"

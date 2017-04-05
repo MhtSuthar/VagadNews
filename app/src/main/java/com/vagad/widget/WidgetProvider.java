@@ -10,7 +10,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.vagad.R;
-import com.vagad.dashboard.HomeActivity;
+import com.vagad.dashboard.NewsListActivity;
 
 public class WidgetProvider extends AppWidgetProvider {
 
@@ -37,7 +37,7 @@ public class WidgetProvider extends AppWidgetProvider {
       widget.setRemoteAdapter(R.id.words,
                               svcIntent);
 
-      Intent clickIntent=new Intent(ctxt, HomeActivity.class);
+      Intent clickIntent=new Intent(ctxt, NewsListActivity.class);
       PendingIntent clickPI= PendingIntent
                               .getActivity(ctxt, 0,
                                             clickIntent,

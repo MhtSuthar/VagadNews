@@ -1,8 +1,6 @@
 package com.vagad.dashboard.adapter;
 
 import android.content.Context;
-import android.media.Image;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.vagad.R;
 import com.vagad.dashboard.FavListActivity;
-import com.vagad.dashboard.fragments.FavListFragment;
 import com.vagad.model.RSSItem;
 import com.vagad.utils.DateUtils;
 
@@ -25,14 +22,7 @@ public class FavNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private static final int TYPE_ITEM = 1;
     private List<RSSItem> mNewsList;
     private Context context;
-    private FavListFragment favListFragment;
     private FavListActivity favListActivity;
-
-    public FavNewsRecyclerAdapter(List<RSSItem> data, Context context, FavListFragment favListFragment) {
-        this.mNewsList = data;
-        this.context = context;
-        this.favListFragment = favListFragment;
-    }
 
     public FavNewsRecyclerAdapter(List<RSSItem> mNewsList, FavListActivity context, FavListActivity favListActivity) {
         this.mNewsList = mNewsList;

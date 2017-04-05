@@ -216,7 +216,7 @@ public class NewsListActivity extends BaseActivity {
                         }
                         break;
                     case R.id.menu_about_us:
-
+                        moveActivity(new Intent(NewsListActivity.this, AboutUsActivity.class), NewsListActivity.this, false);
                         break;
                     case R.id.menu_feedback:
                         sendFeedback();

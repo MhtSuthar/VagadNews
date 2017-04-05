@@ -11,7 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.vagad.R;
-import com.vagad.dashboard.HomeActivity;
+import com.vagad.dashboard.NewsListActivity;
 
 
 /**
@@ -26,7 +26,7 @@ public class NotificationUtils {
     public void generateNotification(Context context, String title) {
         String summaryText = title;
 
-        Intent resultIntent = new Intent(context, HomeActivity.class);
+        Intent resultIntent = new Intent(context, NewsListActivity.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(context,
                 0, resultIntent,

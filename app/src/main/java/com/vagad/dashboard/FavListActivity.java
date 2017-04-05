@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class FavListActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fullScreen();
+        setupExplodeWindowAnimations(Gravity.BOTTOM);
         setContentView(R.layout.fragment_fav_list);
         rssDatabaseHandler = new RSSDatabaseHandler(this);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);

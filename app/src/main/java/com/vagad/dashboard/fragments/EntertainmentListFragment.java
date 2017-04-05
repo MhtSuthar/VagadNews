@@ -15,7 +15,6 @@ import android.widget.ImageView;
 
 import com.vagad.R;
 import com.vagad.base.BaseFragment;
-import com.vagad.dashboard.HomeActivity;
 import com.vagad.dashboard.NewsDetailActivity;
 import com.vagad.dashboard.adapter.FavNewsRecyclerAdapter;
 import com.vagad.model.RSSItem;
@@ -73,9 +72,6 @@ public class EntertainmentListFragment extends BaseFragment {
         if(resultCode == Activity.RESULT_OK){
             if(requestCode == Constants.REQUEST_CODE_NEWS_DETAIL){
                 setAdapter();
-                if(((HomeActivity)getActivity()).newsListFragment != null){
-                    ((HomeActivity)getActivity()).newsListFragment.setAllNews();
-                }
             }
         }
     }

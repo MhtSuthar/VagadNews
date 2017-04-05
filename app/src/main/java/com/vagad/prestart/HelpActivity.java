@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
-import com.vagad.dashboard.HomeActivity;
+import com.vagad.dashboard.NewsListActivity;
 import com.vagad.prestart.fragment.HelpPagerFragment;
 import com.vagad.storage.SharedPreferenceUtil;
 import com.vagad.utils.Constants;
@@ -45,7 +45,7 @@ public class HelpActivity extends BaseActivity {
     public void onClickDone(View view){
         SharedPreferenceUtil.putValue(Constants.KEY_HELP_SCREEN_APPEAR, true);
         SharedPreferenceUtil.save();
-        Intent intent = new Intent(HelpActivity.this, HomeActivity.class);
+        Intent intent = new Intent(HelpActivity.this, NewsListActivity.class);
         startActivity(intent);
         finish();
     }

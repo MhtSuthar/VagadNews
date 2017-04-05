@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.vagad.R;
 import com.vagad.base.BaseFragment;
-import com.vagad.dashboard.HomeActivity;
 import com.vagad.dashboard.NewsDetailActivity;
 import com.vagad.dashboard.NewsListActivity;
 import com.vagad.model.RSSItem;

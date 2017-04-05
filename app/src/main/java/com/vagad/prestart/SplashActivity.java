@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
-import com.vagad.dashboard.HomeActivity;
 import com.vagad.dashboard.NewsListActivity;
 import com.vagad.model.RSSItem;
 import com.vagad.rest.RSSParser;

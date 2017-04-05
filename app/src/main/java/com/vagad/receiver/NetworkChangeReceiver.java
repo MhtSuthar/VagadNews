@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.vagad.BuildConfig;
 import com.vagad.R;
 import com.vagad.model.RSSItem;
 import com.vagad.rest.RSSParser;
@@ -20,6 +21,7 @@ import com.vagad.storage.SharedPreferenceUtil;
 import com.vagad.utils.AlarmUtils;
 import com.vagad.utils.AppUtils;
 import com.vagad.utils.Constants;
+import com.vagad.utils.NotificationUtils;
 
 import java.util.List;
 
@@ -58,6 +60,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     SharedPreferenceUtil.putValue(Constants.KEY_APP_VERSION, ""+dataSnapshot.getValue());
                     SharedPreferenceUtil.save();
+                    if(Double.parseDouble(SharedPreferenceUtil.getString(Constants.KEY_APP_VERSION, "1.0")) > Double.parseDouble(BuildConfig.VERSION_NAME)){
+                        new NotificationUtils().generateNotification(mContext, mContext.getString(R.string.update_avail)+" "+mContext.getString(R.string.update_message));
+                    }
                 }
 
                 @Override
