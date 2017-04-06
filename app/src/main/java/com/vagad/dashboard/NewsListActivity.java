@@ -135,26 +135,30 @@ public class NewsListActivity extends BaseActivity {
 
         //mDatabase.child(userId).setValue(user);
 
-       /* mDatabase.addValueEventListener(new ValueEventListener() {
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e(TAG, "onDataChange: "+dataSnapshot.getKey()+"   "+dataSnapshot.getRef());
-                NewsPostModel changedPost = dataSnapshot.getValue(NewsPostModel.class);
-                Log.e(TAG, "Dta change() called with: dataSnapshot = [" + dataSnapshot + "], prevChildKey = ["  + "]  "+changedPost.username);
-
+                Log.e(TAG, "onDataChange: "+dataSnapshot.getKey()+"   "+dataSnapshot.getRef()+""+dataSnapshot.getChildren()+"   "+dataSnapshot.getChildrenCount());
+                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                    NewsPostModel changedPost = messageSnapshot.getValue(NewsPostModel.class);
+                    Log.e(TAG, "for : "+changedPost.email);
+                    /*String name = (String) messageSnapshot.child("email").getValue();
+                    String message = (String) messageSnapshot.child("username").getValue();
+                    Log.e(TAG, "for loop: "+name+"  "+message);*/
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
-        });*/
+        });
 
-        mDatabase.addChildEventListener(new ChildEventListener() {
+       /* mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 Log.e(TAG, "onChildAdded: "+dataSnapshot.getKey());
-               /* mDatabase.child(dataSnapshot.getKey()).addChildEventListener(new ChildEventListener() {
+               *//* mDatabase.child(dataSnapshot.getKey()).addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Log.e(TAG, "onChildAdded: "+dataSnapshot.getValue());
@@ -181,7 +185,7 @@ public class NewsListActivity extends BaseActivity {
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
-                });*/
+                });*//*
             }
 
             @Override
@@ -199,7 +203,7 @@ public class NewsListActivity extends BaseActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, "onCancelled: "+databaseError.getMessage() );
             }
-        });
+        });*/
     }
 
     private void checkUpdateAvail() {
