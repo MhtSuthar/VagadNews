@@ -39,6 +39,12 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.vagad.BuildConfig;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
@@ -46,6 +52,7 @@ import com.vagad.base.BaseFragment;
 import com.vagad.base.VagadApp;
 import com.vagad.dashboard.adapter.NewsRecyclerAdapter;
 import com.vagad.dashboard.fragments.HeaderNewsFragment;
+import com.vagad.model.NewsPostModel;
 import com.vagad.model.RSSItem;
 import com.vagad.rest.RSSParser;
 import com.vagad.storage.RSSDatabaseHandler;
@@ -115,6 +122,84 @@ public class NewsListActivity extends BaseActivity {
          * Check forcefully Update
          */
         checkUpdateAvail();
+
+        addValToFirebase();
+    }
+
+    private void addValToFirebase() {
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
+
+        String userId = mDatabase.push().getKey();
+
+        NewsPostModel user = new NewsPostModel("Mht", "rmht.info");
+
+        //mDatabase.child(userId).setValue(user);
+
+       /* mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e(TAG, "onDataChange: "+dataSnapshot.getKey()+"   "+dataSnapshot.getRef());
+                NewsPostModel changedPost = dataSnapshot.getValue(NewsPostModel.class);
+                Log.e(TAG, "Dta change() called with: dataSnapshot = [" + dataSnapshot + "], prevChildKey = ["  + "]  "+changedPost.username);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });*/
+
+        mDatabase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+                Log.e(TAG, "onChildAdded: "+dataSnapshot.getKey());
+               /* mDatabase.child(dataSnapshot.getKey()).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Log.e(TAG, "onChildAdded: "+dataSnapshot.getValue());
+                        NewsPostModel changedPost = dataSnapshot.getValue(NewsPostModel.class);
+                        Log.e(TAG, "onChildChanged() called with: dataSnapshot = [" + dataSnapshot + "]  "+changedPost.username);
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });*/
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {
+                Log.e(TAG, "onChildChanged: "+dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String prevChildKey) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "onCancelled: "+databaseError.getMessage() );
+            }
+        });
     }
 
     private void checkUpdateAvail() {
