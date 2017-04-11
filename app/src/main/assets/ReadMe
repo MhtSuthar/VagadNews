@@ -13,52 +13,19 @@ Valentina nappi
 1. Entertainment List & Astrology, Sport
 
 
-DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
- 
-// Creating new user node, which returns the unique key value
-// new user node would be /users/$userid/
-String userId = mDatabase.push().getKey();
- 
-// creating user object
-User user = new User("Ravi Tamada", "ravi@androidhive.info");
- 
-// pushing user to 'users' node using the userId
-mDatabase.child(userId).setValue(user);
-
-
-mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
-    @Override
-    public void onDataChange(DataSnapshot dataSnapshot) {
- 
-        User user = dataSnapshot.getValue(User.class);
- 
-        Log.d(TAG, "User name: " + user.getName() + ", email " + user.getEmail());
+public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
+       ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(mRestaurant.getPushId())
+                .child("imageUrl");
+        ref.setValue(imageEncoded);
     }
- 
-    @Override
-    public void onCancelled(DatabaseError error) {
-        // Failed to read value
-        Log.w(TAG, "Failed to read value.", error.toException());
+	
+	public static Bitmap decodeFromFirebaseBase64(String image) throws IOException {
+        byte[] decodedByteArray = android.util.Base64.decode(image, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
     }
-});
-
-
-ref.addChildEventListener(new ChildEventListener() {
-    @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {}
-
-    @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {
-        Post changedPost = dataSnapshot.getValue(Post.class);
-        System.out.println("The updated post title is: " + changedPost.title);
-    }
-
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-    @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String prevChildKey) {}
-
-    @Override
-    public void onCancelled(DatabaseError databaseError) {}
-});
