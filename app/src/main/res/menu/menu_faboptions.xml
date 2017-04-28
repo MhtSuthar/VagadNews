@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_news"
+        android:icon="@drawable/ic_newspaper"
+        android:title="News"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_add_news"
+        android:icon="@drawable/ic_plus"
+        android:title="Copy"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_close"
+        android:icon="@drawable/ic_close"
+        android:title="Google+"
+        app:showAsAction="ifRoom" />
+
+</menu>
