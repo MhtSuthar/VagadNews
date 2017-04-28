@@ -6,17 +6,17 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class NewsPostModel {
 
-    public String username;
-    public String email;
+    public String nameReporter;
+    public String newsTitle;
+    public String newsDesc;
 
-    public NewsPostModel() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
-    }
+    public NewsPostModel() {}
 
-    public NewsPostModel(String username, String email) {
-        this.username = username;
-        this.email = email;
+    public NewsPostModel(String nameReporter, String newsDesc, String newsTitle) {
+        this.nameReporter = nameReporter;
+        this.newsTitle = newsTitle;
+        this.newsDesc = newsDesc;
     }
 
 }
-// [END blog_user_class]
+

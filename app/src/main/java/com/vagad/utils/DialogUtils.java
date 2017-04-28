@@ -3,7 +3,12 @@ package com.vagad.utils;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.vagad.R;
 
@@ -20,7 +25,7 @@ public class DialogUtils {
         this.context=context;
     }
 
-   /* public Dialog setupCustomeDialogFromBottom(int layout) {
+   public Dialog setupCustomeDialogFromBottom(int layout) {
         Dialog dialog = new Dialog(context, R.style.ThemeDialog);
         dialog.getWindow().getAttributes().windowAnimations = R.style.ThemeDialog;
         Window window = dialog.getWindow();
@@ -35,7 +40,7 @@ public class DialogUtils {
         return dialog;
     }
 
-
+/*
     public Dialog showDialogForValidation(int layout)
     {
         Dialog dialog = new Dialog(context, R.style.DialogAnimation);

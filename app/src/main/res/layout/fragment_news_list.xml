@@ -1,8 +1,8 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@color/color_bg"
     android:layout_height="match_parent"
+    android:background="@color/color_bg"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -27,9 +27,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/color_bg"
                 android:fitsSystemWindows="true"
                 android:orientation="vertical"
-                android:background="@color/color_bg"
                 app:layout_collapseMode="parallax">
 
                 <android.support.v4.view.ViewPager
@@ -65,10 +65,10 @@
                     android:id="@+id/progressBarToolbar"
                     style="?android:attr/progressBarStyleSmall"
                     android:layout_width="wrap_content"
-                    android:padding="@dimen/activity_horizontal_margin"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:layout_gravity="right" />
+                    android:layout_gravity="right"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:visibility="gone" />
             </android.support.v7.widget.Toolbar>
 
 
@@ -89,8 +89,8 @@
     <RelativeLayout
         android:id="@+id/relNoData"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imgNoData"
@@ -103,42 +103,48 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/no_data_avail"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textAppearance="?android:textAppearanceLarge"
             android:background="@color/darkTransparentColor"
-            />
+            android:gravity="center"
+            android:text="@string/no_data_avail"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@android:color/white" />
 
     </RelativeLayout>
-
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="50dp"
         android:clipToPadding="false"
+        android:paddingBottom="50dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
-        android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         app:adSize="BANNER"
-        app:adUnitId="@string/banner_home_footer"/>
+        app:adUnitId="@string/banner_home_footer" />
 
-   <!-- <android.support.design.widget.FloatingActionButton
+    <com.github.rubensousa.floatingtoolbar.FloatingToolbar
+        android:id="@+id/floatingToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="bottom"
+        app:floatingMenu="@menu/menu_faboptions" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingButtonMore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:elevation="8dp"
-        android:src="@drawable/ic_tab_fav"
-        app:layout_anchor="@id/app_bar_layout"
-        app:layout_anchorGravity="bottom|right|end"
-        />-->
+        android:src="@android:drawable/ic_input_add"
+        app:layout_anchorGravity="bottom|right|end" />
+
 
 </android.support.design.widget.CoordinatorLayout>

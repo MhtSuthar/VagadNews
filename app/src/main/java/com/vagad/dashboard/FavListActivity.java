@@ -64,7 +64,6 @@ public class FavListActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         favNewsRecyclerAdapter = new FavNewsRecyclerAdapter(mNewsList, this, FavListActivity.this);
         recyclerView.setAdapter(favNewsRecyclerAdapter);
-
     }
 
     public void setOnItemClick(int position, ImageView imageView) {

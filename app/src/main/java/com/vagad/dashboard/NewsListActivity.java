@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -26,21 +27,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.github.rubensousa.floatingtoolbar.FloatingToolbar;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,10 +48,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.vagad.BuildConfig;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
-import com.vagad.base.BaseFragment;
 import com.vagad.base.VagadApp;
 import com.vagad.dashboard.adapter.NewsRecyclerAdapter;
 import com.vagad.dashboard.fragments.HeaderNewsFragment;
+import com.vagad.localnews.AddNewsActivity;
+import com.vagad.localnews.ReporterNewsListActivity;
 import com.vagad.model.NewsPostModel;
 import com.vagad.model.RSSItem;
 import com.vagad.rest.RSSParser;
@@ -73,7 +73,7 @@ import java.util.Random;
  * Created by Mohit on 15-Feb-17.
  */
 
-public class NewsListActivity extends BaseActivity {
+public class NewsListActivity extends BaseActivity implements FloatingToolbar.ItemClickListener{
 
     private NewsRecyclerAdapter newsRecyclerAdapter;
     private RecyclerView recyclerView;
@@ -100,6 +100,8 @@ public class NewsListActivity extends BaseActivity {
     private AdView adView;
     private InterstitialAd mInterstitialAd;
     private boolean mFullAddDisplayed;
+    private FloatingToolbar mFloatingToolbar;
+    private FloatingActionButton mFloatingButtonMore;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,9 +127,9 @@ public class NewsListActivity extends BaseActivity {
          */
         checkUpdateAvail();
 
-        addValToFirebase();
+        //addValToFirebase();
 
-        startActivity(new Intent(this, HomeActivity.class));
+        //startActivity(new Intent(this, HomeActivity.class));
     }
 
     private void addValToFirebase() {
@@ -135,7 +137,7 @@ public class NewsListActivity extends BaseActivity {
 
         String userId = mDatabase.push().getKey();
 
-        NewsPostModel user = new NewsPostModel("Mht", "rmht.info");
+        NewsPostModel user = new NewsPostModel("Mht", "rmht.info", "");
 
         //mDatabase.child(userId).setValue(user);
 
@@ -145,7 +147,7 @@ public class NewsListActivity extends BaseActivity {
                 Log.e(TAG, "onDataChange: "+dataSnapshot.getKey()+"   "+dataSnapshot.getRef()+""+dataSnapshot.getChildren()+"   "+dataSnapshot.getChildrenCount());
                 for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                     NewsPostModel changedPost = messageSnapshot.getValue(NewsPostModel.class);
-                    Log.e(TAG, "for : "+changedPost.email);
+                    Log.e(TAG, "for : "+changedPost.nameReporter);
                     /*String name = (String) messageSnapshot.child("email").getValue();
                     String message = (String) messageSnapshot.child("username").getValue();
                     Log.e(TAG, "for loop: "+name+"  "+message);*/
@@ -242,6 +244,10 @@ public class NewsListActivity extends BaseActivity {
         mRelNoData = (RelativeLayout) findViewById(R.id.relNoData);
         mProgressBarToolbar = (ProgressBar) findViewById(R.id.progressBarToolbar);
         adView = (AdView) findViewById(R.id.adView);
+        mFloatingToolbar = (FloatingToolbar) findViewById(R.id.floatingToolbar);
+        mFloatingButtonMore = (FloatingActionButton) findViewById(R.id.floatingButtonMore);
+
+        attachFloatingToolbar();
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -249,7 +255,7 @@ public class NewsListActivity extends BaseActivity {
                 switch (item.getItemId()){
                     case R.id.menu_favourite:
                         Intent intent = new Intent(NewsListActivity.this, FavListActivity.class);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             startActivityForResult(intent, Constants.REQUEST_CODE_FAV_NEWS,  ActivityOptions.makeSceneTransitionAnimation(NewsListActivity.this).toBundle());
                         }else{
                             startActivityForResult(intent, Constants.REQUEST_CODE_FAV_NEWS);
@@ -297,21 +303,10 @@ public class NewsListActivity extends BaseActivity {
         }));*/
     }
 
-    @Override
-    protected boolean onPrepareOptionsPanel(View view, Menu menu) {
-        if (menu != null) {
-            if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
-                try {
-                    Method m = menu.getClass().getDeclaredMethod(
-                            "setOptionalIconsVisible", Boolean.TYPE);
-                    m.setAccessible(true);
-                    m.invoke(menu, true);
-                } catch (Exception e) {
-                    Log.e(getClass().getSimpleName(), "onMenuOpened...unable to set icons for overflow menu", e);
-                }
-            }
-        }
-        return true;
+    private void attachFloatingToolbar() {
+        mFloatingToolbar.setClickListener(this);
+        mFloatingToolbar.attachFab(mFloatingButtonMore);
+        mFloatingToolbar.attachRecyclerView(recyclerView);
     }
 
     private void sendFeedback() {
@@ -377,7 +372,6 @@ public class NewsListActivity extends BaseActivity {
         super.onStop();
         //handler.removeCallbacks(runnable);
     }
-
 
     Runnable runnable = new Runnable() {
         public void run() {
@@ -473,6 +467,23 @@ public class NewsListActivity extends BaseActivity {
                 mLatestNewsListVisible.add(mLatestNewsList.get(i));
         }
         return mLatestNewsListVisible;
+    }
+
+    @Override
+    public void onItemClick(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_news:
+                moveActivity(new Intent(NewsListActivity.this, ReporterNewsListActivity.class), NewsListActivity.this, false);
+                break;
+            case R.id.menu_add_news:
+                moveActivity(new Intent(NewsListActivity.this, AddNewsActivity.class), NewsListActivity.this, false);
+                break;
+        }
+    }
+
+    @Override
+    public void onItemLongClick(MenuItem item) {
+
     }
 
     /**

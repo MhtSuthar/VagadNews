@@ -82,6 +82,12 @@
         </attr>
     </declare-styleable>
     <!--End For View Pager Verticle -->
+	
+	<declare-styleable name="FabOptions">
+        <attr name="button_menu" format="reference" type="menu" />
+        <attr name="background_color" format="reference" type="int" />
+        <attr name="fab_color" format="reference" type="int" />
+    </declare-styleable>
 
 
 </resources>

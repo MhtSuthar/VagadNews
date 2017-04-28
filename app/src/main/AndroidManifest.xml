@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
 
     <application
         android:allowBackup="true"
@@ -31,7 +35,8 @@
         <activity android:name=".dashboard.NewsListActivity" android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".dashboard.FavListActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".dashboard.AboutUsActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".dashboard.HomeActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".localnews.AddNewsActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".localnews.ReporterNewsListActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
             android:name=".receiver.BootReceiver"
