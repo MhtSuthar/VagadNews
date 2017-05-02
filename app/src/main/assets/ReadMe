@@ -29,3 +29,79 @@ public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
         byte[] decodedByteArray = android.util.Base64.decode(image, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
     }
+    
+    
+    
+    public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private List<String> moviesList;
+    private final int AD_TYPE = 0;
+    private final int CONTENT_TYPE = 1;
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView txt_list;
+
+        public MyViewHolder(View view) {
+            super(view);
+            txt_list = (TextView) view.findViewById(R.id.txt_list);
+        }
+    }
+
+    public class AdsHolder extends RecyclerView.ViewHolder {
+        public AdsHolder(View view) {
+            super(view);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position % 10 == 0 && position != 0)
+            return AD_TYPE;
+        return CONTENT_TYPE;
+    }
+
+    public MoviesAdapter(List<String> moviesList) {
+        this.moviesList = moviesList;
+    }
+
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = null;
+        switch (viewType){
+            case AD_TYPE:
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.movie_list_ads, parent, false);
+                break;
+            case CONTENT_TYPE:
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.movie_list_row, parent, false);
+                break;
+        }
+
+        return new MyViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+           switch (holder.getItemViewType()){
+               case AD_TYPE:
+
+                   break;
+               case CONTENT_TYPE:
+                   MyViewHolder viewHolder = (MyViewHolder) holder;
+                   viewHolder.txt_list.setText(""+moviesList.get(actualPos(position)));
+                   break;
+           }
+    }
+
+    int actualPos(int pos){
+        pos = pos -  (pos / 10);
+        return pos;
+    }
+
+    @Override
+    public int getItemCount() {
+        return moviesList.size() + ( moviesList.size() / 10);
+    }
+}
