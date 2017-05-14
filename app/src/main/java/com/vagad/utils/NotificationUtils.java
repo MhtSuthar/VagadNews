@@ -23,7 +23,7 @@ public class NotificationUtils {
     public NotificationUtils() {
     }
 
-    public void generateNotification(Context context, String title) {
+    public synchronized void generateNotification(Context context, String title) {
         String summaryText = title;
 
         Intent resultIntent = new Intent(context, NewsListActivity.class);

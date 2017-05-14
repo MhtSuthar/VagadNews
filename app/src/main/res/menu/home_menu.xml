@@ -5,6 +5,9 @@
     <group
         android:id="@+id/group">
         <item
+            android:id="@+id/menu_vagad_news"
+            android:title="@string/event_and_news"/>
+        <item
             android:id="@+id/menu_favourite"
             android:title="Favorites"/>
         <item

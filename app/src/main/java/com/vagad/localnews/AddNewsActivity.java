@@ -9,9 +9,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,6 +21,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -29,7 +33,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
+import com.vagad.dashboard.NewsListActivity;
 import com.vagad.model.NewsPostModel;
+import com.vagad.utils.AnimationUtils;
+import com.vagad.utils.AppUtils;
 import com.vagad.utils.Constants;
 import com.vagad.utils.DialogUtils;
 import com.vagad.utils.camera.BitmapHelper;
@@ -50,11 +57,14 @@ public class AddNewsActivity extends BaseActivity {
 
     private ImageView imgNews;
     private static final String TAG = "AddNewsActivity";
-    private EditText edtNewsTitle, edtYourName, edtDesc;
+    private EditText edtNewsTitle, edtYourName, edtDesc, edtMobile;
     private CameraIntentHelper mCameraIntentHelper;
     private String imagePath = "";
     private RelativeLayout mRelParent;
-    private boolean isGalleryOpen;
+    private int isGalleryOpen = -1;
+    private AppCompatButton btnSubmit;
+    private ProgressBar progressBar;
+    private LinearLayout linAdd;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,19 +75,7 @@ public class AddNewsActivity extends BaseActivity {
         checkPermission();
         setupCameraIntentHelper();
         initView();
-        findViewById(R.id.fab_email).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ShareCompat.IntentBuilder.from(AddNewsActivity.this)
-                        .setType("message/rfc822")
-                        .addEmailTo(getString(R.string.my_email))
-                        .setSubject("Your Subject")
-                        .setText("")
-                        //.setHtmlText(body) //If you are using HTML in your body text
-                        .setChooserTitle("Send Suggestions & Requirement")
-                        .startChooser();
-            }
-        });
+
     }
 
     private void initView() {
@@ -86,6 +84,10 @@ public class AddNewsActivity extends BaseActivity {
         edtYourName = (EditText) findViewById(R.id.edtYourName);
         edtDesc = (EditText) findViewById(R.id.edtDesc);
         mRelParent = (RelativeLayout) findViewById(R.id.rel_parent);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        btnSubmit = (AppCompatButton) findViewById(R.id.btnSubmit);
+        linAdd = (LinearLayout) findViewById(R.id.linAdd);
+        edtMobile = (EditText) findViewById(R.id.edtMobileNo);
     }
 
     private void fullScreen() {
@@ -117,6 +119,8 @@ public class AddNewsActivity extends BaseActivity {
 
     public void onClickSubmit(View view){
         if(isValid()){
+            AnimationUtils.animateScaleIn(btnSubmit);
+            progressBar.setVisibility(View.VISIBLE);
             addValToFirebase();
         }
     }
@@ -131,6 +135,9 @@ public class AddNewsActivity extends BaseActivity {
         }else if(TextUtils.isEmpty(edtYourName.getText().toString().trim())){
             showSnackbar(mRelParent, "Please Enter Your Name");
             return false;
+        }else if(edtMobile.getText().length() > 0 && edtMobile.getText().length() < 9){
+            showSnackbar(mRelParent, "Please Enter Correct Mobile No");
+            return false;
         }
         return true;
     }
@@ -138,7 +145,10 @@ public class AddNewsActivity extends BaseActivity {
     private void addValToFirebase() {
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
         String key = mDatabase.push().getKey();
-        NewsPostModel user = new NewsPostModel(edtYourName.getText().toString(), edtDesc.getText().toString(), edtNewsTitle.getText().toString());
+        NewsPostModel user = new NewsPostModel(edtYourName.getText().toString(),
+                edtDesc.getText().toString(), edtNewsTitle.getText().toString(),
+                AppUtils.getBase64Image(imagePath), true,
+                AppUtils.getUniqueId(AddNewsActivity.this), edtMobile.getText().toString());
         mDatabase.child(key).setValue(user);
 
         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -156,6 +166,15 @@ public class AddNewsActivity extends BaseActivity {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
+
+        showSnackbar(mRelParent, "News Add Successfully!");
+        //showToast("News Add Successfully!");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                moveActivity(new Intent(AddNewsActivity.this, ReporterNewsListActivity.class), AddNewsActivity.this, true);
+            }
+        }, 1000);
     }
 
     public void checkPermission() {
@@ -172,21 +191,22 @@ public class AddNewsActivity extends BaseActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == Constants.REQUEST_PERMISSION_WRITE_STORAGE){
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if(isGalleryOpen)
+                if(isGalleryOpen == 0)
                     openGallery();
-                else
+                else if(isGalleryOpen == 1)
                     openCamera();
             }
         }
     }
 
     void openGallery() {
-        isGalleryOpen = true;
+        isGalleryOpen = 0;
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, Constants.REQUEST_OPEN_GALLERY);
     }
 
     void openCamera(){
+        isGalleryOpen = 1;
         if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,this) &&
                 checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, this) && checkPermission(Manifest.permission.CAMERA, this)) {
 
@@ -236,6 +256,12 @@ public class AddNewsActivity extends BaseActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         mCameraIntentHelper.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCameraIntentHelper.onRestoreInstanceState(savedInstanceState);
     }
 
     private void setupCameraIntentHelper() {
@@ -290,6 +316,7 @@ public class AddNewsActivity extends BaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.e(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         if (resultCode == RESULT_OK) {
             if (requestCode == Constants.REQUEST_OPEN_CAMERA) {
                 mCameraIntentHelper.onActivityResult(requestCode, resultCode, data);
@@ -321,6 +348,7 @@ public class AddNewsActivity extends BaseActivity {
     }
 
     private void displayImage(Uri photoUri) {
+        linAdd.setVisibility(View.GONE);
         Glide.with(this).load(photoUri).into(imgNews);
     }
 

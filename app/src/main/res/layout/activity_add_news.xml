@@ -8,32 +8,16 @@
     android:layout_height="match_parent"
     tools:ignore="RtlHardcoded">
 
-    <ImageView
-        android:id="@+id/imgNews"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_placeholder" />
-
-    <TextView
-        android:id="@+id/txtAddNews"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="@color/darkTransparentColor"
-        android:gravity="center"
-        android:onClick="onClickNewsPhoto"
-        android:text="@string/add_news"
-        android:textColor="@android:color/white"
-        android:textSize="30sp" />
-
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:fillViewport="true"
         android:paddingTop="220dp"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,6 +53,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="News Title"
+                            android:lines="1"
                             android:textColorHint="@color/colorGreyText" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -85,6 +70,24 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="News Reporter Name"
+                            android:lines="1"
+                            android:textColorHint="@color/colorGreyText" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textColorHint="@color/colorGreyText"
+                        tools:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
+
+                        <EditText
+                            android:id="@+id/edtMobileNo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter Mobile No"
+                            android:inputType="number"
                             android:textColorHint="@color/colorGreyText" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -105,19 +108,74 @@
 
                     </android.support.design.widget.TextInputLayout>
 
-                    <android.support.v7.widget.AppCompatButton
+
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorAccent"
                         android:layout_marginTop="10dp"
-                        android:onClick="onClickSubmit"
-                        android:text="Submit"
-                        android:textAppearance="?android:textAppearanceMedium"
-                        android:textColor="@android:color/white"
-                        />
+                        android:layout_height="wrap_content">
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/btnSubmit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/colorAccent"
+                            android:onClick="onClickSubmit"
+                            android:text="Add"
+                            android:textAppearance="?android:textAppearanceMedium"
+                            android:textColor="@android:color/white"
+                            />
+
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            style="?android:attr/progressBarStyleLarge"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerHorizontal="true"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
                 </LinearLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>
+
     </android.support.v4.widget.NestedScrollView>
+
+    <ImageView
+        android:id="@+id/imgNews"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:scaleType="centerCrop"
+        android:onClick="onClickNewsPhoto"
+        android:src="@drawable/ic_placeholder" />
+
+    <LinearLayout
+        android:id="@+id/linAdd"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:onClick="onClickNewsPhoto"
+        android:background="@color/darkTransparentColor"
+        android:layout_height="220dp">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_gallery" />
+
+        <TextView
+            android:id="@+id/txtAddNews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:text="@string/add_news"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>

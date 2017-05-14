@@ -12,11 +12,11 @@
 
 
     <application
+        android:name=".base.VagadApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".base.VagadApp"
         android:theme="@style/AppTheme">
         <activity
             android:name=".prestart.SplashActivity"
@@ -29,14 +29,38 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".dashboard.NewsDetailActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".prestart.HelpActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".dashboard.OpenUrlActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".dashboard.NewsListActivity" android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".dashboard.FavListActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".dashboard.AboutUsActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".localnews.AddNewsActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".localnews.ReporterNewsListActivity"  android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".dashboard.NewsDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".prestart.HelpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".dashboard.OpenUrlActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".dashboard.NewsListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".dashboard.FavListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".dashboard.AboutUsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".localnews.AddNewsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".localnews.ReporterNewsListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
             android:name=".receiver.BootReceiver"
@@ -56,25 +80,28 @@
         </receiver>
 
         <!-- Alarm receiver-->
-        <receiver android:name=".receiver.AlarmReceiver"/>
-        <receiver android:name=".receiver.AlarmReceiverDeleteNews"/>
+        <receiver android:name=".receiver.AlarmReceiver" />
+        <receiver android:name=".receiver.AlarmReceiverDeleteNews" />
         <!-- End -->
 
         <!-- Start Widget-->
-        <receiver android:icon="@drawable/ic_back"
-            android:label="@string/app_name"
-            android:name=".widget.WidgetProvider">
+        <receiver
+            android:name=".widget.WidgetProvider"
+            android:icon="@drawable/ic_back"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
+            <meta-data
+                android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
-        <service android:name=".widget.WidgetService"
+        <service
+            android:name=".widget.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <!-- End receiver-->
-		
-		<meta-data
+
+        <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
     </application>

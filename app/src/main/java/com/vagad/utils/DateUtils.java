@@ -1,5 +1,6 @@
 package com.vagad.utils;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -40,5 +41,12 @@ public class DateUtils {
     public static String getTimestamp() {
         Calendar calendar = Calendar.getInstance();
         return String.valueOf(calendar.getTimeInMillis());
+    }
+
+    public static String getDate(long time){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm a");
+        Date df = new java.util.Date(time);
+        String date = simpleDateFormat.format(df).toString();
+        return date;
     }
 }

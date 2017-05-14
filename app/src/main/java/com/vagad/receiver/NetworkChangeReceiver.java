@@ -73,6 +73,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             });
         }
     }
+	
+
 
     /**
      * Background Async Task to get Education RSS data from URL

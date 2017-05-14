@@ -22,12 +22,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,11 +40,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.vagad.BuildConfig;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
@@ -53,7 +48,6 @@ import com.vagad.dashboard.adapter.NewsRecyclerAdapter;
 import com.vagad.dashboard.fragments.HeaderNewsFragment;
 import com.vagad.localnews.AddNewsActivity;
 import com.vagad.localnews.ReporterNewsListActivity;
-import com.vagad.model.NewsPostModel;
 import com.vagad.model.RSSItem;
 import com.vagad.rest.RSSParser;
 import com.vagad.storage.RSSDatabaseHandler;
@@ -64,7 +58,6 @@ import com.vagad.utils.loder.CircleProgressBar;
 import com.vagad.utils.pageindicator.CirclePageIndicator;
 import com.vagad.utils.rating.RateItDialogFragment;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -102,6 +95,7 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
     private boolean mFullAddDisplayed;
     private FloatingToolbar mFloatingToolbar;
     private FloatingActionButton mFloatingButtonMore;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -127,38 +121,16 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
          */
         checkUpdateAvail();
 
-        //addValToFirebase();
-
-        //startActivity(new Intent(this, HomeActivity.class));
-    }
-
-    private void addValToFirebase() {
-        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
-
-        String userId = mDatabase.push().getKey();
-
-        NewsPostModel user = new NewsPostModel("Mht", "rmht.info", "");
-
-        //mDatabase.child(userId).setValue(user);
-
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e(TAG, "onDataChange: "+dataSnapshot.getKey()+"   "+dataSnapshot.getRef()+""+dataSnapshot.getChildren()+"   "+dataSnapshot.getChildrenCount());
-                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                    NewsPostModel changedPost = messageSnapshot.getValue(NewsPostModel.class);
-                    Log.e(TAG, "for : "+changedPost.nameReporter);
-                    /*String name = (String) messageSnapshot.child("email").getValue();
-                    String message = (String) messageSnapshot.child("username").getValue();
-                    Log.e(TAG, "for loop: "+name+"  "+message);*/
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
+            public void onRefresh() {
+                if(isOnline(NewsListActivity.this))
+                    new LoadRSSFeed().execute();
+                else
+                    mSwipeRefreshLayout.setRefreshing(false);
             }
         });
+
     }
 
     private void checkUpdateAvail() {
@@ -175,14 +147,40 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
                 }
             });
             builder.show();
+        }else{
+            checkWhatsNew();
+        }
+    }
+
+    private void checkWhatsNew() {
+        double currentVersionNumber = 1.0;
+        double savedVersionNumber = Double.parseDouble(SharedPreferenceUtil.getString(Constants.KEY_SAVED_VERSION, "1.0"));
+        try {
+            currentVersionNumber = Double.parseDouble(BuildConfig.VERSION_NAME);
+        } catch (Exception e) {}
+        if (currentVersionNumber > savedVersionNumber) {
+            AlertDialog.Builder builder =
+                    new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+            builder.setTitle("What's New");
+            builder.setMessage(getString(R.string.whats_new_texts));
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
+            SharedPreferenceUtil.putValue(Constants.KEY_SAVED_VERSION, ""+currentVersionNumber);
+            SharedPreferenceUtil.save();
         }
     }
 
     private void initAds() {
+        adView.setVisibility(View.GONE);
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
 
-        adView.loadAd(adRequest);
+        //adView.loadAd(adRequest);
 
         if(!isOnline(this))
             adView.setVisibility(View.GONE);
@@ -246,6 +244,12 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
         adView = (AdView) findViewById(R.id.adView);
         mFloatingToolbar = (FloatingToolbar) findViewById(R.id.floatingToolbar);
         mFloatingButtonMore = (FloatingActionButton) findViewById(R.id.floatingButtonMore);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                R.color.colorPrimaryDark,
+                android.R.color.holo_orange_light,
+                R.color.colorAccent);
+
 
         attachFloatingToolbar();
 
@@ -269,6 +273,9 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
                         break;
                     case R.id.menu_share:
                         shareApp();
+                        break;
+                    case R.id.menu_vagad_news:
+                        moveActivity(new Intent(NewsListActivity.this, ReporterNewsListActivity.class), NewsListActivity.this, false);
                         break;
                 }
                 return true;
@@ -524,6 +531,7 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
          * After completing background task Dismiss the progress dialog
          * **/
         protected void onPostExecute(String args) {
+            mSwipeRefreshLayout.setRefreshing(false);
             mProgressBarToolbar.setVisibility(View.GONE);
             mNewsList.clear();
             mNewsList.addAll(rssDatabaseHandler.getAllSites());

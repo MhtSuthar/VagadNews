@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.dashboard.fragments.NewsDetailFragment;
+import com.vagad.localnews.adapter.ReportNewsRecyclerAdapter;
 import com.vagad.model.RSSItem;
 import com.vagad.storage.RSSDatabaseHandler;
 import com.vagad.utils.AnimationUtils;
@@ -34,6 +36,7 @@ import com.vagad.utils.Constants;
 import com.vagad.utils.DateUtils;
 import com.vagad.utils.customviews.CustomViewPager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,18 +48,14 @@ public class NewsDetailActivity extends BaseActivity {
     private LinearLayout linNewsDetail;
     private RelativeLayout relHeader;
     private List<RSSItem> mNewsList = new ArrayList<>();
-    private Toolbar toolbar;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-    //private FloatingActionButton mBtnFav;
     public RSSDatabaseHandler rssDatabaseHandler;
     public boolean isFavChange;
     private FragmentStatePagerAdapter mHeaderPagerAdapter;
     private CustomViewPager customViewPager;
     private int mWhichPage = 0;
-    private boolean mIsFromNewsList;
+    private boolean mIsFromNewsList, mIsFromLocalNews;
     private static final String TAG = "NewsDetailActivity";
     private RSSItem rssItem;
-    private InterstitialAd mInterstitialAd;
     private AdView adView;
 
     @Override
@@ -69,6 +68,7 @@ public class NewsDetailActivity extends BaseActivity {
         setupAds();
         mIsFromNewsList = getIntent().getBooleanExtra(Constants.Bundle_Is_From_News_List, false);
         if(mIsFromNewsList){
+            mIsFromLocalNews = getIntent().getBooleanExtra(Constants.Bundle_Is_From_Local_News, false);
             AnimationUtils.animateScaleOut(btnShare);
             rssItem = getIntent().getParcelableExtra(Constants.Bundle_Feed_Item);
             setDataFromNewsList();
@@ -83,27 +83,6 @@ public class NewsDetailActivity extends BaseActivity {
     }
 
     private void setupAds() {
-       /* mInterstitialAd = new InterstitialAd(this);
-
-        // set the ad unit ID
-        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
-
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        *//*AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("FD6CED2CA6E0957AC9A94C05C3FCCD6F")
-                .build();*//*
-
-        // Load ads into Interstitial Ads
-        mInterstitialAd.loadAd(adRequest);
-
-        mInterstitialAd.setAdListener(new AdListener() {
-            public void onAdLoaded() {
-                showInterstitial();
-            }
-        });*/
-
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
         /*AdRequest adRequest = new AdRequest.Builder()
@@ -112,54 +91,44 @@ public class NewsDetailActivity extends BaseActivity {
                 .build();*/
         adView.loadAd(adRequest);
 
-        /*adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                Toast.makeText(getApplicationContext(), "Ad is loaded!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onAdClosed() {
-                Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onAdOpened() {
-                Toast.makeText(getApplicationContext(), "Ad is opened!", Toast.LENGTH_SHORT).show();
-            }
-        });*/
         if(!isOnline(this))
             adView.setVisibility(View.GONE);
     }
 
-    private void showInterstitial() {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        }
-    }
 
     private void setDataFromNewsList() {
-        Glide.with(this).load(rssItem.getImage()).placeholder(R.drawable.ic_placeholder).into(imgCover);
-        txtTitle.setText(rssItem.getTitle());
-        txtTime.setText(DateUtils.convertData(rssItem.getPubdate()));
-        txtDesc.setText(rssItem.getDescription());
-        if(rssItem.isFav()){
-            imgFav.setTag("1");
-            imgFav.setImageResource(R.drawable.ic_fav_select);
-        }else{
-            imgFav.setTag("0");
-            imgFav.setImageResource(R.drawable.ic_tab_fav);
+        if(mIsFromLocalNews){
+            imgFav.setVisibility(View.GONE);
+            txt_more_read.setVisibility(View.GONE);
+            try {
+                Glide.with(this).load(decodeFromFirebaseBase64(rssItem.getImage())).asBitmap().
+                        placeholder(R.drawable.ic_placeholder).error(R.drawable.ic_placeholder).into(imgCover);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //get_news_type is mobile no & link is reporter name
+            txtTitle.setText(rssItem.getTitle()+"\n Created By : "+rssItem.getLink()+" "+rssItem.get_news_type());
+            txtTime.setText(DateUtils.getDate(Long.parseLong(rssItem.getPubdate())));
+            txtDesc.setText(rssItem.getDescription());
+        }else {
+            Glide.with(this).load(rssItem.getImage()).placeholder(R.drawable.ic_placeholder).into(imgCover);
+            txtTitle.setText(rssItem.getTitle());
+            txtTime.setText(DateUtils.convertData(rssItem.getPubdate()));
+            txtDesc.setText(rssItem.getDescription());
+            if(rssItem.isFav()){
+                imgFav.setTag("1");
+                imgFav.setImageResource(R.drawable.ic_fav_select);
+            }else{
+                imgFav.setTag("0");
+                imgFav.setImageResource(R.drawable.ic_tab_fav);
+            }
         }
+
+    }
+
+    public static  byte[]  decodeFromFirebaseBase64(String image) throws IOException {
+        byte[] decodedByteArray = Base64.decode(image, Base64.DEFAULT);
+        return decodedByteArray;
     }
 
     private void fullScreen() {

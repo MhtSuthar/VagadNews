@@ -1,11 +1,16 @@
 package com.vagad.localnews.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -16,6 +21,7 @@ import com.vagad.model.NewsPostModel;
 import com.vagad.model.RSSItem;
 import com.vagad.utils.DateUtils;
 
+import java.io.IOException;
 import java.util.List;
 
 public class ReportNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -36,7 +42,7 @@ public class ReportNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.list_item_fav, parent, false);
+                    .inflate(R.layout.list_item_report, parent, false);
             return new VHItem(v);
         } else if (viewType == TYPE_HEADER) {
             View v = LayoutInflater.from(parent.getContext())
@@ -51,9 +57,14 @@ public class ReportNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof VHItem) {
             ((VHItem) holder).txtTitle.setText(getItem(position).newsTitle);
-            ((VHItem) holder).txtDescription.setText(getItem(position).newsDesc);
-            ((VHItem) holder).txtTime.setText(DateUtils.convertData(getItem(position).nameReporter));
-            //Glide.with(context).load(getItem(position).getImage()).placeholder(R.drawable.ic_placeholder).into(((VHItem) holder).imgNews);
+            ((VHItem) holder).txtDescription.setText("Created By : "+getItem(position).nameReporter);
+            ((VHItem) holder).txtTime.setText(DateUtils.getDate(getItem(position).timestamp));
+            try {
+                Glide.with(context).load(decodeFromFirebaseBase64(getItem(position).image)).asBitmap().
+                        placeholder(R.drawable.ic_placeholder).error(R.drawable.ic_placeholder).into(((VHItem) holder).imgNews);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             ((VHItem) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -61,11 +72,25 @@ public class ReportNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             });
         } else if (holder instanceof VHHeader) {
-            ((VHHeader) holder).txtTitle.setText("Vagad News");
+            ((VHHeader) holder).txtTitle.setText("Events & News");
             if(mNewsList.size() == 0) {
-                ((VHHeader) holder).txtNoData.setVisibility(View.VISIBLE);
+                ((VHHeader) holder).mProgress.setVisibility(View.VISIBLE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((VHHeader) holder).mProgress.setVisibility(View.GONE);
+                    }
+                }, 15000);
+            }else{
+                ((VHHeader) holder).mProgress.setVisibility(View.GONE);
             }
         }
+    }
+
+    public static  byte[]  decodeFromFirebaseBase64(String image) throws IOException {
+        byte[] decodedByteArray = Base64.decode(image, Base64.DEFAULT);
+        //return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
+        return decodedByteArray;
     }
 
     @Override
@@ -104,11 +129,13 @@ public class ReportNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     class VHHeader extends RecyclerView.ViewHolder {
         ImageView imgCover;
         TextView txtTitle, txtNoData;
+        ProgressBar mProgress;
         public VHHeader(View itemView) {
             super(itemView);
             imgCover = (ImageView) itemView.findViewById(R.id.imgCover);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtNoData = (TextView) itemView.findViewById(R.id.txtNodata);
+            mProgress = (ProgressBar) itemView.findViewById(R.id.progressBar);
         }
     }
 

@@ -36,8 +36,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             app:fillColor="@color/colorPrimary"
             app:pageColor="@android:color/white"
-            app:radius="5dp"
-            app:spaceWidth="10"
+            app:radius="4dp"
+            app:spaceWidth="8"
             app:strokeColor="@color/colorPrimary" />
 
         <TextView

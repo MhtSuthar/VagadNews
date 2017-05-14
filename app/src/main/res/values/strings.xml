@@ -32,6 +32,8 @@
     <string name="update_message">Press GO to download latest version of the app and enjoy.</string>
     <string name="faboptions_vector_overflow_path">M 6 12 L 6 12.1, M 12 12.1 L 12 12, M 18 12.1 L 18 12</string>
     <string name="faboptions_vector_close_path">M 6 6 L 18 18, M 12 12 L 12 12, M 6 18 L 18 6</string>
-    <string name="add_news">Add News</string>
     <string name="no_internet">No Internet Connection!</string>
+    <string name="add_news"><![CDATA[Event & News]]></string>
+    <string name="event_and_news"><![CDATA[Event & News]]></string>
+    <string name="whats_new_texts">We have added new functionality for you, Press Below + button for adding Events or News. Keep reading and Sharing. Thank You.</string>
 </resources>

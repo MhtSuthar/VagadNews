@@ -45,7 +45,6 @@
         android:textColor="@android:color/white"
         android:textSize="30sp"
         android:visibility="gone"
-        android:background="@color/darkTransparentColor"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         />

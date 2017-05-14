@@ -24,9 +24,12 @@ public class Constants {
     public static final String FIREBASE_CHILD_NEWS = "news";
     public static final int REQUEST_OPEN_GALLERY = 104;
     public static final int REQUEST_PERMISSION_WRITE_STORAGE = 105;
+    public static final String PREF_UNIQUE_ID = "uniq _id";
+    public static final String KEY_SAVED_VERSION = "saved_version";
     public static String Bundle_Which_Page = "which_page";
     public static String Bundle_Pos = "position";
     public static String Bundle_Is_From_News_List = "is_from_new_list";
     public static String EXTRA_URL = "url";
-    public static int REQUEST_OPEN_CAMERA = 103;
+    public static int REQUEST_OPEN_CAMERA = 1000;
+    public static String Bundle_Is_From_Local_News = "is_from_local_news";
 }
