@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -36,6 +37,13 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        SharedPreferenceUtil.putValue(Constants.KEY_SCREEN_HEIGHT , displayMetrics.heightPixels);
+        SharedPreferenceUtil.putValue(Constants.KEY_SCREEN_WIDTH , displayMetrics.widthPixels);
+        SharedPreferenceUtil.save();
+
         rssDatabaseHandler = new RSSDatabaseHandler(this);
         progressBar = (CircleProgressBar) findViewById(R.id.progressBar);
         mTxtDataLoad = (TextView) findViewById(R.id.txtDataLoad);

@@ -20,9 +20,9 @@ public class HelpPagerFragment extends BaseFragment {
 
     private ImageView imgHelp;
     private int[] mImages = new int[]{R.drawable.splash_bg, R.drawable.help_two, R.drawable.help_three, R.drawable.help_four};
-    private String[] mDesc = new String[]{"Simple UI and easy to use only one finger to access.", "Swipe up and Down for latest detail news and favourites.",
+    private String[] mDesc = new String[]{"Simple UI and easy to use only one finger to access.", "All Dungarpur or Banswara bus route available only on in this app.",
             "Add your news to Favourites and Read anytime", "No worry about your Internet connection, use offline"};
-    private String[] mTitle = new String[]{"Easy To Use", "Swipe Up & Down", "Favourite", "Offline"};
+    private String[] mTitle = new String[]{"Easy To Use", "Bus Details", "Favourite", "Offline"};
     private TextView txtDesc, txtTitle;
 
     @Override

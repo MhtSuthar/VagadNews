@@ -1,5 +1,6 @@
 package com.vagad.localnews;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,8 +30,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
+import com.vagad.base.BaseFragment;
 import com.vagad.dashboard.FavListActivity;
 import com.vagad.dashboard.NewsDetailActivity;
+import com.vagad.dashboard.NewsListActivity;
 import com.vagad.dashboard.adapter.FavNewsRecyclerAdapter;
 import com.vagad.localnews.adapter.ReportNewsRecyclerAdapter;
 import com.vagad.model.NewsPostModel;
@@ -40,7 +43,11 @@ import com.vagad.utils.Constants;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Admin on 15-Feb-17.
@@ -52,6 +59,7 @@ public class ReporterNewsListActivity extends BaseActivity {
     private ReportNewsRecyclerAdapter mReportNewsRecyclerAdapter;
     private static final String TAG = "ReporterNewsListActivity";
     private List<NewsPostModel> mListNews = new ArrayList<>();
+    private boolean isDeleteHappen;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -130,15 +138,22 @@ public class ReporterNewsListActivity extends BaseActivity {
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e(TAG, "onDataChange: "+dataSnapshot.getKey()+"   "+dataSnapshot.getRef()+""+dataSnapshot.getChildren()+"   "+dataSnapshot.getChildrenCount());
-                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                    NewsPostModel changedPost = messageSnapshot.getValue(NewsPostModel.class);
-                    Log.e(TAG, "for : "+changedPost.nameReporter+"   "+changedPost.newsDesc+"   "+changedPost.newsTitle);
-                    if(changedPost.isVisible)
-                        mListNews.add(changedPost);
+                Log.e(TAG, ""+isDeleteHappen);
+                if(!isDeleteHappen) {
+                    for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                        NewsPostModel changedPost = messageSnapshot.getValue(NewsPostModel.class);
+                        //changedPost.key = dataSnapshot.getKey();
+                        Log.e(TAG, "for : " + changedPost.nameReporter + " key   " + changedPost.key + "   " + changedPost.newsTitle);
+                        if (changedPost.isVisible)
+                            mListNews.add(changedPost);
+                    }
+                    Log.e(TAG, "mListNews Size "+mListNews.size());
+                    mListNews = removeDuplicates(mListNews);
+                    Collections.reverse(mListNews);
+                    setAdapter();
+                }else{
+                    isDeleteHappen = false;
                 }
-                Collections.reverse(mListNews);
-                setAdapter();
             }
 
             @Override
@@ -148,10 +163,45 @@ public class ReporterNewsListActivity extends BaseActivity {
         });
     }
 
+    public <T> void removeDuplicates1(List<T> list) {
+        int size = list.size();
+        int out = 0;
+        {
+            final Set<T> encountered = new HashSet<T>();
+            for (int in = 0; in < size; in++) {
+                final T t = list.get(in);
+                final boolean first = encountered.add(t);
+                if (first) {
+                    list.set(out++, t);
+                }
+            }
+        }
+        while (out < size) {
+            list.remove(--size);
+        }
+    }
+
+    public ArrayList<NewsPostModel> removeDuplicates(List<NewsPostModel> list){
+        Set set = new TreeSet(new Comparator() {
+
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(((NewsPostModel)o1).newsTitle.equalsIgnoreCase(((NewsPostModel)o2).newsTitle)){
+                    return 0;
+                }
+                return 1;
+            }
+        });
+        set.addAll(list);
+
+        final ArrayList newList = new ArrayList(set);
+        return newList;
+    }
+
     public void setAdapter() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mReportNewsRecyclerAdapter = new ReportNewsRecyclerAdapter(mListNews, this, ReporterNewsListActivity.this);
+       // mReportNewsRecyclerAdapter = new ReportNewsRecyclerAdapter(mListNews, this, ReporterNewsListActivity.this);
         recyclerView.setAdapter(mReportNewsRecyclerAdapter);
     }
 
@@ -179,5 +229,43 @@ public class ReporterNewsListActivity extends BaseActivity {
     private RSSItem getRssItem(NewsPostModel newsPostModel) {
         RSSItem rssItem = new RSSItem(newsPostModel.newsTitle, newsPostModel.nameReporter, newsPostModel.newsDesc, ""+newsPostModel.timestamp, "", newsPostModel.image, newsPostModel.mobileNo);
         return rssItem;
+    }
+
+    public void onEditReport(NewsPostModel item) {
+        Intent intent = new Intent(this, AddNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_NEWS, item);
+        startActivityForResults(intent, ReporterNewsListActivity.this, false, Constants.REQUEST_CODE_NEWS_EDIT);
+    }
+
+    public void onDeleteReport(final NewsPostModel item, final int position) {
+        showAlertDialog(new BaseFragment.OnDialogClick() {
+            @Override
+            public void onPositiveBtnClick() {
+                isDeleteHappen = true;
+                final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
+                mDatabase.child(item.key).removeValue();
+                mListNews.remove(position);
+                mReportNewsRecyclerAdapter.notifyItemRemoved(position);
+            }
+
+            @Override
+            public void onNegativeBtnClick() {
+
+            }
+        }, "Delete News!", "Are you sure you want to delete this news?", true);
+        //mReportNewsRecyclerAdapter.notifyDataSetChanged();
+        //getValFromFirebase();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e(TAG, "onActivityResult: "+resultCode+"  "+requestCode);
+        if(resultCode == Activity.RESULT_OK){
+            if(requestCode == Constants.REQUEST_CODE_NEWS_EDIT){
+                mListNews.clear();
+                getValFromFirebase();
+            }
+        }
     }
 }

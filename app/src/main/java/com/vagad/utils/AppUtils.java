@@ -70,10 +70,10 @@ public class AppUtils {
         if (path != null && path != "") {
             try {
                 BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 8; // shrink it down otherwise we will use stupid amounts of memory
+                options.inSampleSize = 4; // shrink it down otherwise we will use stupid amounts of memory
                 Bitmap bitmap = BitmapFactory.decodeFile(path, options);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] bytes = baos.toByteArray();
                 base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
             } catch (Exception e) {

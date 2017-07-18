@@ -32,7 +32,7 @@ public class NotificationUtils {
                 0, resultIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
-        Bitmap icon1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
+        Bitmap icon1 = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
 
         NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
         bigText.bigText(summaryText);
@@ -65,6 +65,6 @@ public class NotificationUtils {
 
     public int getNotificationIcon() {
         boolean whiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
-        return whiteIcon ? R.drawable.ic_white_notification : R.drawable.ic_launcher;
+        return whiteIcon ? R.drawable.ic_white_notification : R.mipmap.ic_launcher;
     }
 }

@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -214,6 +215,13 @@ public class NewsDetailActivity extends BaseActivity {
             }
         });
 
+        imgCover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPreviewImage();
+            }
+        });
+
         imgFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -231,6 +239,18 @@ public class NewsDetailActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private void openPreviewImage() {
+        Intent intent = new Intent(this, PreviewImageActivity.class);
+        intent.putExtra(Constants.Bundle_Feed_Item, rssItem);
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, imgCover, "profile");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            startActivityForResult(intent, Constants.REQUEST_CODE_NEWS_DETAIL, options.toBundle());
+        }else{
+            startActivityForResult(intent, Constants.REQUEST_CODE_NEWS_DETAIL);
+        }
     }
 
     private void openShare() {

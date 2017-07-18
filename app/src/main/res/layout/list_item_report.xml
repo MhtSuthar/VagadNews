@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardElevation="5dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="@dimen/common_margin">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imgNews"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:transitionName="profile"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_placeholder" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/common_margin"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/imgNews"
+                android:orientation="vertical">
+
+               <RelativeLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                   <com.vagad.utils.fonts.HindiFontTextView
+                       android:id="@+id/txtTitle"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:text="@string/app_name"
+                       android:ellipsize="end"
+                       android:layout_toLeftOf="@+id/img_more"
+                       android:textAppearance="?android:textAppearanceMedium"
+                       android:textColor="@android:color/black"
+                       android:visibility="visible" />
+
+                   <ImageView
+                       android:id="@+id/img_more"
+                       android:layout_width="25dp"
+                       android:layout_height="25dp"
+                       android:layout_alignParentTop="true"
+                       android:layout_alignParentRight="true"
+                       android:src="@drawable/ic_view_more"
+                       />
+               </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/txtTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    tools:text="12 hours"
+                    android:textColor="@color/colorGreyText"
+                    android:textAppearance="?android:textAppearanceSmall" />
+
+                <com.vagad.utils.fonts.HindiFontTextView
+                    android:id="@+id/txtDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@android:color/black"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    tools:text="12 hours"
+                     />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

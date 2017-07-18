@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Vagad News</string>
+	<string name="tappx_key">/120940746/Pub-20913-Android-6011</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="more_read_old">और पढ़े राजस्थान पत्रिका पर</string>
     <string name="more_read">और पढ़े वागड़ पर</string>
@@ -35,5 +36,11 @@
     <string name="no_internet">No Internet Connection!</string>
     <string name="add_news"><![CDATA[Event & News]]></string>
     <string name="event_and_news"><![CDATA[Event & News]]></string>
-    <string name="whats_new_texts">We have added new functionality for you, Press Below + button for adding Events or News. Keep reading and Sharing. Thank You.</string>
+    <string name="whats_new_texts">Yup! You got it completely new experience of our Vagad News app.
+        *We have added our Dungarpur and Banswara Bus details.
+        *You can share with Bus details to your Friends and Family
+        *We are comming soon with more news.
+        *Keep Updated and Keep reading and Sharing.
+        Thank You.</string>
+    <string name="search">Search</string>
 </resources>

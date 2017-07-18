@@ -2,39 +2,32 @@ package com.vagad.dashboard;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityOptionsCompat;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.ShareCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.github.rubensousa.floatingtoolbar.FloatingToolbar;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -44,68 +37,46 @@ import com.vagad.BuildConfig;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.base.VagadApp;
-import com.vagad.dashboard.adapter.NewsRecyclerAdapter;
-import com.vagad.dashboard.fragments.HeaderNewsFragment;
-import com.vagad.localnews.AddNewsActivity;
-import com.vagad.localnews.ReporterNewsListActivity;
-import com.vagad.model.RSSItem;
-import com.vagad.rest.RSSParser;
-import com.vagad.storage.RSSDatabaseHandler;
+import com.vagad.busroute.fragment.BusRouteSearchFragment;
+import com.vagad.dashboard.fragments.NewsListFragment;
+import com.vagad.localnews.fragment.ReporterNewsListFragment;
+import com.vagad.receiver.NetworkChangeReceiver;
 import com.vagad.storage.SharedPreferenceUtil;
-import com.vagad.utils.AnimationUtils;
+import com.vagad.utils.BottomNavigationViewBehavior;
 import com.vagad.utils.Constants;
-import com.vagad.utils.loder.CircleProgressBar;
-import com.vagad.utils.pageindicator.CirclePageIndicator;
 import com.vagad.utils.rating.RateItDialogFragment;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Mohit on 15-Feb-17.
  */
 
-public class NewsListActivity extends BaseActivity implements FloatingToolbar.ItemClickListener{
+public class NewsListActivity extends BaseActivity {
 
-    private NewsRecyclerAdapter newsRecyclerAdapter;
-    private RecyclerView recyclerView;
     private ViewPager viewPager;
-    private CircleProgressBar progressBar;
-    private RSSParser rssParser = new RSSParser();
     private static final String TAG = "NewsListActivity";
-    private  RSSDatabaseHandler rssDatabaseHandler;
-    private List<RSSItem> mNewsList = new ArrayList<>();
-    private Toolbar toolbar;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-    private CirclePageIndicator pageIndicator;
-    private ProgressBar mProgressBarToolbar;
-    private Handler handler = new Handler();
-    private int delay = 5000;
-    private int mVisiblePage = -1;
     private FragmentStatePagerAdapter mHeaderPagerAdapter;
-    private ImageView imgNoData;
-    private RelativeLayout mRelNoData;
-    private int mStartLatestNews = 0, mEndLatestNews = 5;
-    private List<RSSItem> mLatestNewsList = new ArrayList<>();
-    private List<RSSItem> mLatestNewsListVisible = new ArrayList<>();
     private int[] mImages = new int[]{R.drawable.splash_bg, R.drawable.help_two, R.drawable.help_three, R.drawable.help_four};
-    private AdView adView;
     private InterstitialAd mInterstitialAd;
     private boolean mFullAddDisplayed;
-    private FloatingToolbar mFloatingToolbar;
-    private FloatingActionButton mFloatingButtonMore;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private int mVisiblePage = -1;
+    private NewsListFragment newsListFragment = new NewsListFragment();
+    private BusRouteSearchFragment busRouteSearchFragment = new BusRouteSearchFragment();
+    private ReporterNewsListFragment reporterNewsListFragment = new ReporterNewsListFragment();
+    private BottomNavigationView bottomNavigation;
+    private CoordinatorLayout mCoordinatorLayout;
+    private AdView adView;
+    private int mBottomNavHeight = 120;
+    private RelativeLayout mRelBottomMenu;
+    private NetworkChangeReceiver mNetworkReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_news_list);
+        setContentView(R.layout.activity_news_list);
+
         initView();
+
         initAds();
-        setAllNews();
-        if(isOnline(this))
-            new LoadRSSFeed().execute();
 
         Bundle bundle = new Bundle();
         bundle.putString("Devices", "Mobile Used "+android.os.Build.MODEL);
@@ -120,17 +91,6 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
          * Check forcefully Update
          */
         checkUpdateAvail();
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if(isOnline(NewsListActivity.this))
-                    new LoadRSSFeed().execute();
-                else
-                    mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
     }
 
     private void checkUpdateAvail() {
@@ -176,11 +136,10 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
     }
 
     private void initAds() {
-        adView.setVisibility(View.GONE);
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
 
-        //adView.loadAd(adRequest);
+        adView.loadAd(adRequest);
 
         if(!isOnline(this))
             adView.setVisibility(View.GONE);
@@ -205,84 +164,14 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
         super.onConfigurationChanged(newConfig);
     }
 
-    public void setAllNews() {
-        mNewsList = rssDatabaseHandler.getAllSites();
-        mLatestNewsList = rssDatabaseHandler.getLatestNews();
-        if(mNewsList.size() > 0){
-            imgNoData.setVisibility(View.GONE);
-            setRecyclerAdapter();
-            setViewPagerAdapter(viewPager);
-        }else{
-            mRelNoData.setVisibility(View.VISIBLE);
-            imgNoData.setImageResource(mImages[new Random().nextInt(mImages.length)]);
-        }
-    }
-
-    public void setAllNewsForHeaderFavChanges() {
-        mNewsList = rssDatabaseHandler.getAllSites();
-        if(mNewsList.size() > 0){
-            imgNoData.setVisibility(View.GONE);
-            setRecyclerAdapter();
-            setViewPagerAdapter(viewPager);
-        }
-    }
 
     private void initView() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        progressBar = (CircleProgressBar) findViewById(R.id.progressBar);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        pageIndicator = (CirclePageIndicator) findViewById(R.id.pageIndicator);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitle(getString(R.string.app_name));
-        collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
-        rssDatabaseHandler = new RSSDatabaseHandler(this);
-        imgNoData = (ImageView) findViewById(R.id.imgNoData);
-        mRelNoData = (RelativeLayout) findViewById(R.id.relNoData);
-        mProgressBarToolbar = (ProgressBar) findViewById(R.id.progressBarToolbar);
         adView = (AdView) findViewById(R.id.adView);
-        mFloatingToolbar = (FloatingToolbar) findViewById(R.id.floatingToolbar);
-        mFloatingButtonMore = (FloatingActionButton) findViewById(R.id.floatingButtonMore);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                R.color.colorPrimaryDark,
-                android.R.color.holo_orange_light,
-                R.color.colorAccent);
-
-
-        attachFloatingToolbar();
-
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.menu_favourite:
-                        Intent intent = new Intent(NewsListActivity.this, FavListActivity.class);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            startActivityForResult(intent, Constants.REQUEST_CODE_FAV_NEWS,  ActivityOptions.makeSceneTransitionAnimation(NewsListActivity.this).toBundle());
-                        }else{
-                            startActivityForResult(intent, Constants.REQUEST_CODE_FAV_NEWS);
-                        }
-                        break;
-                    case R.id.menu_about_us:
-                        moveActivity(new Intent(NewsListActivity.this, AboutUsActivity.class), NewsListActivity.this, false);
-                        break;
-                    case R.id.menu_feedback:
-                        sendFeedback();
-                        break;
-                    case R.id.menu_share:
-                        shareApp();
-                        break;
-                    case R.id.menu_vagad_news:
-                        moveActivity(new Intent(NewsListActivity.this, ReporterNewsListActivity.class), NewsListActivity.this, false);
-                        break;
-                }
-                return true;
-            }
-        });
-        toolbar.inflateMenu(R.menu.home_menu);
-
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+        bottomNavigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        mRelBottomMenu = (RelativeLayout) findViewById(R.id.relBottomMenu);
+        setViewPagerAdapter(viewPager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -291,10 +180,50 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
             @Override
             public void onPageSelected(int position) {
                 mVisiblePage = position;
+                switch (position){
+                    case 0:
+                        bottomNavigation.setSelectedItemId(R.id.menu_news);
+                        break;
+                    case 1:
+                        bottomNavigation.setSelectedItemId(R.id.menu_bus);
+                        break;
+                    case 2:
+                        bottomNavigation.setSelectedItemId(R.id.menu_event);
+                        break;
+                }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+        //CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigation.getLayoutParams();
+        //layoutParams.setBehavior(new BottomNavigationViewBehavior());
+        bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_news:
+                        viewPager.setCurrentItem(0);
+                        break;
+                    case R.id.menu_bus:
+                        viewPager.setCurrentItem(1);
+                        break;
+                    case R.id.menu_event:
+                        viewPager.setCurrentItem(2);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        bottomNavigation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                bottomNavigation.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                mBottomNavHeight = bottomNavigation.getHeight(); //height is ready
+                Log.e(TAG, "onGlobalLayout: "+ bottomNavigation.getHeight());
             }
         });
 
@@ -310,142 +239,60 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
         }));*/
     }
 
-    private void attachFloatingToolbar() {
-        mFloatingToolbar.setClickListener(this);
-        mFloatingToolbar.attachFab(mFloatingButtonMore);
-        mFloatingToolbar.attachRecyclerView(recyclerView);
+    public void showBottomnavigation(){
+        mRelBottomMenu.animate()
+                .translationYBy(mBottomNavHeight)
+                .translationY(0)
+                .setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
-    private void sendFeedback() {
-        ShareCompat.IntentBuilder.from(this)
-                .setType("message/rfc822")
-                .addEmailTo(getString(R.string.my_email))
-                .setSubject("Vagad App Feedback")
-                .setText("")
-                //.setHtmlText(body) //If you are using HTML in your body text
-                .setChooserTitle("Your Feedback")
-                .startChooser();
-    }
-
-    private void shareApp() {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT,
-                "Hey check out my Vagad News App at: https://play.google.com/store/apps/details?id=com.vagad");
-        sendIntent.setType("text/plain");
-        startActivity(sendIntent);
-    }
-
-    public void openNewsDetail(RSSItem rssItem, ImageView imageView, int position) {
-        Intent intent = new Intent(this, NewsDetailActivity.class);
-        intent.putExtra(Constants.Bundle_Is_From_News_List, true);
-        intent.putExtra(Constants.Bundle_Feed_Item, rssItem);
-        //intent.putParcelableArrayListExtra(Constants.Bundle_Feed_Item, (ArrayList<? extends Parcelable>) mNewsList);
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(this, imageView, "profile");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            startActivityForResult(intent, Constants.REQUEST_CODE_NEWS_DETAIL, options.toBundle());
-        }else{
-            startActivityForResult(intent, Constants.REQUEST_CODE_NEWS_DETAIL);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.e(TAG, "onActivityResult: "+resultCode+"  "+requestCode);
-        if(resultCode == Activity.RESULT_OK){
-            if(requestCode == Constants.REQUEST_CODE_NEWS_DETAIL){
-               changeInFav(data);
-            }else if(requestCode == Constants.REQUEST_CODE_FAV_NEWS){
-                setAllNews();
-            }
-        }
-    }
-
-    private void changeInFav(Intent data) {
-        RSSItem rssItem = data.getParcelableExtra(Constants.Bundle_Feed_Item);
-        for (int i = 0; i < mNewsList.size(); i++) {
-            if(mNewsList.get(i).getId() == rssItem.getId()){
-                mNewsList.set(i, rssItem);
-                break;
-            }
-        }
-        newsRecyclerAdapter.notifyDataSetChanged();
+    public void hideBottomnavigation(){
+        mRelBottomMenu.animate()
+                .translationYBy(0)
+                .translationY(mBottomNavHeight)
+                .setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //handler.removeCallbacks(runnable);
     }
 
-    Runnable runnable = new Runnable() {
-        public void run() {
-            if (mLatestNewsListVisible.size()-1 == mVisiblePage) {
-                mVisiblePage = 0;
-                if(mEndLatestNews >= mLatestNewsList.size()){
-                    mStartLatestNews = 0;
-                    mEndLatestNews = 5;
-                }else {
-                    mStartLatestNews = mStartLatestNews + 5;
-                    mEndLatestNews = mEndLatestNews + 5;
-                }
-                handler.removeCallbacks(runnable);
-                Log.e(TAG, "end: "+mStartLatestNews+"     "+mEndLatestNews);
-                setViewPagerAdapter(viewPager);
-            } else {
-                mVisiblePage++;
-                viewPager.setCurrentItem(mVisiblePage, true);
-                handler.postDelayed(this, delay);
-            }
-
-        }
-    };
-
-    private void setRecyclerAdapter() {
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        newsRecyclerAdapter = new NewsRecyclerAdapter(mNewsList, this, NewsListActivity.this);
-        recyclerView.setAdapter(newsRecyclerAdapter);
-    }
-
-    private void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        recyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
-        recyclerView.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                recyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
-
-        if(show){
-            AnimationUtils.animateScaleOut(progressBar);
-            //binding.progressBar.setVisibility(View.VISIBLE);
-        }else{
-            AnimationUtils.animateScaleIn(progressBar);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mNetworkReceiver = new NetworkChangeReceiver();
+            registerReceiver(mNetworkReceiver,
+                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mNetworkReceiver != null) {
+            unregisterReceiver(mNetworkReceiver);
+        }
+    }
 
     public void setViewPagerAdapter(ViewPager viewPager){
-        final List<RSSItem> mRandomList = getRandomList();
         mHeaderPagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public int getCount() {
-                return mRandomList.size();
+                return 3;
             }
             @Override
             public Fragment getItem(int position) {
-                HeaderNewsFragment headerNewsFragment = new HeaderNewsFragment();
-                headerNewsFragment.setList(mLatestNewsListVisible);
-                Bundle bundle = new Bundle();
-                bundle.putInt(Constants.Bundle_Pos, position);
-                bundle.putParcelable(Constants.Bundle_Feed_Item, mRandomList.get(position));
-                headerNewsFragment.setArguments(bundle);
-                return headerNewsFragment;
+                switch (position){
+                    case 0:
+                        return newsListFragment;
+                    case 1:
+                        return busRouteSearchFragment;
+                    case 2:
+                        return reporterNewsListFragment;
+                }
+               return null;
             }
             @Override
             public Parcelable saveState() {return null;}
@@ -461,88 +308,8 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
             }
         };
         viewPager.setAdapter(mHeaderPagerAdapter);
-        viewPager.setOffscreenPageLimit(mRandomList.size());
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setCurrentItem(0);
-        pageIndicator.setViewPager(viewPager);
-        handler.postDelayed(runnable, delay);
-    }
-
-    private List<RSSItem> getRandomList() {
-        mLatestNewsListVisible = new ArrayList<>();
-        for (int i = mStartLatestNews; i < mEndLatestNews; i++) {
-            if(i < mLatestNewsList.size())
-                mLatestNewsListVisible.add(mLatestNewsList.get(i));
-        }
-        return mLatestNewsListVisible;
-    }
-
-    @Override
-    public void onItemClick(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_news:
-                moveActivity(new Intent(NewsListActivity.this, ReporterNewsListActivity.class), NewsListActivity.this, false);
-                break;
-            case R.id.menu_add_news:
-                moveActivity(new Intent(NewsListActivity.this, AddNewsActivity.class), NewsListActivity.this, false);
-                break;
-        }
-    }
-
-    @Override
-    public void onItemLongClick(MenuItem item) {
-
-    }
-
-    /**
-     * Background Async Task to get RSS data from URL
-     * */
-    class LoadRSSFeed extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressBarToolbar.setVisibility(View.VISIBLE);
-        }
-
-        /**
-         * getting Inbox JSON
-         * */
-        @Override
-        protected String doInBackground(String... args) {
-                try {
-                    List<RSSItem> rssFeed = rssParser.getRSSFeedItems(getString(R.string.feed_url_dungarpur));
-                    rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_banswara)));
-                    rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_udaipur)));
-                    rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_latest_news)));
-                    for (int i = 0; i < rssFeed.size(); i++) {
-                        rssDatabaseHandler.addFeed(rssFeed.get(i));
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                    return "";
-                }
-            return null;
-        }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        protected void onPostExecute(String args) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            mProgressBarToolbar.setVisibility(View.GONE);
-            mNewsList.clear();
-            mNewsList.addAll(rssDatabaseHandler.getAllSites());
-            if(newsRecyclerAdapter == null){
-                setRecyclerAdapter();
-                setViewPagerAdapter(viewPager);
-            }else {
-                newsRecyclerAdapter.notifyDataSetChanged();
-            }
-        }
-
     }
 
     @Override
@@ -554,28 +321,4 @@ public class NewsListActivity extends BaseActivity implements FloatingToolbar.It
             super.onBackPressed();
     }
 
-    @Override
-    public void onPause() {
-        if (adView != null) {
-            adView.pause();
-        }
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (adView != null) {
-            adView.resume();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        handler.removeCallbacks(runnable);
-        if (adView != null) {
-            adView.destroy();
-        }
-        super.onDestroy();
-    }
 }

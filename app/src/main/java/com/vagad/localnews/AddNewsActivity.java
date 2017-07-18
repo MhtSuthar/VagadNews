@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.dashboard.NewsListActivity;
+import com.vagad.localnews.adapter.ReportNewsRecyclerAdapter;
 import com.vagad.model.NewsPostModel;
 import com.vagad.utils.AnimationUtils;
 import com.vagad.utils.AppUtils;
@@ -48,6 +50,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by Admin on 15-Feb-17.
@@ -66,6 +69,9 @@ public class AddNewsActivity extends BaseActivity {
     private ProgressBar progressBar;
     private LinearLayout linAdd;
 
+    private NewsPostModel newsPostModel;
+    private boolean isEditMode;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +82,38 @@ public class AddNewsActivity extends BaseActivity {
         setupCameraIntentHelper();
         initView();
 
+        /**
+         * For Checking where it comes for edit or add
+         */
+        if(getIntent().hasExtra(Constants.EXTRA_NEWS)){
+            newsPostModel = (NewsPostModel) getIntent().getExtras().getSerializable(Constants.EXTRA_NEWS);
+            if(newsPostModel != null){
+                isEditMode = true;
+                setAllVal();
+            }
+        }
+    }
+
+    private void setAllVal() {
+        edtYourName.setText(newsPostModel.nameReporter);
+        edtDesc.setText(newsPostModel.newsDesc);
+        edtMobile.setText(newsPostModel.mobileNo);
+        edtNewsTitle.setText(newsPostModel.newsTitle);
+        linAdd.setVisibility(View.GONE);
+        btnSubmit.setText("Update");
+        try {
+            Glide.with(this).load(decodeFromFirebaseBase64(newsPostModel.image)).asBitmap().
+                    placeholder(R.drawable.ic_placeholder).error(R.drawable.ic_placeholder).into(imgNews);
+        } catch (IOException e) {
+            linAdd.setVisibility(View.VISIBLE);
+            e.printStackTrace();
+        }
+    }
+
+    public static  byte[]  decodeFromFirebaseBase64(String image) throws IOException {
+        byte[] decodedByteArray = Base64.decode(image, Base64.DEFAULT);
+        //return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
+        return decodedByteArray;
     }
 
     private void initView() {
@@ -121,7 +159,10 @@ public class AddNewsActivity extends BaseActivity {
         if(isValid()){
             AnimationUtils.animateScaleIn(btnSubmit);
             progressBar.setVisibility(View.VISIBLE);
-            addValToFirebase();
+            if(isEditMode){
+                editValue();
+            }else
+                addValToFirebase();
         }
     }
 
@@ -148,7 +189,7 @@ public class AddNewsActivity extends BaseActivity {
         NewsPostModel user = new NewsPostModel(edtYourName.getText().toString(),
                 edtDesc.getText().toString(), edtNewsTitle.getText().toString(),
                 AppUtils.getBase64Image(imagePath), true,
-                AppUtils.getUniqueId(AddNewsActivity.this), edtMobile.getText().toString());
+                AppUtils.getUniqueId(AddNewsActivity.this), edtMobile.getText().toString(), key);
         mDatabase.child(key).setValue(user);
 
         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -172,7 +213,46 @@ public class AddNewsActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                moveActivity(new Intent(AddNewsActivity.this, ReporterNewsListActivity.class), AddNewsActivity.this, true);
+                finish();
+                //moveActivity(new Intent(AddNewsActivity.this, ReporterNewsListActivity.class), AddNewsActivity.this, true);
+            }
+        }, 1000);
+    }
+
+    private void editValue(){
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
+
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("nameReporter", edtYourName.getText().toString());
+        result.put("newsDesc", edtDesc.getText().toString());
+        result.put("newsTitle", edtNewsTitle.getText().toString());
+        result.put("image", imagePath.equals("") ? newsPostModel.image : AppUtils.getBase64Image(imagePath));
+        result.put("mobileNo", edtMobile.getText().toString());
+        mDatabase.child(newsPostModel.key).updateChildren(result);
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e(TAG, "onDataChange: "+dataSnapshot.getKey()+"   "+dataSnapshot.getRef()+""+dataSnapshot.getChildren()+"   "+dataSnapshot.getChildrenCount());
+                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                    NewsPostModel changedPost = messageSnapshot.getValue(NewsPostModel.class);
+                    Log.e(TAG, "for : "+changedPost.nameReporter);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+        showSnackbar(mRelParent, "News Update Successfully!");
+        //showToast("News Add Successfully!");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setResult(RESULT_OK);
+                finish();
             }
         }, 1000);
     }

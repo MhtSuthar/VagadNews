@@ -28,19 +28,31 @@ public class AlarmReceiver extends BroadcastReceiver {
         this.context = context;
         rssDatabaseHandler = new RSSDatabaseHandler(context);
         notificationUtils = new NotificationUtils();
-        if(AppUtils.isOnline(context)){
+        if (AppUtils.isOnline(context)) {
             new LoadRSSFeed().execute();
-        }else{
+        } else {
             setNotifyOfflineNews(context);
             AlarmUtils.setAlarm(context);
         }
     }
 
-    private void setNotifyOfflineNews(Context context) {
-        List<RSSItem> mNewsList = rssDatabaseHandler.getAllSites();
-        if(mNewsList.size() > 2){
-            notificationUtils.generateNotification(context, mNewsList.get(0).getTitle());
-            notificationUtils.generateNotification(context, mNewsList.get(1).getTitle());
+    private void setNotifyOfflineNews(final Context context) {
+        final List<RSSItem> mNewsList = rssDatabaseHandler.getAllSites();
+        if (mNewsList.size() > 2) {
+            Thread t = new Thread() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < 2; i++) {
+                        notificationUtils.generateNotification(context, mNewsList.get(i).getTitle());
+                        try {
+                            Thread.sleep(1000);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            t.start();
         }
     }
 
@@ -53,14 +65,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         protected List<RSSItem> doInBackground(String... args) {
             List<RSSItem> rssFeed = new ArrayList<>();
             try {
-                rssFeed  = rssParser.getRSSFeedItems(context.getString(R.string.feed_url_latest_news));
+                rssFeed = rssParser.getRSSFeedItems(context.getString(R.string.feed_url_latest_news));
                 rssFeed.addAll(rssParser.getRSSFeedItems(context.getString(R.string.feed_url_banswara)));
                 rssFeed.addAll(rssParser.getRSSFeedItems(context.getString(R.string.feed_url_udaipur)));
                 rssFeed.addAll(rssParser.getRSSFeedItems(context.getString(R.string.feed_url_dungarpur)));
                 for (int i = 0; i < rssFeed.size(); i++) {
                     rssDatabaseHandler.addFeed(rssFeed.get(i));
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 return rssFeed;
             }
@@ -70,7 +82,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         @Override
         protected void onPostExecute(List<RSSItem> rssItems) {
             super.onPostExecute(rssItems);
-            if(rssItems.size() > 2){
+            if (rssItems.size() > 2) {
                 for (int i = 0; i < 2; i++) {
                     notificationUtils.generateNotification(context, rssItems.get(i).getTitle());
                 }

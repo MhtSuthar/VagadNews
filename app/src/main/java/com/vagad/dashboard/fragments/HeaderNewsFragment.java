@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,16 @@ public class HeaderNewsFragment extends BaseFragment {
     private ImageView imgCover;
     private TextView txtTitle;
     private List<RSSItem> list;
+    private NewsListFragment newsListFragment;
+    private static final String TAG = "HeaderNewsFragment";
+
+    public HeaderNewsFragment(NewsListFragment newsListFragment) {
+        this.newsListFragment = newsListFragment;
+    }
+
+    public HeaderNewsFragment() {
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,13 +53,14 @@ public class HeaderNewsFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        rssItem = (RSSItem) getArguments().getParcelable(Constants.Bundle_Feed_Item);
+        rssItem = getArguments().getParcelable(Constants.Bundle_Feed_Item);
         initView(view);
         setData();
     }
 
     private void setData() {
         Glide.with(getActivity()).load(rssItem.getImage()).placeholder(R.drawable.ic_placeholder).into(imgCover);
+        Log.e(TAG, "setData: "+rssItem.getTitle());
         txtTitle.setText(rssItem.getTitle());
     }
 
@@ -65,12 +77,6 @@ public class HeaderNewsFragment extends BaseFragment {
     }
 
     private void openNewsDetail(RSSItem rssItem) {
-        /*Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-        intent.putExtra(Constants.Bundle_Feed_Item, rssItem);
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(getActivity(), imgCover, "profile");
-        startActivity(intent, options.toBundle());*/
-
         Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
         intent.putExtra(Constants.Bundle_Which_Page, getArguments().getInt(Constants.Bundle_Pos));
         intent.putParcelableArrayListExtra(Constants.Bundle_Feed_Item, (ArrayList<? extends Parcelable>) list);
@@ -80,8 +86,10 @@ public class HeaderNewsFragment extends BaseFragment {
     }
 
     public void setList(List<RSSItem> list) {
-        if(this.list == null)
+        if(this.list == null) {
             this.list = list;
+        }
+       // this.newsListFragment = newsListFragment;
     }
 
     @Override
@@ -89,7 +97,7 @@ public class HeaderNewsFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK){
             if(requestCode == Constants.REQUEST_CODE_NEWS_DETAIL){
-                ((NewsListActivity)getActivity()).setAllNewsForHeaderFavChanges();
+                newsListFragment.setAllNewsForHeaderFavChanges();
             }
         }
     }

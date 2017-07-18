@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/color_bg"
+    android:layout_height="match_parent">
+
+    <include
+        layout="@layout/layout_toolbar"/>
+
+    <com.vagad.utils.customviews.FlowLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="start|top">
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_corner_btn"
+            android:text="Entertainment"
+            />
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_corner_btn"
+            android:text="Entertainment"
+            />
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_corner_btn"
+            android:text="Entertainment"
+            />
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_corner_btn"
+            android:text="Entertainment"
+            />
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_corner_btn"
+            android:text="Entertainment"
+            />
+
+    </com.vagad.utils.customviews.FlowLayout>
+
+</LinearLayout>

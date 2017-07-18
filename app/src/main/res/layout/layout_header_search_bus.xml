@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center|top"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        app:cardBackgroundColor="@color/colorButtonColor"
+        app:cardUseCompatPadding="true"
+        app:cardPreventCornerOverlap="true"
+        android:elevation="10dp"
+        app:contentPadding="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/relCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/linCity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.vagad.utils.fonts.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="From"
+                        android:textColor="@color/colorTextColor"
+                        android:textSize="12sp" />
+
+                    <com.vagad.utils.fonts.CustomFontTextView
+                        android:id="@+id/txt_source"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="Select Your Source"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@android:color/white"
+                        android:transitionName="source" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/colorPrimary" />
+
+                    <com.vagad.utils.fonts.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="To"
+                        android:textColor="@color/colorTextColor"
+                        android:textSize="12sp" />
+
+                    <com.vagad.utils.fonts.CustomFontTextView
+                        android:id="@+id/txt_destination"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="Select Your Destination"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@android:color/white" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/img_change_city"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/round_primary_color"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_bus_front_yellow" />
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relCity"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorAccent"
+                android:text="Search"
+                android:textColor="@android:color/black" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/vagadNews"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#6f3bca"
+        app:cardElevation="10dp"
+        app:contentPadding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|left">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher" />
+
+            <com.vagad.utils.fonts.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Download our Vagad News App from Play Store."
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
+
+</LinearLayout>
