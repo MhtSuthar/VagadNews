@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
 
 import com.vagad.R;
 import com.vagad.model.RSSItem;
@@ -80,11 +81,18 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         @Override
-        protected void onPostExecute(List<RSSItem> rssItems) {
+        protected void onPostExecute(final List<RSSItem> rssItems) {
             super.onPostExecute(rssItems);
+            Handler handler = new Handler();
             if (rssItems.size() > 2) {
                 for (int i = 0; i < 2; i++) {
-                    notificationUtils.generateNotification(context, rssItems.get(i).getTitle());
+                    final int val = i;
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationUtils.showBigNotification(rssItems.get(val).getImage(), rssItems.get(val).getTitle(), context);
+                        }
+                    }, 1000 * i);
                 }
             }
             AlarmUtils.cancelAlarm(context, AlarmUtils.ALARM_ID_FOR_NEWS);

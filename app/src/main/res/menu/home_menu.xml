@@ -5,6 +5,9 @@
     <group
         android:id="@+id/group">
         <item
+            android:id="@+id/menu_more_news"
+            android:title="More News"/>
+        <item
             android:id="@+id/menu_favourite"
             android:title="Favorites"/>
         <item
@@ -17,7 +20,7 @@
             android:id="@+id/menu_share"
             android:title="Share App"/>
         <item
-            android:id="@+id/menu_more_news"
-            android:title="More News"/>
+            android:id="@+id/menu_more_apps"
+            android:title="More Our Apps"/>
     </group>
 </menu>

@@ -102,14 +102,20 @@ public class NewsDetailActivity extends BaseActivity {
             imgFav.setVisibility(View.GONE);
             txt_more_read.setVisibility(View.GONE);
             try {
-                Glide.with(this).load(decodeFromFirebaseBase64(rssItem.getImage())).asBitmap().
-                        placeholder(R.drawable.ic_placeholder).error(R.drawable.ic_placeholder).into(imgCover);
+                if(rssItem.getImage().contains(".png") || rssItem.getImage().contains(".jpg")){
+                    Glide.with(this).load(rssItem.getImage()).placeholder(R.drawable.ic_placeholder).into(imgCover);
+                    txtTime.setText(DateUtils.convertData(rssItem.getPubdate()));
+                }else {
+                    Glide.with(this).load(decodeFromFirebaseBase64(Constants.mClickImagePath)).asBitmap().
+                            placeholder(R.drawable.ic_placeholder).error(R.drawable.ic_placeholder).into(imgCover);
+                    txtTime.setText(DateUtils.getDate(Long.parseLong(rssItem.getPubdate())));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
             //get_news_type is mobile no & link is reporter name
             txtTitle.setText(rssItem.getTitle()+"\n Created By : "+rssItem.getLink()+" "+rssItem.get_news_type());
-            txtTime.setText(DateUtils.getDate(Long.parseLong(rssItem.getPubdate())));
+
             txtDesc.setText(rssItem.getDescription());
         }else {
             Glide.with(this).load(rssItem.getImage()).placeholder(R.drawable.ic_placeholder).into(imgCover);

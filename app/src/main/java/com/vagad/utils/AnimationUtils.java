@@ -1,6 +1,7 @@
 package com.vagad.utils;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.graphics.drawable.GradientDrawable;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.Transformation;
@@ -24,11 +26,11 @@ public class AnimationUtils {
     private static final int DELAY = 100;
     private static final int ANIM = 400;
 
-    public AnimationUtils(){
+    public AnimationUtils() {
     }
 
     public static void animateIn(View view) {
-        if(view instanceof RelativeLayout){
+        if (view instanceof RelativeLayout) {
             RelativeLayout relativeLayout = (RelativeLayout) view;
             for (int i = 0; i < relativeLayout.getChildCount(); i++) {
                 View child = relativeLayout.getChildAt(i);
@@ -38,7 +40,7 @@ public class AnimationUtils {
                         .scaleX(1)
                         .scaleY(1);
             }
-        }else{
+        } else {
             LinearLayout linearLayout = (LinearLayout) view;
             for (int i = 0; i < linearLayout.getChildCount(); i++) {
                 View child = linearLayout.getChildAt(i);
@@ -51,8 +53,8 @@ public class AnimationUtils {
         }
     }
 
-    public static void animateScaleOut(final View view){
-        if(!view.isShown()) {
+    public static void animateScaleOut(final View view) {
+        if (!view.isShown()) {
             view.setScaleX(0.2f);
             view.setScaleY(0.2f);
             view.animate()
@@ -84,7 +86,7 @@ public class AnimationUtils {
     }
 
 
-    public static void animateScaleIn(final View view){
+    public static void animateScaleIn(final View view) {
         view.setScaleX(1);
         view.setScaleY(1);
         view.animate()
@@ -115,7 +117,7 @@ public class AnimationUtils {
     }
 
     public static void animateOut(View view) {
-        if(view instanceof RelativeLayout){
+        if (view instanceof RelativeLayout) {
             RelativeLayout relativeLayout = (RelativeLayout) view;
             for (int i = 0; i < relativeLayout.getChildCount(); i++) {
                 View child = relativeLayout.getChildAt(i);
@@ -125,7 +127,7 @@ public class AnimationUtils {
                         .scaleX(0f)
                         .scaleY(0f);
             }
-        }else{
+        } else {
             LinearLayout linearLayout = (LinearLayout) view;
             for (int i = 0; i < linearLayout.getChildCount(); i++) {
                 View child = linearLayout.getChildAt(i);
@@ -139,13 +141,13 @@ public class AnimationUtils {
 
     }
 
-    public void translateAnim(View view){
-        if(view instanceof RelativeLayout){
+    public void translateAnim(View view) {
+        if (view instanceof RelativeLayout) {
             RelativeLayout relativeLayout = (RelativeLayout) view;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 TransitionManager.beginDelayedTransition(relativeLayout);
             }
-        }else{
+        } else {
             LinearLayout linearLayout = (LinearLayout) view;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 TransitionManager.beginDelayedTransition(linearLayout);
@@ -164,7 +166,7 @@ public class AnimationUtils {
         anim.start();
     }
 
-    public void changeColor(final View view, int colorFrom, int colorTo){
+    public void changeColor(final View view, int colorFrom, int colorTo) {
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
         colorAnimation.setDuration(250);
         colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -178,7 +180,7 @@ public class AnimationUtils {
         colorAnimation.start();
     }
 
-    public static void changeGradientColor(final View view, int colorFrom, int colorTo){
+    public static void changeGradientColor(final View view, int colorFrom, int colorTo) {
         final ValueAnimator valueAnimator = ValueAnimator.ofObject(new ArgbEvaluator(),
                 colorFrom,
                 colorTo);
@@ -199,13 +201,12 @@ public class AnimationUtils {
         final int targetHeight = v.getMeasuredHeight();
         v.getLayoutParams().height = 1;
         v.setVisibility(View.VISIBLE);
-        Animation a = new Animation()
-        {
+        Animation a = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 v.getLayoutParams().height = interpolatedTime == 1
                         ? RelativeLayout.LayoutParams.WRAP_CONTENT
-                        : (int)(targetHeight * interpolatedTime);
+                        : (int) (targetHeight * interpolatedTime);
                 v.requestLayout();
             }
 
@@ -220,14 +221,13 @@ public class AnimationUtils {
 
     public static void collapse(final View v) {
         final int initialHeight = v.getMeasuredHeight();
-        Animation a = new Animation()
-        {
+        Animation a = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
-                if(interpolatedTime == 1){
+                if (interpolatedTime == 1) {
                     v.setVisibility(View.GONE);
-                }else{
-                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                } else {
+                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
                     v.requestLayout();
                 }
             }
@@ -241,7 +241,7 @@ public class AnimationUtils {
         v.startAnimation(a);
     }
 
-    public static void rotate0to180(View view){
+    public static void rotate0to180(View view) {
         RotateAnimation rotate = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotate.setDuration(ANIM);
         rotate.setInterpolator(new LinearInterpolator());
@@ -249,7 +249,7 @@ public class AnimationUtils {
         view.startAnimation(rotate);
     }
 
-    public static void rotate180to360(View view){
+    public static void rotate180to360(View view) {
         RotateAnimation rotate = new RotateAnimation(180, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotate.setDuration(ANIM);
         rotate.setInterpolator(new LinearInterpolator());
@@ -262,4 +262,19 @@ public class AnimationUtils {
             TransitionManager.beginDelayedTransition(viewGroup);
         }
     }
+
+    public static void runEnterAnimation(View view, int height) {
+        view.setTranslationY(height);
+        view.animate()
+                .translationY(0)
+                .setInterpolator(new DecelerateInterpolator(3.f))
+                .setDuration(700)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                    }
+                })
+                .start();
+    }
+
 }

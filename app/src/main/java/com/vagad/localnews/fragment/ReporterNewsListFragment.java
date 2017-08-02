@@ -28,11 +28,13 @@ import com.vagad.R;
 import com.vagad.base.BaseFragment;
 import com.vagad.dashboard.NewsDetailActivity;
 import com.vagad.dashboard.NewsListActivity;
+import com.vagad.fcm.FcmUtils;
 import com.vagad.localnews.AddNewsActivity;
 import com.vagad.localnews.ReporterNewsListActivity;
 import com.vagad.localnews.adapter.ReportNewsRecyclerAdapter;
 import com.vagad.model.NewsPostModel;
 import com.vagad.model.RSSItem;
+import com.vagad.utils.AppUtils;
 import com.vagad.utils.Constants;
 
 import java.util.ArrayList;
@@ -58,6 +60,8 @@ public class ReporterNewsListFragment extends BaseFragment {
     private FloatingActionButton mFabAdd;
     private Toolbar toolbar;
     private RelativeLayout mRelNoData;
+    private DatabaseReference mDatabase;
+    private View mRootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,6 +71,7 @@ public class ReporterNewsListFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mRootView = view;
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mFabAdd = (FloatingActionButton) view.findViewById(R.id.fab_add);
@@ -112,37 +117,41 @@ public class ReporterNewsListFragment extends BaseFragment {
 
 
     private void getValFromFirebase() {
-        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
-
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e(TAG, ""+isDeleteHappen);
-                if(!isDeleteHappen) {
-                    for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
-                        NewsPostModel changedPost = messageSnapshot.getValue(NewsPostModel.class);
-                        //changedPost.key = dataSnapshot.getKey();
-                        Log.e(TAG, "for : " + changedPost.nameReporter + " key   " + changedPost.key + "   " + changedPost.newsTitle);
-                        if (changedPost.isVisible)
-                            mListNews.add(changedPost);
-                    }
-                    Log.e(TAG, "mListNews Size "+mListNews.size());
-                    mListNews = removeDuplicates(mListNews);
-                    Collections.reverse(mListNews);
-                    progressBar.setVisibility(View.GONE);
-                    setAdapter();
-                }else{
-                    isDeleteHappen = false;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-                progressBar.setVisibility(View.GONE);
-            }
-        });
+        if(isOnline(getActivity())) {
+            progressBar.setVisibility(View.VISIBLE);
+            mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
+            mDatabase.addValueEventListener(valueEventListener);
+        }else{
+            showSnackbar(mRootView, getString(R.string.no_internet));
+            progressBar.setVisibility(View.GONE);
+        }
     }
+
+    ValueEventListener valueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                    NewsPostModel changedPost = messageSnapshot.getValue(NewsPostModel.class);
+                    //changedPost.key = dataSnapshot.getKey();
+                    Log.e(TAG, "for : " + changedPost.nameReporter + " key   " + changedPost.key + "   " + changedPost.newsTitle);
+                    if (changedPost.isVisible)
+                        mListNews.add(changedPost);
+                }
+                Log.e(TAG, "mListNews Size "+mListNews.size());
+                mListNews = removeDuplicates(mListNews);
+                Collections.reverse(mListNews);
+                progressBar.setVisibility(View.GONE);
+                setAdapter();
+                mDatabase.removeEventListener(this);
+        }
+
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            System.out.println("The read failed: " + databaseError.getCode());
+            progressBar.setVisibility(View.GONE);
+        }
+    };
 
     public <T> void removeDuplicates1(List<T> list) {
         int size = list.size();
@@ -198,6 +207,7 @@ public class ReporterNewsListFragment extends BaseFragment {
         Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
         intent.putExtra(Constants.Bundle_Is_From_News_List, true);
         intent.putExtra(Constants.Bundle_Is_From_Local_News, true);
+        Constants.mClickImagePath = mListNews.get(position).image;
         intent.putExtra(Constants.Bundle_Feed_Item, getRssItem(mListNews.get(position)));
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(getActivity(), imgNews, "profile");
@@ -209,7 +219,7 @@ public class ReporterNewsListFragment extends BaseFragment {
     }
 
     private RSSItem getRssItem(NewsPostModel newsPostModel) {
-        RSSItem rssItem = new RSSItem(newsPostModel.newsTitle, newsPostModel.nameReporter, newsPostModel.newsDesc, ""+newsPostModel.timestamp, "", newsPostModel.image, newsPostModel.mobileNo);
+        RSSItem rssItem = new RSSItem(newsPostModel.newsTitle, newsPostModel.nameReporter, newsPostModel.newsDesc, ""+newsPostModel.timestamp, "", "", newsPostModel.mobileNo);
         return rssItem;
     }
 
@@ -223,11 +233,14 @@ public class ReporterNewsListFragment extends BaseFragment {
         showAlertDialog(new BaseFragment.OnDialogClick() {
             @Override
             public void onPositiveBtnClick() {
-                isDeleteHappen = true;
-                final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
-                mDatabase.child(item.key).removeValue();
-                mListNews.remove(position);
-                mReportNewsRecyclerAdapter.notifyItemRemoved(position);
+                if(AppUtils.isOnline(getActivity())) {
+                    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
+                    mDatabase.child(item.key).removeValue();
+                    mListNews.remove(position);
+                    mReportNewsRecyclerAdapter.notifyItemRemoved(position);
+                }else{
+                    showSnackbar(mRootView, getString(R.string.no_internet));
+                }
             }
 
             @Override
@@ -244,10 +257,18 @@ public class ReporterNewsListFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         Log.e(TAG, "onActivityResult: "+resultCode+"  "+requestCode);
         if(resultCode == Activity.RESULT_OK){
-            if(requestCode == Constants.REQUEST_CODE_NEWS_EDIT){
+            /*if(requestCode == Constants.REQUEST_CODE_NEWS_EDIT){
                 mListNews.clear();
                 getValFromFirebase();
-            }
+            }*/
+            mListNews.clear();
+            getValFromFirebase();
+
+            /**
+             * Send All Device Notification
+             */
+            if(isOnline(getActivity()))
+                FcmUtils.getAllDeviceToken();
         }
     }
 }

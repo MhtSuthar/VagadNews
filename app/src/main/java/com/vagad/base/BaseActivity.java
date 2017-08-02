@@ -18,14 +18,17 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.transition.Explode;
 import android.transition.Fade;
 import android.transition.Slide;
@@ -38,11 +41,21 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.vagad.R;
+import com.vagad.model.NewsPostModel;
+import com.vagad.model.TokenModel;
 import com.vagad.storage.SharedPreferenceUtil;
+import com.vagad.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 /**
  * Created by ubuntu on 15/9/16.
@@ -53,6 +66,22 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected int FINISH_TIME = 400;
     protected int ANIM_TIME = 300;
     private Dialog dialog;
+    private DatabaseReference mDatabase;
+    protected String mToken;
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mToken = FirebaseInstanceId.getInstance().getToken();
+    }
+
+    protected void getAndCheckToken() {
+        if(isOnline(this)){
+            mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_USERS_TOKEN);
+            mDatabase.addValueEventListener(valueTokenEventListener);
+        }
+    }
 
     protected boolean checkPermission(String strPermission, Context context){
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
@@ -290,6 +319,51 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    ValueEventListener valueTokenEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getChildrenCount() == 0){
+                mDatabase.removeEventListener(this);
+                addTokenToFirebase();
+                return;
+            }
+            for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                TokenModel changedPost = messageSnapshot.getValue(TokenModel.class);
+                if(!mToken.equals(changedPost.device_token)){
+                    addTokenToFirebase();
+                    break;
+                }
+            }
+
+        }
+
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            System.out.println("The read failed: " + databaseError.getCode());
+        }
+    };
+
+    private void addTokenToFirebase() {
+        if(!TextUtils.isEmpty(mToken)) {
+            final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_USERS_TOKEN);
+            String key = mDatabase.push().getKey();
+            TokenModel tokenModel = new TokenModel(mToken, key);
+            mDatabase.child(key).setValue(tokenModel);
+
+            mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.e(TAG, "onDataChange: " + dataSnapshot.getKey() + "   " + dataSnapshot.getRef() + "" + dataSnapshot.getChildren() + "   " + dataSnapshot.getChildrenCount());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    System.out.println("The read failed: " + databaseError.getCode());
+                }
+            });
+        }
+    }
 
 
    /* void setAlarmForAutoLogout(){

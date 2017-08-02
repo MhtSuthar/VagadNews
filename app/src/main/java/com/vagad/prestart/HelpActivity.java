@@ -3,18 +3,27 @@ package com.vagad.prestart;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.dashboard.NewsListActivity;
+import com.vagad.model.TokenModel;
 import com.vagad.prestart.fragment.HelpPagerFragment;
 import com.vagad.storage.SharedPreferenceUtil;
 import com.vagad.utils.Constants;
@@ -31,16 +40,22 @@ public class HelpActivity extends BaseActivity {
     private CirclePageIndicator mIndicator;
     private RelativeLayout relHeader;
 
+    private static final String TAG = "HelpActivity";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_help);
 
         init();
 
         setPagerAdapter();
+
+        /*if(isOnline(this))
+            getAndCheckToken();*/
     }
+
+
 
     public void onClickDone(View view){
         SharedPreferenceUtil.putValue(Constants.KEY_HELP_SCREEN_APPEAR, true);

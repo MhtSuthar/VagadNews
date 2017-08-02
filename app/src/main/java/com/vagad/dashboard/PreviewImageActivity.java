@@ -65,12 +65,12 @@ public class PreviewImageActivity extends BaseActivity {
     private void init() {
         rssItem = getIntent().getParcelableExtra(Constants.Bundle_Feed_Item);
         previewImage = (TouchImageView) findViewById(R.id.previewImage);
-        Log.e(TAG, "init: "+rssItem.getImage());
+        Log.e(TAG, "init: image "+Constants.mClickImagePath);
         if(rssItem.getImage().contains("png") || rssItem.getImage().contains("jpg"))
             Glide.with(this).load(rssItem.getImage()).placeholder(R.drawable.ic_placeholder).into(previewImage);
         else {
             try {
-                Glide.with(this).load(decodeFromFirebaseBase64(rssItem.getImage())).placeholder(R.drawable.ic_placeholder).into(previewImage);
+                Glide.with(this).load(decodeFromFirebaseBase64(Constants.mClickImagePath)).placeholder(R.drawable.ic_placeholder).into(previewImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 
 import com.vagad.R;
+import com.vagad.base.BaseFragment;
 import com.vagad.base.VagadApp;
 import com.vagad.busroute.SearchCityActivity;
 import com.vagad.busroute.adapter.BusRouteRecyclerAdapter;
@@ -36,6 +37,7 @@ import com.vagad.dashboard.FavListActivity;
 import com.vagad.dashboard.MoreNewsActivity;
 import com.vagad.dashboard.NewsListActivity;
 import com.vagad.model.BusListModel;
+import com.vagad.utils.AnimationUtils;
 import com.vagad.utils.Constants;
 
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ import static android.content.Context.SEARCH_SERVICE;
  * Created by Admin on 02-Jul-17.
  */
 
-public class BusRouteSearchFragment extends Fragment {
+public class BusRouteSearchFragment extends BaseFragment {
 
     public static final String TAG = "BusRouteSearchFragment";
     private List<BusListModel> mBusList = new ArrayList<>();
@@ -74,7 +76,7 @@ public class BusRouteSearchFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        //AnimationUtils.runEnterAnimation(view, getScreenHeight());
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         //((MainActivity)getActivity()).setSupportActionBar(toolbar);

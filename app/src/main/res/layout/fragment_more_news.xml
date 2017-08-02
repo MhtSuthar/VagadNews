@@ -12,41 +12,48 @@
     <com.vagad.utils.customviews.FlowLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="start|top">
+        app:childSpacing="auto"
+        app:childSpacingForLastRow="align"
+        app:rowSpacing="8dp">
 
-        <android.support.v7.widget.AppCompatButton
+        <com.vagad.utils.fonts.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_corner_btn"
+            android:background="@drawable/round_corner_yellow_with_transparent_bg"
             android:text="Entertainment"
+            android:textColor="@android:color/white"
             />
 
-        <android.support.v7.widget.AppCompatButton
+        <com.vagad.utils.fonts.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_corner_btn"
-            android:text="Entertainment"
+            android:background="@drawable/round_corner_yellow_with_transparent_bg"
+            android:text="Sport"
+            android:textColor="@android:color/white"
             />
 
-        <android.support.v7.widget.AppCompatButton
+        <com.vagad.utils.fonts.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_corner_btn"
-            android:text="Entertainment"
+            android:background="@drawable/round_corner_yellow_with_transparent_bg"
+            android:text="Astrology"
+            android:textColor="@android:color/white"
             />
 
-        <android.support.v7.widget.AppCompatButton
+        <com.vagad.utils.fonts.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_corner_btn"
-            android:text="Entertainment"
+            android:background="@drawable/round_corner_yellow_with_transparent_bg"
+            android:text="Education"
+            android:textColor="@android:color/white"
             />
 
-        <android.support.v7.widget.AppCompatButton
+        <com.vagad.utils.fonts.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_corner_btn"
+            android:background="@drawable/round_corner_yellow_with_transparent_bg"
             android:text="Entertainment"
+            android:textColor="@android:color/white"
             />
 
     </com.vagad.utils.customviews.FlowLayout>

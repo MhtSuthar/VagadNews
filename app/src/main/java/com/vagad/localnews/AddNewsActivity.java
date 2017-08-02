@@ -37,6 +37,7 @@ import com.vagad.base.BaseActivity;
 import com.vagad.dashboard.NewsListActivity;
 import com.vagad.localnews.adapter.ReportNewsRecyclerAdapter;
 import com.vagad.model.NewsPostModel;
+import com.vagad.storage.SharedPreferenceUtil;
 import com.vagad.utils.AnimationUtils;
 import com.vagad.utils.AppUtils;
 import com.vagad.utils.Constants;
@@ -159,10 +160,16 @@ public class AddNewsActivity extends BaseActivity {
         if(isValid()){
             AnimationUtils.animateScaleIn(btnSubmit);
             progressBar.setVisibility(View.VISIBLE);
+
+            SharedPreferenceUtil.putValue(Constants.LOCALE_NEWS_TITLE_ADD, edtNewsTitle.getText().toString());
+            SharedPreferenceUtil.putValue(Constants.LOCALE_NEWS_DESC_ADD, edtDesc.getText().toString());
+            SharedPreferenceUtil.save();
+
             if(isEditMode){
                 editValue();
-            }else
+            }else {
                 addValToFirebase();
+            }
         }
     }
 
@@ -172,12 +179,15 @@ public class AddNewsActivity extends BaseActivity {
             return false;
         }else if(TextUtils.isEmpty(edtNewsTitle.getText().toString().trim())){
             showSnackbar(mRelParent, "Please Enter News Title");
+            edtNewsTitle.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, R.anim.shake_error));
             return false;
         }else if(TextUtils.isEmpty(edtYourName.getText().toString().trim())){
             showSnackbar(mRelParent, "Please Enter Your Name");
+            edtYourName.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, R.anim.shake_error));
             return false;
         }else if(edtMobile.getText().length() > 0 && edtMobile.getText().length() < 9){
             showSnackbar(mRelParent, "Please Enter Correct Mobile No");
+            edtMobile.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, R.anim.shake_error));
             return false;
         }
         return true;
@@ -192,7 +202,7 @@ public class AddNewsActivity extends BaseActivity {
                 AppUtils.getUniqueId(AddNewsActivity.this), edtMobile.getText().toString(), key);
         mDatabase.child(key).setValue(user);
 
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        /*mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.e(TAG, "onDataChange: "+dataSnapshot.getKey()+"   "+dataSnapshot.getRef()+""+dataSnapshot.getChildren()+"   "+dataSnapshot.getChildrenCount());
@@ -206,13 +216,14 @@ public class AddNewsActivity extends BaseActivity {
             public void onCancelled(DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
-        });
+        });*/
 
         showSnackbar(mRelParent, "News Add Successfully!");
         //showToast("News Add Successfully!");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                setResult(RESULT_OK);
                 finish();
                 //moveActivity(new Intent(AddNewsActivity.this, ReporterNewsListActivity.class), AddNewsActivity.this, true);
             }
@@ -230,7 +241,7 @@ public class AddNewsActivity extends BaseActivity {
         result.put("mobileNo", edtMobile.getText().toString());
         mDatabase.child(newsPostModel.key).updateChildren(result);
 
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        /*mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.e(TAG, "onDataChange: "+dataSnapshot.getKey()+"   "+dataSnapshot.getRef()+""+dataSnapshot.getChildren()+"   "+dataSnapshot.getChildrenCount());
@@ -244,7 +255,7 @@ public class AddNewsActivity extends BaseActivity {
             public void onCancelled(DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
-        });
+        });*/
 
         showSnackbar(mRelParent, "News Update Successfully!");
         //showToast("News Add Successfully!");

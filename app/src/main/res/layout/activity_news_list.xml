@@ -48,4 +48,156 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/design_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_bg"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        app:behavior_hideable="true"
+        android:orientation="vertical"
+        app:behavior_peekHeight="0dp"
+        app:elevation="4dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <com.vagad.utils.fonts.CustomFontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select News Type"
+            android:gravity="center"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textStyle="bold"
+            />
+
+        <com.vagad.utils.customviews.FlowLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:childSpacing="16dp"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            app:childSpacingForLastRow="align"
+            app:rowSpacing="16dp">
+
+            <com.vagad.utils.fonts.CustomFontTextView
+                android:onClick="onClickEntertainment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/round_corner_yellow_with_transparent_bg"
+                android:text="Entertainment"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                />
+
+            <com.vagad.utils.fonts.CustomFontTextView
+                android:onClick="onClickSport"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_corner_yellow_with_transparent_bg"
+                android:text="Sport"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                />
+
+            <com.vagad.utils.fonts.CustomFontTextView
+                android:onClick="onClickAstrology"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/round_corner_yellow_with_transparent_bg"
+                android:text="Astrology"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                />
+
+            <com.vagad.utils.fonts.CustomFontTextView
+                android:onClick="onClickEducation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/round_corner_yellow_with_transparent_bg"
+                android:text="Education"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                />
+
+            <com.vagad.utils.fonts.CustomFontTextView
+                android:onClick="onClickWorld"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/round_corner_yellow_with_transparent_bg"
+                android:text="World"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                />
+
+
+            <com.vagad.utils.fonts.CustomFontTextView
+                android:onClick="onClickPolitics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/round_corner_yellow_with_transparent_bg"
+                android:text="Politics"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                />
+
+
+            <com.vagad.utils.fonts.CustomFontTextView
+                android:onClick="onClickBollyWood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/round_corner_yellow_with_transparent_bg"
+                android:text="Bollywood"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                />
+
+
+            <com.vagad.utils.fonts.CustomFontTextView
+                android:onClick="onClickHealth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/round_corner_yellow_with_transparent_bg"
+                android:text="Health"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                />
+
+
+        </com.vagad.utils.customviews.FlowLayout>
+
+    </LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>

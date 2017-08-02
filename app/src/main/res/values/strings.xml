@@ -13,6 +13,12 @@
     <string name="feed_url_entertainment"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=entertainment]]></string>
     <string name="feed_url_sport"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=sports]]></string>
     <string name="feed_url_education"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=education]]></string>
+    <string name="feed_url_world"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=world]]></string>
+    <string name="feed_url_technology"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=technology]]></string>
+    <string name="feed_url_politics"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=politics]]></string>
+    <string name="feed_url_bollywood"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=bollywood]]></string>
+    <string name="feed_url_helth"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=health]]></string>
+
     <string name="about_us">About Us</string>
     <string name="favourite">Favourites</string>
 	<!-- AdMob ad unit IDs -->
@@ -36,11 +42,10 @@
     <string name="no_internet">No Internet Connection!</string>
     <string name="add_news"><![CDATA[Event & News]]></string>
     <string name="event_and_news"><![CDATA[Event & News]]></string>
-    <string name="whats_new_texts">Yup! You got it completely new experience of our Vagad News app.
-        *We have added our Dungarpur and Banswara Bus details.
-        *You can share with Bus details to your Friends and Family
-        *We are comming soon with more news.
-        *Keep Updated and Keep reading and Sharing.
+    <string name="whats_new_texts">Yup! You got it completely new experience of our Vagad News app.\n
+        - When you add news than all device will be showing notification about your news.\n
+        - You can share with Friends and Family\n
+        - Keep Supporting and Sharing.\n
         Thank You.</string>
     <string name="search">Search</string>
 </resources>

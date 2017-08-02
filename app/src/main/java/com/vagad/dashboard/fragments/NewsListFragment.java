@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -12,24 +11,17 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ShareCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,25 +31,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.github.rubensousa.floatingtoolbar.FloatingToolbar;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.vagad.BuildConfig;
 import com.vagad.R;
 import com.vagad.base.BaseFragment;
 import com.vagad.base.VagadApp;
 import com.vagad.dashboard.AboutUsActivity;
 import com.vagad.dashboard.FavListActivity;
-import com.vagad.dashboard.MoreNewsActivity;
 import com.vagad.dashboard.NewsDetailActivity;
 import com.vagad.dashboard.NewsListActivity;
 import com.vagad.dashboard.adapter.NewsRecyclerAdapter;
-import com.vagad.localnews.ReporterNewsListActivity;
 import com.vagad.model.RSSItem;
 import com.vagad.rest.RSSParser;
 import com.vagad.storage.RSSDatabaseHandler;
@@ -66,11 +49,9 @@ import com.vagad.utils.AnimationUtils;
 import com.vagad.utils.Constants;
 import com.vagad.utils.loder.CircleProgressBar;
 import com.vagad.utils.pageindicator.CirclePageIndicator;
-import com.vagad.utils.rating.RateItDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Mohit on 15-Feb-17.
@@ -186,8 +167,11 @@ public class NewsListFragment extends BaseFragment{
                         shareApp();
                         break;
                     case R.id.menu_more_news:
-                        Toast.makeText(getActivity(), "Coming Soon...", Toast.LENGTH_LONG).show();
-                        //moveActivity(new Intent(getActivity(), MoreNewsActivity.class), getActivity(), false);
+                        ((NewsListActivity)getActivity()).openMoreNews();
+                        break;
+                    case R.id.menu_more_apps:
+                        //FcmUtils.sendMultipleDeviceNotification(SharedPreferenceUtil.getString(Constants.FIREBASE_USERS_TOKEN, ""));
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.simplywall")));
                         break;
                 }
                 return true;
@@ -206,8 +190,6 @@ public class NewsListFragment extends BaseFragment{
                 } else {
                     // Scrolling down visible
                     ((NewsListActivity)getActivity()).showBottomnavigation();
-
-
                 }
             }
 
@@ -260,6 +242,8 @@ public class NewsListFragment extends BaseFragment{
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }
+
+
 
     public void openNewsDetail(RSSItem rssItem, ImageView imageView, int position) {
         Intent intent = new Intent(getActivity(), NewsDetailActivity.class);

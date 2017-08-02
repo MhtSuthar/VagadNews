@@ -10,9 +10,12 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -33,17 +36,28 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.vagad.BuildConfig;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.base.VagadApp;
 import com.vagad.busroute.fragment.BusRouteSearchFragment;
 import com.vagad.dashboard.fragments.NewsListFragment;
+import com.vagad.localnews.AddNewsActivity;
 import com.vagad.localnews.fragment.ReporterNewsListFragment;
+import com.vagad.model.NewsPostModel;
+import com.vagad.model.TokenModel;
 import com.vagad.receiver.NetworkChangeReceiver;
 import com.vagad.storage.SharedPreferenceUtil;
+import com.vagad.utils.AppUtils;
 import com.vagad.utils.BottomNavigationViewBehavior;
 import com.vagad.utils.Constants;
+import com.vagad.utils.fonts.CustomFontTextView;
 import com.vagad.utils.rating.RateItDialogFragment;
 
 /**
@@ -68,12 +82,14 @@ public class NewsListActivity extends BaseActivity {
     private int mBottomNavHeight = 120;
     private RelativeLayout mRelBottomMenu;
     private NetworkChangeReceiver mNetworkReceiver;
+    private BottomSheetBehavior behavior;
+    private boolean isNotificationFromLocaleNews;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_list);
-
+        isNotificationFromLocaleNews = getIntent().getBooleanExtra(Constants.EXTRA_FROM_LOCALE_NEWS, false);
         initView();
 
         initAds();
@@ -91,6 +107,14 @@ public class NewsListActivity extends BaseActivity {
          * Check forcefully Update
          */
         checkUpdateAvail();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        isNotificationFromLocaleNews = intent.getBooleanExtra(Constants.EXTRA_FROM_LOCALE_NEWS, false);
+        if(viewPager != null)
+            viewPager.setCurrentItem(isNotificationFromLocaleNews ? 2 : 0);
     }
 
     private void checkUpdateAvail() {
@@ -227,6 +251,36 @@ public class NewsListActivity extends BaseActivity {
             }
         });
 
+        View bottomSheet = findViewById(R.id.design_bottom_sheet);
+        behavior = BottomSheetBehavior.from(bottomSheet);
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_DRAGGING");
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_SETTLING");
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_EXPANDED");
+                        break;
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_COLLAPSED");
+                        break;
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_HIDDEN");
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                Log.i("BottomSheetCallback", "slideOffset: " + slideOffset);
+            }
+        });
+
        /* recyclerView.addOnItemTouchListener(new RecyclerTouchListener(recyclerView, new RecyclerTouchListener.OnRecyclerClickListener() {
             @Override
             public void onClick(View v, int position) {
@@ -309,7 +363,7 @@ public class NewsListActivity extends BaseActivity {
         };
         viewPager.setAdapter(mHeaderPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
-        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(isNotificationFromLocaleNews ? 2 : 0);
     }
 
     @Override
@@ -321,4 +375,75 @@ public class NewsListActivity extends BaseActivity {
             super.onBackPressed();
     }
 
+    public void openMoreNews() {
+        if (behavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+            behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+    }
+
+    public void onClickEntertainment(View view){
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(this, MoreNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_ENTERTAINMENT);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    public void onClickSport(View view){
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(this, MoreNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_SPORT);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    public void onClickAstrology(View view){
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(this, MoreNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_ASTROLOGY);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    public void onClickEducation(View view){
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(this, MoreNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_EDUCATION);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    public void onClickWorld(View view){
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(this, MoreNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_WORD);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    public void onClickPolitics(View view){
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(this, MoreNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_POLITICS);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    public void onClickBollyWood(View view){
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(this, MoreNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_BOLLYWOOD);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    public void onClickHealth(View view){
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(this, MoreNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_HEALTH);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
 }
