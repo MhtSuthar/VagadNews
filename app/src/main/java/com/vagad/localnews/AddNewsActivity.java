@@ -443,5 +443,25 @@ public class AddNewsActivity extends BaseActivity {
         Glide.with(this).load(photoUri).into(imgNews);
     }
 
-
+  String getFileNameByUri(Context context, Uri uri) {
+        String fileName = "";
+        Uri filePathUri = uri;
+        if (uri.getScheme().toString().compareTo("content") == 0) {
+            Cursor cursor = null;
+            try {
+                String[] proj = { MediaStore.Images.Media.DATA };
+                cursor = context.getContentResolver().query(filePathUri, proj, null, null, null);
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                return cursor.getString(column_index);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        } else if (uri.getScheme().compareTo("file") == 0) {
+            fileName = new File(uri.getPath()).getAbsolutePath();
+        }
+        return fileName;
+    }
 }
