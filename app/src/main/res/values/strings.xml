@@ -18,6 +18,7 @@
     <string name="feed_url_politics"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=politics]]></string>
     <string name="feed_url_bollywood"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=bollywood]]></string>
     <string name="feed_url_helth"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=health]]></string>
+    <string name="rss_best_link">http://hindi.news18.com/khabar-rss/</string>
 
     <string name="about_us">About Us</string>
     <string name="favourite">Favourites</string>
