@@ -24,8 +24,8 @@ public class DateUtils {
             return simpleDateFormat.format(calendar.getTime());
         } catch (Exception e) {
             e.printStackTrace();
+            return date;
         }
-        return "";
     }
 
     public static String convertTimestamp(String pubdate) {
@@ -34,6 +34,18 @@ public class DateUtils {
             date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(pubdate);
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+        return ""+date.getTime();
+    }
+
+    public static String convertTimestampRajasthan(String pubdate) {
+        Date date = null;
+        try {
+            //Tuesday, August 15, 2017 09:15 AM
+            date = new SimpleDateFormat("EEEE, MMMM dd, yyyy KK:mm a").parse(pubdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
         }
         return ""+date.getTime();
     }

@@ -2,6 +2,7 @@ package com.vagad.dashboard.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.vagad.R;
 import com.vagad.dashboard.FavListActivity;
 import com.vagad.dashboard.fragments.MoreNewsListFragment;
 import com.vagad.model.RSSItem;
+import com.vagad.utils.AppUtils;
 import com.vagad.utils.DateUtils;
 
 import java.util.List;
@@ -50,9 +52,12 @@ public class MoreNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof VHItem) {
-            ((VHItem) holder).txtTitle.setText(getItem(position).getTitle());
-            ((VHItem) holder).txtDescription.setText(getItem(position).getDescription());
-            ((VHItem) holder).txtTime.setText(DateUtils.convertData(getItem(position).getPubdate()));
+            ((VHItem) holder).txtTitle.setText(AppUtils.fromHtml(getItem(position).getTitle()));
+            ((VHItem) holder).txtDescription.setText(AppUtils.fromHtml(getItem(position).getDescription()));
+            if(moreNewsListFragment.mNewsType.equals("Latest News")){
+                ((VHItem) holder).txtTime.setText(DateUtils.convertData(getItem(position).getPubdate()));
+            }else
+                ((VHItem) holder).txtTime.setText(getItem(position).getPubdate());
             Glide.with(context).load(getItem(position).getImage()).placeholder(R.drawable.ic_placeholder).into(((VHItem) holder).imgNews);
             ((VHItem) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

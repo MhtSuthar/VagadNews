@@ -7,8 +7,8 @@ android {
         applicationId "com.vagad"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 10
-        versionName "1.4"
+        versionCode 19
+        versionName "1.6"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -40,7 +40,6 @@ dependencies {
     compile 'com.google.firebase:firebase-core:10.2.1'
     compile 'com.google.firebase:firebase-database:10.2.1'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.github.rubensousa:floatingtoolbar:1.4.4'
 	compile 'com.google.firebase:firebase-messaging:10.2.1'
     testCompile 'junit:junit:4.12'
     compile files('libs/jsoup-1.6.2.jar')

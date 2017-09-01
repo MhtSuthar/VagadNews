@@ -7,20 +7,40 @@
         <item
             android:id="@+id/menu_more_news"
             android:title="More News"/>
+
+        <item
+            android:id="@+id/menu_e_paper"
+            android:title="E-Paper"/>
+
         <item
             android:id="@+id/menu_favourite"
             android:title="Favorites"/>
+
         <item
-            android:id="@+id/menu_about_us"
-            android:title="About Us"/>
+            android:id="@+id/menu_music"
+            android:title="Vagad Music"/>
+
         <item
-            android:id="@+id/menu_feedback"
-            android:title="Feedback"/>
-        <item
-            android:id="@+id/menu_share"
-            android:title="Share App"/>
-        <item
-            android:id="@+id/menu_more_apps"
-            android:title="More Our Apps"/>
+            android:id="@+id/menu_like"
+            android:title="Like us on Facebook"/>
+
+
+        <item android:id="@+id/more"
+            android:title="@string/more">
+            <menu>
+                <item
+                    android:id="@+id/menu_about_us"
+                    android:title="About Us"/>
+                <item
+                    android:id="@+id/menu_feedback"
+                    android:title="Feedback"/>
+                <item
+                    android:id="@+id/menu_share"
+                    android:title="Share App"/>
+                <item
+                    android:id="@+id/menu_more_apps"
+                    android:title="More Our Apps"/>
+            </menu>
+        </item>
     </group>
 </menu>

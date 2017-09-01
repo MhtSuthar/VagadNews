@@ -10,7 +10,10 @@ import android.view.WindowManager;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.dashboard.fragments.MoreNewsListFragment;
+import com.vagad.model.RSSItem;
 import com.vagad.utils.Constants;
+
+import java.util.ArrayList;
 
 /**
  * Created by Admin on 25-Jun-17.
@@ -29,6 +32,8 @@ public class MoreNewsActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.EXTRA_MORE_NEWS_TYPE, ""+getIntent().getExtras().get(Constants.EXTRA_MORE_NEWS_TYPE));
         entertainmentListFragment.setArguments(bundle);
+        ArrayList<RSSItem> mList = getIntent().getParcelableArrayListExtra(Constants.Bundle_Feed_List);
+        entertainmentListFragment.setLatestNews(mList);
         getSupportFragmentManager().beginTransaction().
                 replace(R.id.container, entertainmentListFragment, entertainmentListFragment.getTag()).commit();
     }

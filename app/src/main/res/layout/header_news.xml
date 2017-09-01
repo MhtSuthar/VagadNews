@@ -30,11 +30,23 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:padding="10dp"
-                app:fillColor="@color/colorPrimary"
-                app:pageColor="@android:color/white"
-                app:radius="5dp"
+                app:radius="6dp"
                 app:spaceWidth="10"
-                app:strokeColor="@color/colorPrimary" />
+                app:fillColor="@color/colorAccent"
+                app:pageColor="@android:color/transparent"
+                app:strokeColor="@color/colorAccent"/>
+
+            <TextView
+                android:id="@+id/txt_see_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_margin="5dp"
+                android:text="See All"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                />
 
         </RelativeLayout>
 

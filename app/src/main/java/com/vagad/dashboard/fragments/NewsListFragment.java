@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -23,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,27 +34,34 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.vagad.R;
 import com.vagad.base.BaseFragment;
 import com.vagad.base.VagadApp;
 import com.vagad.dashboard.AboutUsActivity;
+import com.vagad.dashboard.EPaperActivity;
 import com.vagad.dashboard.FavListActivity;
+import com.vagad.dashboard.MoreNewsActivity;
 import com.vagad.dashboard.NewsDetailActivity;
 import com.vagad.dashboard.NewsListActivity;
 import com.vagad.dashboard.adapter.NewsRecyclerAdapter;
 import com.vagad.model.RSSItem;
+import com.vagad.music.VagadMusicActivity;
 import com.vagad.rest.RSSParser;
 import com.vagad.storage.RSSDatabaseHandler;
 import com.vagad.storage.SharedPreferenceUtil;
 import com.vagad.utils.AnimationUtils;
+import com.vagad.utils.AppUtils;
 import com.vagad.utils.Constants;
 import com.vagad.utils.loder.CircleProgressBar;
 import com.vagad.utils.pageindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Mohit on 15-Feb-17.
@@ -169,9 +179,29 @@ public class NewsListFragment extends BaseFragment{
                     case R.id.menu_more_news:
                         ((NewsListActivity)getActivity()).openMoreNews();
                         break;
+                    case R.id.menu_e_paper:
+                        Intent mIntent = new Intent(getActivity(), EPaperActivity.class);
+                        startActivity(mIntent);
+                        break;
+                    case R.id.menu_music:
+                        startActivity(new Intent(getActivity(), VagadMusicActivity.class));
+                        break;
+                    case R.id.menu_like:
+                        Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+                        String facebookUrl = AppUtils.getFacebookPageURL(getActivity());
+                        facebookIntent.setData(Uri.parse(facebookUrl));
+                        startActivity(facebookIntent);
+                        break;
                     case R.id.menu_more_apps:
                         //FcmUtils.sendMultipleDeviceNotification(SharedPreferenceUtil.getString(Constants.FIREBASE_USERS_TOKEN, ""));
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.simplywall")));
+                        //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.simplywall")));
+                        Uri uri = Uri.parse("market://search?q=pub:Vagad Droid");
+                        Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                        try {
+                            startActivity(myAppLinkToMarket);
+                        } catch (ActivityNotFoundException e) {
+                            Toast.makeText(getActivity(), "You don't have Google Play installed", Toast.LENGTH_LONG).show();
+                        }
                         break;
                 }
                 return true;
@@ -326,6 +356,14 @@ public class NewsListFragment extends BaseFragment{
             params.height = (int) (SharedPreferenceUtil.getInt(Constants.KEY_SCREEN_HEIGHT, 780) / 2.2);
         linParent.setLayoutParams(params);
 
+        header.findViewById(R.id.txt_see_all).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MoreNewsActivity.class);
+                intent.putParcelableArrayListExtra(Constants.Bundle_Feed_List, (ArrayList<? extends Parcelable>) mLatestNewsList);
+                startActivity(intent);
+            }
+        });
         viewPager = (ViewPager) header.findViewById(R.id.viewPager);
         pageIndicator = (CirclePageIndicator) header.findViewById(R.id.pageIndicator);
         setViewPagerAdapter(viewPager);
@@ -426,8 +464,26 @@ public class NewsListFragment extends BaseFragment{
                     List<RSSItem> rssFeed = rssParser.getRSSFeedItems(getString(R.string.feed_url_dungarpur));
                     rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_banswara)));
                     rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_udaipur)));
-                    rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_latest_news)));
+                    rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_news18_rajasthan)));
                     for (int i = 0; i < rssFeed.size(); i++) {
+                        String imgRegex = "<[iI][mM][gG][^>]+[sS][rR][cC]\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
+                        Pattern p = Pattern.compile(imgRegex);
+                        Matcher m = p.matcher(rssFeed.get(i).getDescription());
+                        if (m.find()) {
+                            try {
+                                String imgSrc = m.group(1);
+                                //Log.e(TAG, "desc  "+args.get(i).getDescription());
+                                rssFeed.get(i).setImage(imgSrc);
+                                //TODO Check this index out bound exeption
+                                if(rssFeed.get(i).getDescription().contains("/>")
+                                        && rssFeed.get(i).get_news_type().equals(Constants.NEWS_TYPE_LATEST)
+                                        && rssFeed.get(i).getDescription().split("/>").length > 1)
+                                    rssFeed.get(i).setDescription(rssFeed.get(i).getDescription().split("/>")[1]);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                continue;
+                            }
+                        }
                         rssDatabaseHandler.addFeed(rssFeed.get(i));
                     }
                 }catch (Exception e){

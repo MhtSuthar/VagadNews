@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.vagad.BuildConfig;
 import com.vagad.R;
 import com.vagad.base.BaseFragment;
 import com.vagad.dashboard.NewsDetailActivity;
@@ -224,6 +225,8 @@ public class ReporterNewsListFragment extends BaseFragment {
     }
 
     public void onEditReport(NewsPostModel item) {
+        Constants.mClickImagePath = item.image;
+        item.image = "";
         Intent intent = new Intent(getActivity(), AddNewsActivity.class);
         intent.putExtra(Constants.EXTRA_NEWS, item);
         startActivityForResults(intent, getActivity(), false, Constants.REQUEST_CODE_NEWS_EDIT);
@@ -267,7 +270,7 @@ public class ReporterNewsListFragment extends BaseFragment {
             /**
              * Send All Device Notification
              */
-            if(isOnline(getActivity()))
+            if(isOnline(getActivity()) /*&& !BuildConfig.DEBUG*/)
                 FcmUtils.getAllDeviceToken();
         }
     }

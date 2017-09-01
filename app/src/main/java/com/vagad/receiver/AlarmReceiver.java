@@ -12,10 +12,13 @@ import com.vagad.rest.RSSParser;
 import com.vagad.storage.RSSDatabaseHandler;
 import com.vagad.utils.AlarmUtils;
 import com.vagad.utils.AppUtils;
+import com.vagad.utils.Constants;
 import com.vagad.utils.NotificationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -66,11 +69,24 @@ public class AlarmReceiver extends BroadcastReceiver {
         protected List<RSSItem> doInBackground(String... args) {
             List<RSSItem> rssFeed = new ArrayList<>();
             try {
-                rssFeed = rssParser.getRSSFeedItems(context.getString(R.string.feed_url_latest_news));
+                rssFeed.addAll(rssParser.getRSSFeedItems(context.getString(R.string.feed_news18_rajasthan)));
                 rssFeed.addAll(rssParser.getRSSFeedItems(context.getString(R.string.feed_url_banswara)));
                 rssFeed.addAll(rssParser.getRSSFeedItems(context.getString(R.string.feed_url_udaipur)));
                 rssFeed.addAll(rssParser.getRSSFeedItems(context.getString(R.string.feed_url_dungarpur)));
                 for (int i = 0; i < rssFeed.size(); i++) {
+                    String imgRegex = "<[iI][mM][gG][^>]+[sS][rR][cC]\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
+                    Pattern p = Pattern.compile(imgRegex);
+                    Matcher m = p.matcher(rssFeed.get(i).getDescription());
+                    if (m.find()) {
+                        try {
+                            String imgSrc = m.group(1);
+                            rssFeed.get(i).setImage(imgSrc);
+                            if(rssFeed.get(i).getDescription().contains("/>") && rssFeed.get(i).get_news_type().equals(Constants.NEWS_TYPE_LATEST))
+                                rssFeed.get(i).setDescription(rssFeed.get(i).getDescription().split("/>")[1]);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
                     rssDatabaseHandler.addFeed(rssFeed.get(i));
                 }
             } catch (Exception e) {

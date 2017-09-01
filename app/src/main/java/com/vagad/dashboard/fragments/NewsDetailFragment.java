@@ -21,6 +21,7 @@ import com.vagad.base.BaseFragment;
 import com.vagad.dashboard.NewsDetailActivity;
 import com.vagad.dashboard.OpenUrlActivity;
 import com.vagad.model.RSSItem;
+import com.vagad.utils.AppUtils;
 import com.vagad.utils.Constants;
 import com.vagad.utils.DateUtils;
 
@@ -66,7 +67,7 @@ public class NewsDetailFragment extends BaseFragment {
         Glide.with(getActivity()).load(rssItem.getImage()).placeholder(R.drawable.ic_placeholder).into(imgCover);
         txtTitle.setText(rssItem.getTitle());
         txtTime.setText(DateUtils.convertData(rssItem.getPubdate()));
-        txtDesc.setText(rssItem.getDescription());
+        txtDesc.setText(AppUtils.fromHtml(rssItem.getDescription()));
         if(rssItem.isFav()){
             imgFav.setTag("1");
             imgFav.setImageResource(R.drawable.ic_fav_select);

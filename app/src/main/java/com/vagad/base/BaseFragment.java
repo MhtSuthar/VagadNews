@@ -143,7 +143,9 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected void showSnackbar(View view, String msg){
-        Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
+        Snackbar sb = Snackbar.make(view, msg, Snackbar.LENGTH_LONG);
+        sb.getView().setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorAccent));
+        sb.show();
     }
 
     protected void showErrorLog(String error){

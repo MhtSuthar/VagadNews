@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +28,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -81,7 +84,15 @@ public class AddNewsActivity extends BaseActivity {
         setContentView(R.layout.activity_add_news);
         checkPermission();
         setupCameraIntentHelper();
+
         initView();
+
+        /**
+         * For getting shared image
+         */
+        if (Intent.ACTION_SEND.equals(getIntent().getAction()) && getIntent().getType() != null) {
+            handleImage(getIntent());
+        }
 
         /**
          * For Checking where it comes for edit or add
@@ -95,6 +106,19 @@ public class AddNewsActivity extends BaseActivity {
         }
     }
 
+    private void handleImage(Intent intent) {
+        Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (imageUri != null) {
+            try{
+                imagePath = getFileNameByUri(imageUri);
+                Log.e(TAG, "Image Gallery " + imagePath);
+                displayImage(Uri.fromFile(new File(imagePath)));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void setAllVal() {
         edtYourName.setText(newsPostModel.nameReporter);
         edtDesc.setText(newsPostModel.newsDesc);
@@ -103,7 +127,7 @@ public class AddNewsActivity extends BaseActivity {
         linAdd.setVisibility(View.GONE);
         btnSubmit.setText("Update");
         try {
-            Glide.with(this).load(decodeFromFirebaseBase64(newsPostModel.image)).asBitmap().
+            Glide.with(this).load(decodeFromFirebaseBase64(Constants.mClickImagePath)).asBitmap().
                     placeholder(R.drawable.ic_placeholder).error(R.drawable.ic_placeholder).into(imgNews);
         } catch (IOException e) {
             linAdd.setVisibility(View.VISIBLE);
@@ -194,78 +218,98 @@ public class AddNewsActivity extends BaseActivity {
     }
 
     private void addValToFirebase() {
-        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
-        String key = mDatabase.push().getKey();
-        NewsPostModel user = new NewsPostModel(edtYourName.getText().toString(),
-                edtDesc.getText().toString(), edtNewsTitle.getText().toString(),
-                AppUtils.getBase64Image(imagePath), true,
-                AppUtils.getUniqueId(AddNewsActivity.this), edtMobile.getText().toString(), key);
-        mDatabase.child(key).setValue(user);
+        if(imagePath != null && imagePath != "") {
+            Glide.with(this)
+                    .load(Uri.fromFile(new File(imagePath)))
+                    .asBitmap()
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
+                            String key = mDatabase.push().getKey();
+                            NewsPostModel user = new NewsPostModel(edtYourName.getText().toString(),
+                                    edtDesc.getText().toString(), edtNewsTitle.getText().toString(),
+                                    AppUtils.getBase64Image(resource), true,
+                                    AppUtils.getUniqueId(AddNewsActivity.this), edtMobile.getText().toString(), key);
+                            mDatabase.child(key).setValue(user);
 
-        /*mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e(TAG, "onDataChange: "+dataSnapshot.getKey()+"   "+dataSnapshot.getRef()+""+dataSnapshot.getChildren()+"   "+dataSnapshot.getChildrenCount());
-                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                    NewsPostModel changedPost = messageSnapshot.getValue(NewsPostModel.class);
-                    Log.e(TAG, "for : "+changedPost.nameReporter);
+                            showSnackbar(mRelParent, "News Add Successfully!");
+                            //showToast("News Add Successfully!");
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setResult(RESULT_OK);
+                                    finish();
+                                }
+                            }, 1000);
+                        }
+                    });
+        }else {
+            final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
+            String key = mDatabase.push().getKey();
+            NewsPostModel user = new NewsPostModel(edtYourName.getText().toString(),
+                    edtDesc.getText().toString(), edtNewsTitle.getText().toString(),
+                    AppUtils.getBase64Image(imagePath), true,
+                    AppUtils.getUniqueId(AddNewsActivity.this), edtMobile.getText().toString(), key);
+            mDatabase.child(key).setValue(user);
+
+            showSnackbar(mRelParent, "News Add Successfully!");
+            //showToast("News Add Successfully!");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setResult(RESULT_OK);
+                    finish();
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });*/
-
-        showSnackbar(mRelParent, "News Add Successfully!");
-        //showToast("News Add Successfully!");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setResult(RESULT_OK);
-                finish();
-                //moveActivity(new Intent(AddNewsActivity.this, ReporterNewsListActivity.class), AddNewsActivity.this, true);
-            }
-        }, 1000);
+            }, 1000);
+        }
     }
 
     private void editValue(){
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_NEWS);
-
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("nameReporter", edtYourName.getText().toString());
-        result.put("newsDesc", edtDesc.getText().toString());
-        result.put("newsTitle", edtNewsTitle.getText().toString());
-        result.put("image", imagePath.equals("") ? newsPostModel.image : AppUtils.getBase64Image(imagePath));
-        result.put("mobileNo", edtMobile.getText().toString());
-        mDatabase.child(newsPostModel.key).updateChildren(result);
-
-        /*mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e(TAG, "onDataChange: "+dataSnapshot.getKey()+"   "+dataSnapshot.getRef()+""+dataSnapshot.getChildren()+"   "+dataSnapshot.getChildrenCount());
-                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                    NewsPostModel changedPost = messageSnapshot.getValue(NewsPostModel.class);
-                    Log.e(TAG, "for : "+changedPost.nameReporter);
+        if(imagePath != null && imagePath != "") {
+            Glide.with(this)
+                    .load(Uri.fromFile(new File(imagePath)))
+                    .asBitmap()
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            HashMap<String, Object> result = new HashMap<>();
+                            result.put("nameReporter", edtYourName.getText().toString());
+                            result.put("newsDesc", edtDesc.getText().toString());
+                            result.put("newsTitle", edtNewsTitle.getText().toString());
+                            result.put("image", AppUtils.getBase64Image(resource));
+                            result.put("mobileNo", edtMobile.getText().toString());
+                            mDatabase.child(newsPostModel.key).updateChildren(result);
+                            showSnackbar(mRelParent, "News Update Successfully!");
+                            //showToast("News Add Successfully!");
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setResult(RESULT_OK);
+                                    finish();
+                                }
+                            }, 1000);
+                        }
+                    });
+        }else {
+            HashMap<String, Object> result = new HashMap<>();
+            result.put("nameReporter", edtYourName.getText().toString());
+            result.put("newsDesc", edtDesc.getText().toString());
+            result.put("newsTitle", edtNewsTitle.getText().toString());
+            result.put("image", Constants.mClickImagePath);
+            result.put("mobileNo", edtMobile.getText().toString());
+            mDatabase.child(newsPostModel.key).updateChildren(result);
+            showSnackbar(mRelParent, "News Update Successfully!");
+            //showToast("News Add Successfully!");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setResult(RESULT_OK);
+                    finish();
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });*/
-
-        showSnackbar(mRelParent, "News Update Successfully!");
-        //showToast("News Add Successfully!");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setResult(RESULT_OK);
-                finish();
-            }
-        }, 1000);
+            }, 1000);
+        }
     }
 
     public void checkPermission() {
@@ -412,12 +456,13 @@ public class AddNewsActivity extends BaseActivity {
             if (requestCode == Constants.REQUEST_OPEN_CAMERA) {
                 mCameraIntentHelper.onActivityResult(requestCode, resultCode, data);
             } else if (requestCode == Constants.REQUEST_OPEN_GALLERY) {
-                getGalleryImageUri(data);
+                imagePath = getFileNameByUri(data.getData());
+                displayImage(Uri.fromFile(new File(imagePath)));
             }
         }
     }
 
-    private Uri getGalleryImageUri(Intent data) {
+    private Uri getGalleryImageUri1(Intent data) {
         Uri uri = null;
         try {
             Uri imageUri = data.getData();
@@ -436,6 +481,28 @@ public class AddNewsActivity extends BaseActivity {
             e.printStackTrace();
         }
         return uri;
+    }
+
+    String getFileNameByUri(Uri uri) {
+        String fileName = "";
+        Uri filePathUri = uri;
+        if (uri.getScheme().toString().compareTo("content") == 0) {
+            Cursor cursor = null;
+            try {
+                String[] proj = { MediaStore.Images.Media.DATA };
+                cursor = getContentResolver().query(filePathUri, proj, null, null, null);
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                return cursor.getString(column_index);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        } else if (uri.getScheme().compareTo("file") == 0) {
+            fileName = new File(uri.getPath()).getAbsolutePath();
+        }
+        return fileName;
     }
 
     private void displayImage(Uri photoUri) {

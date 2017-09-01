@@ -14,6 +14,8 @@ import android.net.NetworkInfo;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Base64;
 import android.util.Log;
 
@@ -83,6 +85,21 @@ public class AppUtils {
         return base64Image;
     }
 
+    public static String getBase64Image(Bitmap path) {
+        String base64Image = "";
+        if (path != null) {
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                path.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+                byte[] bytes = baos.toByteArray();
+                base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return base64Image;
+    }
+
     public synchronized static String getUniqueId(Context context) {
         String uniqueID = SharedPreferenceUtil.getString(Constants.PREF_UNIQUE_ID, null);
         if (uniqueID == null) {
@@ -93,6 +110,34 @@ public class AppUtils {
         }
         Log.e(TAG, "getUniqueId: "+uniqueID);
         return uniqueID;
+    }
+
+    public static Spanned fromHtml(String html){
+        Spanned result;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            result = Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            result = Html.fromHtml(html);
+        }
+        return result;
+    }
+
+    public static String FACEBOOK_URL = "https://www.facebook.com/vagadDroid/";
+    public static String FACEBOOK_PAGE_ID = "vagadDroid";
+
+    //method to get the right URL to use in the intent
+    public static String getFacebookPageURL(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            if (versionCode >= 3002850) { //newer versions of fb app
+                return "fb://facewebmodal/f?href=" + FACEBOOK_URL;
+            } else { //older versions of fb app
+                return "fb://page/" + FACEBOOK_PAGE_ID;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            return FACEBOOK_URL; //normal web url
+        }
     }
 
 

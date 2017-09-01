@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -23,7 +24,13 @@ import com.vagad.utils.Constants;
 import com.vagad.utils.DateUtils;
 import com.vagad.utils.loder.CircleProgressBar;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SplashActivity extends BaseActivity {
 
@@ -125,8 +132,21 @@ public class SplashActivity extends BaseActivity {
                 List<RSSItem> rssFeed = rssParser.getRSSFeedItems(getString(R.string.feed_url_dungarpur));
                 rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_banswara)));
                 rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_udaipur)));
-                rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_latest_news)));
+                rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_news18_rajasthan)));
                 for (int i = 0; i < rssFeed.size(); i++) {
+                    String imgRegex = "<[iI][mM][gG][^>]+[sS][rR][cC]\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
+                    Pattern p = Pattern.compile(imgRegex);
+                    Matcher m = p.matcher(rssFeed.get(i).getDescription());
+                    if (m.find()) {
+                        try {
+                            String imgSrc = m.group(1);
+                            rssFeed.get(i).setImage(imgSrc);
+                            if(rssFeed.get(i).getDescription().contains("/>") && rssFeed.get(i).get_news_type().equals(Constants.NEWS_TYPE_LATEST))
+                                rssFeed.get(i).setDescription(rssFeed.get(i).getDescription().split("/>")[1]);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
                     rssDatabaseHandler.addFeed(rssFeed.get(i));
                 }
 

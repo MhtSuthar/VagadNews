@@ -26,7 +26,7 @@ public class AlarmUtils {
 
     public static void setAlarm(Context context){
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR_OF_DAY, 8);
+        calendar.add(Calendar.HOUR_OF_DAY, 5);
         calendar.set(Calendar.MINUTE, 0);
         //calendar.add(Calendar.DAY_OF_MONTH, 1);
 

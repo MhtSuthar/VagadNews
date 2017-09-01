@@ -66,8 +66,8 @@ public class FavListActivity extends BaseActivity {
         recyclerView.setAdapter(favNewsRecyclerAdapter);
     }
 
-    public void setOnItemClick(int position, ImageView imageView) {
-        Intent intent = new Intent(this, NewsDetailActivity.class);
+    public void setOnItemClick(RSSItem position, ImageView imageView) {
+        /*Intent intent = new Intent(this, NewsDetailActivity.class);
         intent.putExtra(Constants.Bundle_Which_Page, position-1);
         intent.putParcelableArrayListExtra(Constants.Bundle_Feed_Item, (ArrayList<? extends Parcelable>) mNewsList);
         ActivityOptionsCompat options = ActivityOptionsCompat.
@@ -75,7 +75,19 @@ public class FavListActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             startActivityForResult(intent, Constants.REQUEST_CODE_NEWS_DETAIL, options.toBundle());
         }else
+            startActivityForResult(intent, Constants.REQUEST_CODE_NEWS_DETAIL);*/
+
+        Intent intent = new Intent(this, NewsDetailActivity.class);
+        intent.putExtra(Constants.Bundle_Is_From_News_List, true);
+        intent.putExtra(Constants.Bundle_Feed_Item, position);
+        //intent.putParcelableArrayListExtra(Constants.Bundle_Feed_Item, (ArrayList<? extends Parcelable>) mNewsList);
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, imageView, "profile");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            startActivityForResult(intent, Constants.REQUEST_CODE_NEWS_DETAIL, options.toBundle());
+        }else{
             startActivityForResult(intent, Constants.REQUEST_CODE_NEWS_DETAIL);
+        }
     }
 
     @Override

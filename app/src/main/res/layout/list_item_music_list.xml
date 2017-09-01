@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="5dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/lin_music"
+                android:layout_width="60dp"
+                android:layout_alignBottom="@+id/lin"
+                android:layout_alignTop="@+id/lin"
+                android:gravity="center"
+                android:background="@color/colorAccent"
+                android:layout_height="60dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/ic_music" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/lin_music"
+                android:layout_toLeftOf="@+id/lin_download"
+                android:minHeight="60dp"
+                android:minWidth="60dp"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <com.vagad.utils.fonts.CustomFontTextView
+                    android:id="@+id/txtTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:text="@string/app_name"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@android:color/black"
+                    android:visibility="visible" />
+
+                <com.vagad.utils.fonts.CustomFontTextView
+                    android:id="@+id/txtDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/common_margin"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lin_download"
+                android:layout_width="60dp"
+                android:layout_alignBottom="@+id/lin"
+                android:layout_alignTop="@+id/lin"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:background="@color/colorButtonColor"
+                android:layout_height="60dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/ic_download" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

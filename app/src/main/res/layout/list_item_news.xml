@@ -15,8 +15,9 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:clickable="true"
         app:cardUseCompatPadding="true"
+        app:cardCornerRadius="2dp"
         app:cardElevation="5dp"
-        app:contentPadding="@dimen/common_margin">
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -28,14 +29,18 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:transitionName="profile"
+                android:layout_alignBottom="@+id/lin"
+                android:layout_alignTop="@+id/lin"
                 android:scaleType="centerCrop"
                 tools:src="@drawable/splash_bg" />
 
             <LinearLayout
+                android:id="@+id/lin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/common_margin"
-                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:minHeight="100dp"
+                android:minWidth="100dp"
                 android:layout_toRightOf="@+id/imgNews"
                 android:orientation="vertical">
 

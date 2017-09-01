@@ -39,6 +39,7 @@ public class RSSParser {
 	private static String TAG_PUB_DATE = "pubDate";
 	private static String TAG_GUID = "guid";
 	private static String TAG_IMAGE = "image";
+	private static final String TAG = "RSSParser";
 
 	// constructor
 	public RSSParser() {
@@ -106,7 +107,7 @@ public class RSSParser {
 		
 		// get RSS XML from rss url
 		rss_feed_xml = this.getXmlFromUrl(rss_url);
-		
+		Log.e(TAG, "rss_feed_xml: "+rss_feed_xml);
 		// check if RSS XML fetched or not
 		if(rss_feed_xml != null){
 			// successfully fetched rss xml
@@ -131,8 +132,8 @@ public class RSSParser {
 					String image = this.getValue(e1, TAG_IMAGE);
 					
 					RSSItem rssItem = new RSSItem(title, link, description, pubdate, guid, image, getNewsType(rss_url));
-					
 					// adding item to list
+					//Log.e(TAG, "getRSSFeedItems: "+rssItem.getTitle()+", "+rssItem.getDescription()+", "+rssItem.getImage());
 					itemsList.add(rssItem);
 				}
 			}catch(Exception e){
@@ -156,6 +157,8 @@ public class RSSParser {
 			return Constants.NEWS_TYPE_LATEST;
 		else if(rss_url.contains(Constants.NEWS_TYPE_EDUCATION))
 			return Constants.NEWS_TYPE_EDUCATION;
+		else if(rss_url.contains(Constants.NEWS_TYPE_RAJASTHAN))
+			return Constants.NEWS_TYPE_LATEST;
 		else
 			return "";
 	}
@@ -203,7 +206,7 @@ public class RSSParser {
 	 * Method to get xml content from url HTTP Get request
 	 * */
 	public String getXmlFromUrl(String urlFeed) {
-		URL url;
+		/*URL url;
 		StringBuffer response = null;
 		HttpURLConnection urlConnection = null;
 		try {
@@ -230,27 +233,71 @@ public class RSSParser {
 			if (urlConnection != null) {
 				urlConnection.disconnect();
 			}
+		}*/
+
+		URL url;
+		StringBuffer html = null;
+		StringBuffer response = null;
+		HttpURLConnection conn = null;
+		try {
+			url = new URL(urlFeed);
+			conn = (HttpURLConnection) url.openConnection();
+			//conn.setReadTimeout(5000);
+			conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+			conn.addRequestProperty("User-Agent", "Mozilla");
+			conn.addRequestProperty("Referer", "google.com");
+
+			Log.e(TAG, "getXmlFromUrl: "+urlFeed);
+			boolean redirect = false;
+			// normally, 3xx is redirect
+			int status = conn.getResponseCode();
+			if (status != HttpURLConnection.HTTP_OK) {
+				if (status == HttpURLConnection.HTTP_MOVED_TEMP
+						|| status == HttpURLConnection.HTTP_MOVED_PERM
+						|| status == HttpURLConnection.HTTP_SEE_OTHER)
+					redirect = true;
+			}
+			Log.e(TAG, "status: "+status);
+
+			if (redirect) {
+				// get redirect url from "location" header field
+				String newUrl = conn.getHeaderField("Location");
+
+				// get the cookie if need, for login
+				String cookies = conn.getHeaderField("Set-Cookie");
+
+				// open the new connnection again
+				conn = (HttpURLConnection) new URL(newUrl).openConnection();
+				conn.setRequestProperty("Cookie", cookies);
+				conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+				conn.addRequestProperty("User-Agent", "Mozilla");
+				conn.addRequestProperty("Referer", "google.com");
+				Log.e(TAG, "newUrl: "+newUrl);
+			}
+
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(conn.getInputStream()));
+			String inputLine;
+			html = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				html.append(inputLine);
+			}
+			in.close();
+
+			System.out.println("URL Content... \n" + html.toString());
+			Log.e(TAG, "html.toString(): "+html.toString());
+			System.out.println("Done");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+			}
 		}
 
-		/*String xml = null;
-		try {
-			// request method is GET
-			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet(url);
-
-			HttpResponse httpResponse = httpClient.execute(httpGet);
-			HttpEntity httpEntity = httpResponse.getEntity();
-			xml = EntityUtils.toString(httpEntity);
-
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
-		// return XML
-		return response.toString();
+		return html.toString();
 	}
 
 	/**
@@ -270,13 +317,13 @@ public class RSSParser {
 			doc = (Document) db.parse(is);
 
 		} catch (ParserConfigurationException e) {
-			Log.e("Error: ", e.getMessage());
+			Log.e("ParserConfigurationException Error: ", e.getMessage());
 			return null;
 		} catch (SAXException e) {
-			Log.e("Error: ", e.getMessage());
+			Log.e("SAXException Error: ", e.getMessage());
 			return null;
 		} catch (IOException e) {
-			Log.e("Error: ", e.getMessage());
+			Log.e("IOException Error: ", e.getMessage());
 			return null;
 		}
 

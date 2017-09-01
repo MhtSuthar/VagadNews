@@ -41,7 +41,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         try {
             String message = URLDecoder.decode(json.getString("message"),"UTF-8");
             String title = URLDecoder.decode(json.getString("title"),"UTF-8");
-            new NotificationUtils().generateNotification(getApplicationContext(), title, message, json.getBoolean("from_mobile"));
+            if(!json.has("image"))
+                new NotificationUtils().generateNotification(getApplicationContext(), title, message, json.getBoolean("from_mobile"));
+            else
+                new NotificationUtils().showBigNotification(URLDecoder.decode(json.getString("image"),"UTF-8"), title,  getApplicationContext());
         } catch (Exception e) {
             Log.e(TAG, "Exception: " + e.getMessage());
         }

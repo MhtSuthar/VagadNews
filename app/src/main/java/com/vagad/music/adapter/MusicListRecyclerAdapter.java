@@ -1,4 +1,4 @@
-package com.vagad.dashboard.adapter;
+package com.vagad.music.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -7,35 +7,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.vagad.R;
-import com.vagad.dashboard.FavListActivity;
+import com.vagad.dashboard.fragments.MoreNewsListFragment;
+import com.vagad.model.MusicModel;
 import com.vagad.model.RSSItem;
+import com.vagad.music.VagadMusicActivity;
+import com.vagad.utils.AppUtils;
 import com.vagad.utils.DateUtils;
 
 import java.util.List;
 
-public class FavNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MusicListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-    private List<RSSItem> mNewsList;
+    private List<MusicModel> mNewsList;
     private Context context;
-    private FavListActivity favListActivity;
+    private VagadMusicActivity vagadMusicActivity;
 
-    public FavNewsRecyclerAdapter(List<RSSItem> mNewsList, FavListActivity context, FavListActivity favListActivity) {
+    public MusicListRecyclerAdapter(List<MusicModel> mNewsList, Context context, VagadMusicActivity vagadMusicActivity) {
         this.mNewsList = mNewsList;
         this.context = context;
-        this.favListActivity = favListActivity;
+        this.vagadMusicActivity = vagadMusicActivity;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.list_item_fav, parent, false);
+                    .inflate(R.layout.list_item_music_list, parent, false);
             return new VHItem(v);
         } else if (viewType == TYPE_HEADER) {
             View v = LayoutInflater.from(parent.getContext())
@@ -49,19 +54,23 @@ public class FavNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof VHItem) {
-            ((VHItem) holder).txtTitle.setText(getItem(position).getTitle());
-            ((VHItem) holder).txtDescription.setText(getItem(position).getDescription());
-            ((VHItem) holder).txtTime.setText(DateUtils.convertData(getItem(position).getPubdate()));
-            Glide.with(context).load(getItem(position).getImage()).placeholder(R.drawable.ic_placeholder).into(((VHItem) holder).imgNews);
-            ((VHItem) holder).mCardView.setOnClickListener(new View.OnClickListener() {
+            ((VHItem) holder).txtTitle.setText(AppUtils.fromHtml(getItem(position).name));
+            ((VHItem) holder).txtDescription.setText(AppUtils.fromHtml(getItem(position).description));
+             ((VHItem) holder).mLinDown.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    favListActivity.setOnItemClick(getItem(position), ((VHItem) holder).imgNews);
+                    vagadMusicActivity.setOnItemClick(getItem(position));
                 }
             });
         } else if (holder instanceof VHHeader) {
+            ((VHHeader) holder).txtTitle.setText("Vagad Music");
+            /*switch (moreNewsListFragment.mNewsType){
+
+            }*/
             if(mNewsList.size() == 0) {
-                ((VHHeader) holder).txtNoData.setVisibility(View.VISIBLE);
+                ((VHHeader) holder).mProgressBar.setVisibility(View.VISIBLE);
+            }else{
+                ((VHHeader) holder).mProgressBar.setVisibility(View.GONE);
             }
         }
     }
@@ -83,34 +92,37 @@ public class FavNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return position == 0;
     }
 
-    private RSSItem getItem(int position) {
+    private MusicModel getItem(int position) {
         return mNewsList.get(position - 1);
     }
 
     class VHItem extends RecyclerView.ViewHolder {
-        public ImageView imgNews;
+        public TextView txtTitle, txtDescription;
         public CardView mCardView;
-        public TextView txtTitle, txtTime, txtDescription;
+        public LinearLayout mLinDown;
         public VHItem(View itemView) {
             super(itemView);
-            imgNews = (ImageView) itemView.findViewById(R.id.imgNews);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
-            txtTime = (TextView) itemView.findViewById(R.id.txtTime);
             mCardView = (CardView) itemView.findViewById(R.id.cardView);
             txtDescription = (TextView) itemView.findViewById(R.id.txtDescription);
+            mLinDown = (LinearLayout) itemView.findViewById(R.id.lin_download);
         }
     }
 
     class VHHeader extends RecyclerView.ViewHolder {
         ImageView imgCover;
         TextView txtTitle, txtNoData;
+        ProgressBar mProgressBar;
         public VHHeader(View itemView) {
             super(itemView);
             imgCover = (ImageView) itemView.findViewById(R.id.imgCover);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtNoData = (TextView) itemView.findViewById(R.id.txtNodata);
+            mProgressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
         }
     }
+
+
 
 
 }

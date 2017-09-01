@@ -247,7 +247,6 @@ public class NewsListActivity extends BaseActivity {
             public void onGlobalLayout() {
                 bottomNavigation.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 mBottomNavHeight = bottomNavigation.getHeight(); //height is ready
-                Log.e(TAG, "onGlobalLayout: "+ bottomNavigation.getHeight());
             }
         });
 
@@ -258,19 +257,14 @@ public class NewsListActivity extends BaseActivity {
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_DRAGGING:
-                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_DRAGGING");
                         break;
                     case BottomSheetBehavior.STATE_SETTLING:
-                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_SETTLING");
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_EXPANDED");
                         break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
-                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_COLLAPSED");
                         break;
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_HIDDEN");
                         break;
                 }
             }
@@ -391,6 +385,38 @@ public class NewsListActivity extends BaseActivity {
         overridePendingTransition(0, 0);
     }
 
+    public void onClickRajasthan(View view){
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(this, MoreNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_RAJASTHAN);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    public void onClickGadget(View view){
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(this, MoreNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_GADGET);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    public void onClickFilmReview(View view){
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(this, MoreNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_FILM_REVIEW);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    public void onClickIndia(View view){
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(this, MoreNewsActivity.class);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_INDIA);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
     public void onClickSport(View view){
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         Intent intent = new Intent(this, MoreNewsActivity.class);
@@ -434,7 +460,7 @@ public class NewsListActivity extends BaseActivity {
     public void onClickBollyWood(View view){
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         Intent intent = new Intent(this, MoreNewsActivity.class);
-        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_BOLLYWOOD);
+        intent.putExtra(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_HOLLYWOOD);
         startActivity(intent);
         overridePendingTransition(0, 0);
     }

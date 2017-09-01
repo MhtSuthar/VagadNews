@@ -16,18 +16,31 @@
             android:scaleType="centerCrop"
             android:src="@drawable/splash_bg" />
 
+        <View
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/darkTransparentColor"
+            />
+
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:background="@color/darkTransparentColor"
-            android:padding="@dimen/activity_horizontal_margin"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="@string/favourite"
             android:gravity="center"
             android:textSize="30sp"
             android:textAppearance="?android:textAppearanceLarge"
             android:textColor="@android:color/white"
+            />
+
+        <View
+            android:layout_width="30dp"
+            android:layout_height="2dp"
+            android:background="@android:color/white"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/txtTitle"
             />
 
     </RelativeLayout>

@@ -5,9 +5,9 @@
     <string name="more_read_old">और पढ़े राजस्थान पत्रिका पर</string>
     <string name="more_read">और पढ़े वागड़ पर</string>
     <string name="firebase_url">https://vagad-news.firebaseio.com/</string>
-    <string name="feed_url_dungarpur"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=dungarpur]]></string>
-    <string name="feed_url_banswara"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=banswara]]></string>
-    <string name="feed_url_udaipur"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=udaipur]]></string>
+    <string name="feed_url_dungarpur"><![CDATA[http://api.patrika.com/rss/dungarpur-news]]></string>
+    <string name="feed_url_banswara"><![CDATA[http://api.patrika.com/rss/banswara-news]]></string>
+    <string name="feed_url_udaipur"><![CDATA[http://api.patrika.com/rss/udaipur-news]]></string>
     <string name="feed_url_latest_news"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=latest-news]]></string>
     <string name="feed_url_astrology"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=astrology-and-spirituality]]></string>
     <string name="feed_url_entertainment"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=entertainment]]></string>
@@ -18,6 +18,18 @@
     <string name="feed_url_politics"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=politics]]></string>
     <string name="feed_url_bollywood"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=bollywood]]></string>
     <string name="feed_url_helth"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=health]]></string>
+    <string name="feed_news18_entertainment">http://hindi.news18.com/rss/khabar/entertainment/entertainment.xml</string>
+    <string name="feed_news18_world">http://hindi.news18.com/rss/khabar/world/world.xml</string>
+    <string name="feed_news18_india">https://hindi.news18.com/rss/khabar/nation/nation.xml</string>
+    <string name="feed_news18_rajasthan">http://hindi.news18.com/rss/khabar/rajasthan/rajasthan.xml</string>
+    <string name="feed_news18_sport">http://hindi.news18.com/rss/khabar/sports/sports.xml</string>
+    <string name="feed_news18_hollywood">http://hindi.news18.com/rss/khabar/entertainment/hollywood.xml</string>
+    <string name="feed_news18_politics">http://hindi.news18.com/rss/khabar/politics/politics.xml</string>
+    <string name="feed_news18_film_review">http://hindi.news18.com/rss/khabar/entertainment/film-review.xml</string>
+    <string name="feed_news18_gadget">http://hindi.news18.com/rss/khabar/lifestyle/gadgets.xml</string>
+    <string name="feed_news18_astro">http://hindi.news18.com/rss/khabar/astro/astro.xml</string>
+    <string name="feed_news18_helth">http://hindi.news18.com/rss/khabar/lifestyle/health.xml</string>
+    <string name="feed_news18_career">http://hindi.news18.com/rss/khabar/career/career.xml</string>
 
     <string name="about_us">About Us</string>
     <string name="favourite">Favourites</string>
@@ -43,9 +55,11 @@
     <string name="add_news"><![CDATA[Event & News]]></string>
     <string name="event_and_news"><![CDATA[Event & News]]></string>
     <string name="whats_new_texts">Yup! You got it completely new experience of our Vagad News app.\n
-        - When you add news than all device will be showing notification about your news.\n
-        - You can share with Friends and Family\n
+        - We are adding new news type so you can enjoy.\n
+        - Bug Fixes\n
         - Keep Supporting and Sharing.\n
         Thank You.</string>
     <string name="search">Search</string>
+    <string name="more">See More</string>
+    <string name="e_paper_bhasker">http://m.epaper.bhaskar.com/dungarpur/90/DATEHERE/0/1/</string>
 </resources>

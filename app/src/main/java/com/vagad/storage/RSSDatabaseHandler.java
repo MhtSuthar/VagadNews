@@ -71,7 +71,7 @@ public class RSSDatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_LINK, site.getLink()); // site url
 		values.put(KEY_IMAGE, site.getImage()); // rss link url
 		values.put(KEY_DESCRIPTION, site.getDescription()); // site description
-		values.put(KEY_DATE, DateUtils.convertTimestamp(site.getPubdate())); // site description
+		values.put(KEY_DATE, site.get_news_type().equals(Constants.NEWS_TYPE_LATEST) ? DateUtils.convertTimestampRajasthan(site.getPubdate()) : DateUtils.convertTimestamp(site.getPubdate())); // site description
 		values.put(KEY_FAV, 0);
 		values.put(KEY_NEWS_TYPE, site.get_news_type());
 
@@ -196,7 +196,8 @@ public class RSSDatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_LINK, site.getLink());
 		values.put(KEY_IMAGE, site.getImage());
 		values.put(KEY_DESCRIPTION, site.getDescription());
-		values.put(KEY_DATE, DateUtils.convertTimestamp(site.getPubdate()));
+		//values.put(KEY_DATE, DateUtils.convertTimestamp(site.getPubdate()));
+		values.put(KEY_DATE, site.get_news_type().equals(Constants.NEWS_TYPE_LATEST) ? DateUtils.convertTimestampRajasthan(site.getPubdate()) : DateUtils.convertTimestamp(site.getPubdate())); // site description
 		values.put(KEY_NEWS_TYPE, site.get_news_type());
 
 		// updating row return

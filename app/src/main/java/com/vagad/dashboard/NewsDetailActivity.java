@@ -2,6 +2,8 @@ package com.vagad.dashboard;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LevelListDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
@@ -10,10 +12,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -33,8 +39,10 @@ import com.vagad.localnews.adapter.ReportNewsRecyclerAdapter;
 import com.vagad.model.RSSItem;
 import com.vagad.storage.RSSDatabaseHandler;
 import com.vagad.utils.AnimationUtils;
+import com.vagad.utils.AppUtils;
 import com.vagad.utils.Constants;
 import com.vagad.utils.DateUtils;
+import com.vagad.utils.ImageGetterAsyncTask;
 import com.vagad.utils.customviews.CustomViewPager;
 
 import java.io.IOException;
@@ -108,20 +116,41 @@ public class NewsDetailActivity extends BaseActivity {
                 }else {
                     Glide.with(this).load(decodeFromFirebaseBase64(Constants.mClickImagePath)).asBitmap().
                             placeholder(R.drawable.ic_placeholder).error(R.drawable.ic_placeholder).into(imgCover);
-                    txtTime.setText(DateUtils.getDate(Long.parseLong(rssItem.getPubdate())));
+                    try {
+                        txtTime.setText(DateUtils.getDate(Long.parseLong(rssItem.getPubdate())));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
             //get_news_type is mobile no & link is reporter name
-            txtTitle.setText(rssItem.getTitle()+"\n Created By : "+rssItem.getLink()+" "+rssItem.get_news_type());
+            if(getIntent().getBooleanExtra(Constants.Bundle_Is_From_More_News, false)) {
+                txt_more_read.setVisibility(View.VISIBLE);
+                txtTitle.setText(AppUtils.fromHtml(rssItem.getTitle()));
+            }else
+                txtTitle.setText(rssItem.getTitle()+"\n Created By : "+rssItem.getLink()+" "+rssItem.get_news_type());
 
-            txtDesc.setText(rssItem.getDescription());
+            txtDesc.setText(AppUtils.fromHtml(rssItem.getDescription()));
         }else {
             Glide.with(this).load(rssItem.getImage()).placeholder(R.drawable.ic_placeholder).into(imgCover);
-            txtTitle.setText(rssItem.getTitle());
+            txtTitle.setText(AppUtils.fromHtml(rssItem.getTitle()));
             txtTime.setText(DateUtils.convertData(rssItem.getPubdate()));
-            txtDesc.setText(rssItem.getDescription());
+            Spanned spanned = Html.fromHtml(rssItem.getDescription(),
+                    new Html.ImageGetter() {
+                        @Override
+                        public Drawable getDrawable(String source) {
+                            LevelListDrawable d = new LevelListDrawable();
+                            Drawable empty = ContextCompat.getDrawable(NewsDetailActivity.this, R.drawable.ic_placeholder);
+                            d.addLevel(0, 0, empty);
+                            d.setBounds(0, 0, empty.getIntrinsicWidth(), empty.getIntrinsicHeight());
+                            new ImageGetterAsyncTask(NewsDetailActivity.this, source, d).execute(txtDesc);
+                            return d;
+                        }
+                    }, null);
+            txtDesc.setText(spanned);
+            //txtDesc.setText(AppUtils.fromHtml(rssItem.getDescription()));
             if(rssItem.isFav()){
                 imgFav.setTag("1");
                 imgFav.setImageResource(R.drawable.ic_fav_select);
@@ -262,7 +291,9 @@ public class NewsDetailActivity extends BaseActivity {
     private void openShare() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, ""+rssItem.getTitle()+"\n"+rssItem.getDescription()+" Thanks For Using Vagad News. Please download from play store https://play.google.com/store/apps/details?id=com.vagad");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, ""+AppUtils.fromHtml(rssItem.getTitle())+"\n"+
+                AppUtils.fromHtml(rssItem.getDescription())+
+                " Thanks For Using Vagad News. Please download from play store https://play.google.com/store/apps/details?id=com.vagad");
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }

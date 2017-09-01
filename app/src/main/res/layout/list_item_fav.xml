@@ -6,18 +6,20 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/colorPrimary"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp">
+   >
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@android:color/white"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
         app:cardElevation="5dp"
+        app:cardCornerRadius="2dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
-        app:contentPadding="@dimen/common_margin">
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -29,14 +31,18 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:transitionName="profile"
+                android:layout_alignBottom="@+id/lin_meddle"
+                android:layout_alignTop="@+id/lin_meddle"
                 android:scaleType="centerCrop"
                 tools:src="@drawable/ic_placeholder" />
 
             <LinearLayout
+                android:id="@+id/lin_meddle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/common_margin"
-                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:minHeight="100dp"
+                android:minWidth="100dp"
                 android:layout_toRightOf="@+id/imgNews"
                 android:orientation="vertical">
 
