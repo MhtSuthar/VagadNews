@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +60,7 @@ public class MoreNewsListFragment extends BaseFragment {
             recyclerView.setAdapter(moreNewsRecyclerAdapter);
             return;
         }
-        mNewsType = getArguments().getString(Constants.EXTRA_MORE_NEWS_TYPE);
+        mNewsType = getArguments().getString(Constants.EXTRA_MORE_NEWS_TYPE, Constants.KEY_RAJASTHAN);
         setAdapter();
         if(AppUtils.isOnline(getActivity())){
             new LoadRSSFeed().execute();
@@ -100,7 +100,8 @@ public class MoreNewsListFragment extends BaseFragment {
         }
     }
 
-    public void setLatestNews(ArrayList<RSSItem> latestNews) {
+    public void setLatestNews(List<RSSItem> latestNews) {
+        Log.e(TAG, "setLatestNews:Size "+latestNews.size());
         this.mLatestNews = latestNews;
     }
 

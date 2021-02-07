@@ -60,8 +60,8 @@ public class FcmUtils {
                     }
 
                     JSONObject message = new JSONObject();
-                    //message.put("to", token);
-                    message.put("registration_ids", regId);
+                    message.put("to", "/topics/"+Constants.TOPIC_GLOBAL);
+                    //message.put("registration_ids", regId);
                     message.put("priority", "high");
                     message.put("data", data);
 
@@ -69,7 +69,7 @@ public class FcmUtils {
                     notification.put("title", "Vagad News");
                     notification.put("text", SharedPreferenceUtil.getString(Constants.LOCALE_NEWS_TITLE_ADD, ""));
 
-                    message.put("notification", notification);
+                    //message.put("notification", notification);
 
                     Log.e(TAG, "run: "+message.toString());
 

@@ -133,6 +133,7 @@ public class SplashActivity extends BaseActivity {
                 rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_banswara)));
                 rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_udaipur)));
                 rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_news18_rajasthan)));
+                rssFeed.addAll(rssParser.getRSSFeedItems(getString(R.string.feed_url_latest_news)));
                 for (int i = 0; i < rssFeed.size(); i++) {
                     String imgRegex = "<[iI][mM][gG][^>]+[sS][rR][cC]\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
                     Pattern p = Pattern.compile(imgRegex);

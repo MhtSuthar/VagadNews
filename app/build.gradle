@@ -1,16 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 29
+    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.vagad"
-        minSdkVersion 14
-        targetSdkVersion 23
-        versionCode 19
-        versionName "1.6"
+        minSdkVersion 16
+        targetSdkVersion 29
+        versionCode 26
+        versionName "1.8"
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -24,24 +24,22 @@ android {
     }
 }
 
-def ASUPPORT = '25.3.0'
 def glideVersion = "3.6.1"
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile "com.android.support:appcompat-v7:$ASUPPORT"
-    compile "com.android.support:design:$ASUPPORT"
-    compile "com.android.support:cardview-v7:$ASUPPORT"
-    compile "com.github.bumptech.glide:glide:$glideVersion"
-	compile 'com.google.android.gms:play-services-ads:10.2.1'
-    compile 'com.google.firebase:firebase-core:10.2.1'
-    compile 'com.google.firebase:firebase-database:10.2.1'
-    compile 'com.android.support:multidex:1.0.1'
-	compile 'com.google.firebase:firebase-messaging:10.2.1'
-    testCompile 'junit:junit:4.12'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    implementation 'com.google.android.gms:play-services-ads:19.3.0'
+    implementation 'com.google.firebase:firebase-core:17.4.4'
+    implementation 'com.google.firebase:firebase-database:19.3.1'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
     compile files('libs/jsoup-1.6.2.jar')
 }
 apply plugin: 'com.google.gms.google-services'

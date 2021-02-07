@@ -1,21 +1,16 @@
 package com.vagad.dashboard.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.vagad.R;
-import com.vagad.busroute.adapter.BusRouteRecyclerAdapter;
-import com.vagad.dashboard.NewsListActivity;
 import com.vagad.dashboard.fragments.NewsListFragment;
 import com.vagad.model.RSSItem;
 import com.vagad.utils.AppUtils;

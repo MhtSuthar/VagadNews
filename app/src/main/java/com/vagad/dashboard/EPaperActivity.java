@@ -2,9 +2,9 @@ package com.vagad.dashboard;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
-import com.vagad.utils.Constants;
 
 /**
  * Created by Mohit-Anjali on 18-Aug-17.

@@ -1,8 +1,9 @@
 package com.vagad.dashboard.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.text.Html;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.vagad.R;
-import com.vagad.dashboard.FavListActivity;
 import com.vagad.dashboard.fragments.MoreNewsListFragment;
 import com.vagad.model.RSSItem;
 import com.vagad.utils.AppUtils;
@@ -59,7 +59,7 @@ public class MoreNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             }else
                 ((VHItem) holder).txtTime.setText(getItem(position).getPubdate());
             Glide.with(context).load(getItem(position).getImage()).placeholder(R.drawable.ic_placeholder).into(((VHItem) holder).imgNews);
-            ((VHItem) holder).itemView.setOnClickListener(new View.OnClickListener() {
+            ((VHItem) holder).mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     moreNewsListFragment.setOnItemClick(position, ((VHItem) holder).imgNews);
@@ -102,11 +102,13 @@ public class MoreNewsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     class VHItem extends RecyclerView.ViewHolder {
         public ImageView imgNews;
         public TextView txtTitle, txtTime, txtDescription;
+        public CardView mCardView;
         public VHItem(View itemView) {
             super(itemView);
             imgNews = (ImageView) itemView.findViewById(R.id.imgNews);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtTime = (TextView) itemView.findViewById(R.id.txtTime);
+            mCardView = (CardView) itemView.findViewById(R.id.cardView);
             txtDescription = (TextView) itemView.findViewById(R.id.txtDescription);
         }
     }

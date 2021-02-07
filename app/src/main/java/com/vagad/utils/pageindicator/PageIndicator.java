@@ -17,7 +17,7 @@
 
 package com.vagad.utils.pageindicator;
 
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * CommonAsync PageIndicator is responsible to show an visual indicator on the total views

@@ -1,7 +1,5 @@
 package com.vagad.dashboard;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -10,54 +8,35 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.vagad.BuildConfig;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.base.VagadApp;
 import com.vagad.busroute.fragment.BusRouteSearchFragment;
 import com.vagad.dashboard.fragments.NewsListFragment;
-import com.vagad.localnews.AddNewsActivity;
 import com.vagad.localnews.fragment.ReporterNewsListFragment;
-import com.vagad.model.NewsPostModel;
-import com.vagad.model.TokenModel;
 import com.vagad.receiver.NetworkChangeReceiver;
 import com.vagad.storage.SharedPreferenceUtil;
-import com.vagad.utils.AppUtils;
-import com.vagad.utils.BottomNavigationViewBehavior;
 import com.vagad.utils.Constants;
-import com.vagad.utils.fonts.CustomFontTextView;
 import com.vagad.utils.rating.RateItDialogFragment;
 
 /**
@@ -70,8 +49,6 @@ public class NewsListActivity extends BaseActivity {
     private static final String TAG = "NewsListActivity";
     private FragmentStatePagerAdapter mHeaderPagerAdapter;
     private int[] mImages = new int[]{R.drawable.splash_bg, R.drawable.help_two, R.drawable.help_three, R.drawable.help_four};
-    private InterstitialAd mInterstitialAd;
-    private boolean mFullAddDisplayed;
     private int mVisiblePage = -1;
     private NewsListFragment newsListFragment = new NewsListFragment();
     private BusRouteSearchFragment busRouteSearchFragment = new BusRouteSearchFragment();
@@ -167,20 +144,6 @@ public class NewsListActivity extends BaseActivity {
 
         if(!isOnline(this))
             adView.setVisibility(View.GONE);
-
-        mInterstitialAd = new InterstitialAd(this);
-
-        // set the ad unit ID
-        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
-
-        // Load ads into Interstitial Ads
-        mInterstitialAd.loadAd(adRequest);
-
-        mInterstitialAd.setAdListener(new AdListener() {
-            public void onAdLoaded() {
-
-            }
-        });
     }
 
     @Override
@@ -362,11 +325,11 @@ public class NewsListActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (mInterstitialAd.isLoaded() && !mFullAddDisplayed) {
+       /* if (mInterstitialAd.isLoaded() && !mFullAddDisplayed) {
             mInterstitialAd.show();
             mFullAddDisplayed = true;
-        }else
-            super.onBackPressed();
+        }else*/
+        super.onBackPressed();
     }
 
     public void openMoreNews() {

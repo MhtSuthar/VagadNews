@@ -8,16 +8,16 @@
     <string name="feed_url_dungarpur"><![CDATA[http://api.patrika.com/rss/dungarpur-news]]></string>
     <string name="feed_url_banswara"><![CDATA[http://api.patrika.com/rss/banswara-news]]></string>
     <string name="feed_url_udaipur"><![CDATA[http://api.patrika.com/rss/udaipur-news]]></string>
-    <string name="feed_url_latest_news"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=latest-news]]></string>
-    <string name="feed_url_astrology"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=astrology-and-spirituality]]></string>
-    <string name="feed_url_entertainment"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=entertainment]]></string>
-    <string name="feed_url_sport"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=sports]]></string>
-    <string name="feed_url_education"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=education]]></string>
-    <string name="feed_url_world"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=world]]></string>
-    <string name="feed_url_technology"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=technology]]></string>
-    <string name="feed_url_politics"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=politics]]></string>
-    <string name="feed_url_bollywood"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=bollywood]]></string>
-    <string name="feed_url_helth"><![CDATA[http://rss.rajasthanpatrika.com/rss/rss.php?q=category&v=health]]></string>
+    <string name="feed_url_latest_news"><![CDATA[http://api.patrika.com/rss/jaipur-news]]></string>
+    <string name="feed_url_astrology"><![CDATA[http://api.patrika.com/rss/astrology-and-spirituality]]></string>
+    <string name="feed_url_entertainment"><![CDATA[http://api.patrika.com/rss/entertainment-news]]></string>
+    <string name="feed_url_sport"><![CDATA[http://api.patrika.com/rss/sports-news]]></string>
+    <string name="feed_url_education"><![CDATA[http://api.patrika.com/rss/education-news]]></string>
+    <string name="feed_url_world"><![CDATA[http://api.patrika.com/rss/world-news]]></string>
+    <string name="feed_url_technology"><![CDATA[http://api.patrika.com/rss/technology]]></string>
+    <string name="feed_url_politics"><![CDATA[http://api.patrika.com/rss/politics]]></string>
+    <string name="feed_url_bollywood"><![CDATA[http://api.patrika.com/rss/bollywood]]></string>
+    <string name="feed_url_helth"><![CDATA[http://api.patrika.com/rss/health-news]]></string>
     <string name="feed_news18_entertainment">http://hindi.news18.com/rss/khabar/entertainment/entertainment.xml</string>
     <string name="feed_news18_world">http://hindi.news18.com/rss/khabar/world/world.xml</string>
     <string name="feed_news18_india">https://hindi.news18.com/rss/khabar/nation/nation.xml</string>

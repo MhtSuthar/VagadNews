@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +18,10 @@ import com.bumptech.glide.Glide;
 import com.vagad.R;
 import com.vagad.base.BaseFragment;
 import com.vagad.dashboard.NewsDetailActivity;
-import com.vagad.dashboard.NewsListActivity;
 import com.vagad.model.RSSItem;
 import com.vagad.utils.AppUtils;
 import com.vagad.utils.Constants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

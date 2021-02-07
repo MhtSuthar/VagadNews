@@ -1,10 +1,6 @@
 package com.vagad.utils;
 
-import android.Manifest;
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -13,7 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.ContactsContract;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
+import androidx.core.app.ActivityCompat;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Base64;
@@ -22,9 +18,6 @@ import android.util.Log;
 import com.vagad.storage.SharedPreferenceUtil;
 
 import java.io.ByteArrayOutputStream;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Admin on 19-Feb-17.

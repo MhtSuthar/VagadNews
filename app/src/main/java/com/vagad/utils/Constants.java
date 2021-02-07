@@ -70,4 +70,5 @@ public class Constants {
     public static final String CETEGORY_OF_SERVICE = "CETEGORY_OF_SERVICE";
     public static String mClickImagePath = "";
     public static String Bundle_Is_From_More_News = "more_news";
+    public static String Bundle_News= "news_list";
 }

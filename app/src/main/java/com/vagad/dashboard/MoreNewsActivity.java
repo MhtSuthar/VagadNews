@@ -2,18 +2,19 @@ package com.vagad.dashboard;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
+import com.vagad.base.VagadApp;
 import com.vagad.dashboard.fragments.MoreNewsListFragment;
 import com.vagad.model.RSSItem;
 import com.vagad.utils.Constants;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Admin on 25-Jun-17.
@@ -22,20 +23,28 @@ import java.util.ArrayList;
 public class MoreNewsActivity extends BaseActivity {
 
     private MoreNewsListFragment entertainmentListFragment = new MoreNewsListFragment();
+    private static final String TAG = "MoreNewsActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG, "onCreate: MOre News ");
         fullScreen();
         setContentView(R.layout.layout_frame);
 
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.EXTRA_MORE_NEWS_TYPE, ""+getIntent().getExtras().get(Constants.EXTRA_MORE_NEWS_TYPE));
+        if(getIntent().hasExtra(Constants.EXTRA_MORE_NEWS_TYPE)) {
+            bundle.putString(Constants.EXTRA_MORE_NEWS_TYPE, "" + getIntent().getExtras().get(Constants.EXTRA_MORE_NEWS_TYPE));
+        }else{
+            List<RSSItem> mList = ((VagadApp)getApplication()).getmNewsList();
+            Log.e(TAG, "onCreate: "+mList.size());
+            entertainmentListFragment.setLatestNews(mList);
+        }
         entertainmentListFragment.setArguments(bundle);
-        ArrayList<RSSItem> mList = getIntent().getParcelableArrayListExtra(Constants.Bundle_Feed_List);
-        entertainmentListFragment.setLatestNews(mList);
-        getSupportFragmentManager().beginTransaction().
-                replace(R.id.container, entertainmentListFragment, entertainmentListFragment.getTag()).commit();
+
+        //Bundle data = this.getIntent().getBundleExtra(Constants.Bundle_News);
+        //ArrayList<RSSItem> mList = data.getParcelableArrayList(Constants.Bundle_Feed_List);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, entertainmentListFragment, entertainmentListFragment.getTag()).commit();
     }
 
     private void fullScreen() {

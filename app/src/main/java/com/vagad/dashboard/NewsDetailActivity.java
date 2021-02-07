@@ -1,25 +1,21 @@
 package com.vagad.dashboard;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LevelListDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.Spanned;
+import androidx.appcompat.widget.Toolbar;
+
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -35,14 +31,12 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.dashboard.fragments.NewsDetailFragment;
-import com.vagad.localnews.adapter.ReportNewsRecyclerAdapter;
 import com.vagad.model.RSSItem;
 import com.vagad.storage.RSSDatabaseHandler;
 import com.vagad.utils.AnimationUtils;
 import com.vagad.utils.AppUtils;
 import com.vagad.utils.Constants;
 import com.vagad.utils.DateUtils;
-import com.vagad.utils.ImageGetterAsyncTask;
 import com.vagad.utils.customviews.CustomViewPager;
 
 import java.io.IOException;
@@ -66,6 +60,8 @@ public class NewsDetailActivity extends BaseActivity {
     private static final String TAG = "NewsDetailActivity";
     private RSSItem rssItem;
     private AdView adView;
+    private InterstitialAd mInterstitialAd;
+    private boolean mFullAddDisplayed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +87,8 @@ public class NewsDetailActivity extends BaseActivity {
         }
     }
 
+
+
     private void setupAds() {
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
@@ -102,6 +100,20 @@ public class NewsDetailActivity extends BaseActivity {
 
         if(!isOnline(this))
             adView.setVisibility(View.GONE);
+
+        mInterstitialAd = new InterstitialAd(this);
+
+        // set the ad unit ID
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+
+        // Load ads into Interstitial Ads
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+
+            }
+        });
     }
 
 
@@ -137,7 +149,7 @@ public class NewsDetailActivity extends BaseActivity {
             Glide.with(this).load(rssItem.getImage()).placeholder(R.drawable.ic_placeholder).into(imgCover);
             txtTitle.setText(AppUtils.fromHtml(rssItem.getTitle()));
             txtTime.setText(DateUtils.convertData(rssItem.getPubdate()));
-            Spanned spanned = Html.fromHtml(rssItem.getDescription(),
+           /* Spanned spanned = Html.fromHtml(rssItem.getDescription(),
                     new Html.ImageGetter() {
                         @Override
                         public Drawable getDrawable(String source) {
@@ -149,8 +161,9 @@ public class NewsDetailActivity extends BaseActivity {
                             return d;
                         }
                     }, null);
-            txtDesc.setText(spanned);
-            //txtDesc.setText(AppUtils.fromHtml(rssItem.getDescription()));
+            txtDesc.setText(spanned);*/
+
+            txtDesc.setText(AppUtils.fromHtml(rssItem.getDescription()));
             if(rssItem.isFav()){
                 imgFav.setTag("1");
                 imgFav.setImageResource(R.drawable.ic_fav_select);
@@ -276,6 +289,7 @@ public class NewsDetailActivity extends BaseActivity {
         });
     }
 
+    @SuppressLint("RestrictedApi")
     private void openPreviewImage() {
         Intent intent = new Intent(this, PreviewImageActivity.class);
         intent.putExtra(Constants.Bundle_Feed_Item, rssItem);
@@ -311,7 +325,11 @@ public class NewsDetailActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if(isFavChange && mIsFromNewsList){
+        if (mInterstitialAd.isLoaded() && !mFullAddDisplayed) {
+            mInterstitialAd.show();
+            mFullAddDisplayed = true;
+        }
+        else if(isFavChange && mIsFromNewsList){
             Intent intent = new Intent();
             intent.putExtra(Constants.Bundle_Feed_Item, rssItem);
             setResult(Activity.RESULT_OK, intent);

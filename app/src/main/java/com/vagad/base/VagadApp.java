@@ -2,13 +2,12 @@ package com.vagad.base;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
-import android.util.Log;
+import androidx.multidex.MultiDex;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.vagad.model.BusListModel;
+import com.vagad.model.RSSItem;
 import com.vagad.storage.SharedPreferenceUtil;
-import com.vagad.utils.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,6 +36,16 @@ public class VagadApp extends Application {
 
     private static FirebaseAnalytics mFirebaseAnalytics;
     private static final String TAG = "VagadApp";
+
+    public List<RSSItem> getmNewsList() {
+        return mNewsList;
+    }
+
+    public void setmNewsList(List<RSSItem> mNewsList) {
+        this.mNewsList = mNewsList;
+    }
+
+    public List<RSSItem> mNewsList;
 
     @Override
     public void onCreate() {

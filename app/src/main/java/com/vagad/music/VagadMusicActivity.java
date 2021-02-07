@@ -8,13 +8,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,17 +21,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
-import com.vagad.dashboard.adapter.MoreNewsRecyclerAdapter;
-import com.vagad.dashboard.fragments.MoreNewsListFragment;
 import com.vagad.model.MusicModel;
-import com.vagad.model.NewsPostModel;
-import com.vagad.model.RSSItem;
 import com.vagad.music.adapter.MusicListRecyclerAdapter;
 import com.vagad.utils.Constants;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

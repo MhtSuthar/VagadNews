@@ -2,17 +2,14 @@ package com.vagad.dashboard;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ShareCompat;
+import androidx.annotation.Nullable;
+import androidx.core.app.ShareCompat;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
-import com.vagad.base.BaseFragment;
 
 /**
  * Created by Admin on 15-Feb-17.
