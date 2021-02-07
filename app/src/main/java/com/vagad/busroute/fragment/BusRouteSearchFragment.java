@@ -88,18 +88,6 @@ public class BusRouteSearchFragment extends BaseFragment {
         });
         toolbar.inflateMenu(R.menu.bus_menu);
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0) {
-                    ((NewsListActivity)getActivity()).hideBottomnavigation();
-                } else {
-                    ((NewsListActivity)getActivity()).showBottomnavigation();
-                }
-            }
-        });
-
         setupSearchView();
     }
 

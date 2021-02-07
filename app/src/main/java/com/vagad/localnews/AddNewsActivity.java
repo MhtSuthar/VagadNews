@@ -2,6 +2,7 @@ package com.vagad.localnews;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -12,9 +13,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import androidx.annotation.Nullable;
-import androidx.core.app.ShareCompat;
-import androidx.appcompat.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -50,6 +48,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 
 /**
  * Created by Admin on 15-Feb-17.

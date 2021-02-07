@@ -39,6 +39,9 @@ import com.vagad.storage.SharedPreferenceUtil;
 import com.vagad.utils.Constants;
 import com.vagad.utils.rating.RateItDialogFragment;
 
+import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
+import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_SET_USER_VISIBLE_HINT;
+
 /**
  * Created by Mohit on 15-Feb-17.
  */
@@ -48,16 +51,10 @@ public class NewsListActivity extends BaseActivity {
     private ViewPager viewPager;
     private static final String TAG = "NewsListActivity";
     private FragmentStatePagerAdapter mHeaderPagerAdapter;
-    private int[] mImages = new int[]{R.drawable.splash_bg, R.drawable.help_two, R.drawable.help_three, R.drawable.help_four};
-    private int mVisiblePage = -1;
     private NewsListFragment newsListFragment = new NewsListFragment();
-    private BusRouteSearchFragment busRouteSearchFragment = new BusRouteSearchFragment();
     private ReporterNewsListFragment reporterNewsListFragment = new ReporterNewsListFragment();
     private BottomNavigationView bottomNavigation;
-    private CoordinatorLayout mCoordinatorLayout;
     private AdView adView;
-    private int mBottomNavHeight = 120;
-    private RelativeLayout mRelBottomMenu;
     private NetworkChangeReceiver mNetworkReceiver;
     private BottomSheetBehavior behavior;
     private boolean isNotificationFromLocaleNews;
@@ -91,7 +88,7 @@ public class NewsListActivity extends BaseActivity {
         super.onNewIntent(intent);
         isNotificationFromLocaleNews = intent.getBooleanExtra(Constants.EXTRA_FROM_LOCALE_NEWS, false);
         if(viewPager != null)
-            viewPager.setCurrentItem(isNotificationFromLocaleNews ? 2 : 0);
+            viewPager.setCurrentItem(isNotificationFromLocaleNews ? 1 : 0);
     }
 
     private void checkUpdateAvail() {
@@ -155,9 +152,7 @@ public class NewsListActivity extends BaseActivity {
     private void initView() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         adView = (AdView) findViewById(R.id.adView);
-        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        mRelBottomMenu = (RelativeLayout) findViewById(R.id.relBottomMenu);
         setViewPagerAdapter(viewPager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -166,15 +161,11 @@ public class NewsListActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                mVisiblePage = position;
                 switch (position){
                     case 0:
                         bottomNavigation.setSelectedItemId(R.id.menu_news);
                         break;
                     case 1:
-                        bottomNavigation.setSelectedItemId(R.id.menu_bus);
-                        break;
-                    case 2:
                         bottomNavigation.setSelectedItemId(R.id.menu_event);
                         break;
                 }
@@ -185,8 +176,6 @@ public class NewsListActivity extends BaseActivity {
             }
         });
 
-        //CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigation.getLayoutParams();
-        //layoutParams.setBehavior(new BottomNavigationViewBehavior());
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -194,74 +183,16 @@ public class NewsListActivity extends BaseActivity {
                     case R.id.menu_news:
                         viewPager.setCurrentItem(0);
                         break;
-                    case R.id.menu_bus:
-                        viewPager.setCurrentItem(1);
-                        break;
                     case R.id.menu_event:
-                        viewPager.setCurrentItem(2);
+                        viewPager.setCurrentItem(1);
                         break;
                 }
                 return true;
             }
         });
 
-        bottomNavigation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                bottomNavigation.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                mBottomNavHeight = bottomNavigation.getHeight(); //height is ready
-            }
-        });
-
         View bottomSheet = findViewById(R.id.design_bottom_sheet);
         behavior = BottomSheetBehavior.from(bottomSheet);
-        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        break;
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        break;
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                Log.i("BottomSheetCallback", "slideOffset: " + slideOffset);
-            }
-        });
-
-       /* recyclerView.addOnItemTouchListener(new RecyclerTouchListener(recyclerView, new RecyclerTouchListener.OnRecyclerClickListener() {
-            @Override
-            public void onClick(View v, int position) {
-               openNewsDetail(mNewsList.get(position));
-            }
-            @Override
-            public void onLongClick(View v, int position) {
-
-            }
-        }));*/
-    }
-
-    public void showBottomnavigation(){
-        mRelBottomMenu.animate()
-                .translationYBy(mBottomNavHeight)
-                .translationY(0)
-                .setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
-    }
-
-    public void hideBottomnavigation(){
-        mRelBottomMenu.animate()
-                .translationYBy(0)
-                .translationY(mBottomNavHeight)
-                .setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
     @Override
@@ -288,10 +219,10 @@ public class NewsListActivity extends BaseActivity {
     }
 
     public void setViewPagerAdapter(ViewPager viewPager){
-        mHeaderPagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+        mHeaderPagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT ) {
             @Override
             public int getCount() {
-                return 3;
+                return 2;
             }
             @Override
             public Fragment getItem(int position) {
@@ -299,8 +230,6 @@ public class NewsListActivity extends BaseActivity {
                     case 0:
                         return newsListFragment;
                     case 1:
-                        return busRouteSearchFragment;
-                    case 2:
                         return reporterNewsListFragment;
                 }
                return null;
@@ -319,18 +248,10 @@ public class NewsListActivity extends BaseActivity {
             }
         };
         viewPager.setAdapter(mHeaderPagerAdapter);
-        viewPager.setOffscreenPageLimit(3);
-        viewPager.setCurrentItem(isNotificationFromLocaleNews ? 2 : 0);
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.setCurrentItem(isNotificationFromLocaleNews ? 1 : 0);
     }
 
-    @Override
-    public void onBackPressed() {
-       /* if (mInterstitialAd.isLoaded() && !mFullAddDisplayed) {
-            mInterstitialAd.show();
-            mFullAddDisplayed = true;
-        }else*/
-        super.onBackPressed();
-    }
 
     public void openMoreNews() {
         if (behavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {

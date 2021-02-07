@@ -211,7 +211,7 @@ public class RSSDatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_TITLE, site.getTitle());
+        values.put(KEY_TITLE, site.getTitle().replace("'", ""));
         values.put(KEY_LINK, site.getLink());
         values.put(KEY_IMAGE, site.getImage());
         values.put(KEY_DESCRIPTION, site.getDescription());
@@ -281,9 +281,8 @@ public class RSSDatabaseHandler extends SQLiteOpenHelper {
      * link
      */
     public boolean isSiteExists(SQLiteDatabase db, String title) {
-
-        Cursor cursor = db.rawQuery("SELECT 1 FROM " + TABLE_RSS
-                + " WHERE title = '" + title + "'", new String[]{});
+        String replaceTitle = title.replace("'", "");
+        Cursor cursor = db.rawQuery("SELECT 1 FROM " + TABLE_RSS + " WHERE title = '" + replaceTitle + "'", new String[]{});
         boolean exists = (cursor.getCount() > 0);
 
         if(cursor != null)

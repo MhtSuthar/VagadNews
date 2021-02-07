@@ -62,4 +62,6 @@
     <string name="search">Search</string>
     <string name="more">See More</string>
     <string name="e_paper_bhasker">http://m.epaper.bhaskar.com/dungarpur/90/DATEHERE/0/1/</string>
+    <string name="news">News</string>
+    <string name="event">Event</string>
 </resources>

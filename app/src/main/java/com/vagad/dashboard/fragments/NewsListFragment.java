@@ -61,6 +61,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
+
 /**
  * Created by Mohit on 15-Feb-17.
  */
@@ -85,7 +87,6 @@ public class NewsListFragment extends BaseFragment{
     private int mStartLatestNews = 0, mEndLatestNews = 5;
     private List<RSSItem> mLatestNewsList = new ArrayList<>();
     private List<RSSItem> mLatestNewsListVisible = new ArrayList<>();
-    private int[] mImages = new int[]{R.drawable.splash_bg, R.drawable.help_two, R.drawable.help_three, R.drawable.help_four};
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ViewPager viewPager;
 
@@ -219,48 +220,6 @@ public class NewsListFragment extends BaseFragment{
             }
         });
         toolbar.inflateMenu(R.menu.home_menu);
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0) {
-                    // Scrolling up hide
-                    ((NewsListActivity)getActivity()).hideBottomnavigation();
-                } else {
-                    // Scrolling down visible
-                    ((NewsListActivity)getActivity()).showBottomnavigation();
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-                    // Do something
-                    Log.e(TAG, "onScrollStateChanged: SCROLL_STATE_FLING");
-                } else if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    // Do something
-                    Log.e(TAG, "onScrollStateChanged: SCROLL_STATE_TOUCH_SCROLL");
-                } else {
-                    // Do something
-                    Log.e(TAG, "onScrollStateChanged: else");
-                }
-            }
-        });
-
-       /* recyclerView.addOnItemTouchListener(new RecyclerTouchListener(recyclerView, new RecyclerTouchListener.OnRecyclerClickListener() {
-            @Override
-            public void onClick(View v, int position) {
-               openNewsDetail(mNewsList.get(position));
-            }
-            @Override
-            public void onLongClick(View v, int position) {
-
-            }
-        }));*/
     }
 
 
@@ -364,7 +323,7 @@ public class NewsListFragment extends BaseFragment{
 
 
         ViewGroup.LayoutParams params = linParent.getLayoutParams();
-            params.height = (int) (SharedPreferenceUtil.getInt(Constants.KEY_SCREEN_HEIGHT, 780) / 2.2);
+            params.height = (int) (SharedPreferenceUtil.getInt(Constants.KEY_SCREEN_HEIGHT, 780) / 3);
         linParent.setLayoutParams(params);
 
         header.findViewById(R.id.txt_see_all).setOnClickListener(new View.OnClickListener() {
@@ -417,7 +376,8 @@ public class NewsListFragment extends BaseFragment{
     public void setViewPagerAdapter(ViewPager viewPager){
         if(getActivity() != null && viewPager != null) {
             final List<RSSItem> mRandomList = getRandomList();
-            mHeaderPagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
+            Log.e("Random List", ""+mRandomList.size());
+            mHeaderPagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
                 @Override
                 public int getCount() {
                     return mRandomList.size();
@@ -520,6 +480,7 @@ public class NewsListFragment extends BaseFragment{
                 setRecyclerAdapter();
                 setViewPagerAdapter(viewPager);
             }else {
+                setViewPagerAdapter(viewPager);
                 newsRecyclerAdapter.notifyDataSetChanged();
             }
         }
