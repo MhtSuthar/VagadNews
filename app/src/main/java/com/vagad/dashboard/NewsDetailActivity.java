@@ -6,14 +6,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Parcelable;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 
 import android.util.Base64;
 import android.view.View;
@@ -43,11 +40,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
+
 public class NewsDetailActivity extends BaseActivity {
 
-    private TextView txtTitle, txtTime, txtDesc, txt_more_read;
+    private TextView txtTitle, txtTime, txtDesc, txtNewsFrom;
     private ImageView imgCover, imgBack, imgFav;
-    private FloatingActionButton btnShare;
+    private ImageView btnShare;
     private LinearLayout linNewsDetail;
     private RelativeLayout relHeader;
     private List<RSSItem> mNewsList = new ArrayList<>();
@@ -92,10 +91,7 @@ public class NewsDetailActivity extends BaseActivity {
     private void setupAds() {
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
-        /*AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("FD6CED2CA6E0957AC9A94C05C3FCCD6F")
-                .build();*/
+
         adView.loadAd(adRequest);
 
         if(!isOnline(this))
@@ -120,7 +116,7 @@ public class NewsDetailActivity extends BaseActivity {
     private void setDataFromNewsList() {
         if(mIsFromLocalNews){
             imgFav.setVisibility(View.GONE);
-            txt_more_read.setVisibility(View.GONE);
+            txtNewsFrom.setVisibility(View.GONE);
             try {
                 if(rssItem.getImage().contains(".png") || rssItem.getImage().contains(".jpg")){
                     Glide.with(this).load(rssItem.getImage()).placeholder(R.drawable.ic_placeholder).into(imgCover);
@@ -139,7 +135,7 @@ public class NewsDetailActivity extends BaseActivity {
             }
             //get_news_type is mobile no & link is reporter name
             if(getIntent().getBooleanExtra(Constants.Bundle_Is_From_More_News, false)) {
-                txt_more_read.setVisibility(View.VISIBLE);
+                txtNewsFrom.setVisibility(View.VISIBLE);
                 txtTitle.setText(AppUtils.fromHtml(rssItem.getTitle()));
             }else
                 txtTitle.setText(rssItem.getTitle()+"\n Created By : "+rssItem.getLink()+" "+rssItem.get_news_type());
@@ -188,7 +184,7 @@ public class NewsDetailActivity extends BaseActivity {
     }
 
     public void setViewPagerAdapter(ViewPager viewPager){
-        mHeaderPagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+        mHeaderPagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             @Override
             public int getCount() {
                 return mNewsList.size();
@@ -230,10 +226,10 @@ public class NewsDetailActivity extends BaseActivity {
         txtDesc = (TextView) findViewById(R.id.txtDescription);
         txtTime = (TextView) findViewById(R.id.txtTime);
         relHeader = (RelativeLayout) findViewById(R.id.relHeader);
-        txt_more_read = (TextView) findViewById(R.id.txt_more_read);
+        txtNewsFrom = (TextView) findViewById(R.id.txtNewsFrom);
         imgBack = (ImageView) findViewById(R.id.imgBack);
         imgFav = (ImageView) findViewById(R.id.imgFav);
-        btnShare = (FloatingActionButton) findViewById(R.id.btn_share);
+        btnShare = (ImageView) findViewById(R.id.imgShare);
         linNewsDetail = (LinearLayout) findViewById(R.id.linNewsDetail);
         adView = (AdView) findViewById(R.id.adView);
         if (Build.VERSION.SDK_INT >= 21) {
@@ -256,7 +252,7 @@ public class NewsDetailActivity extends BaseActivity {
             }
         });
 
-        txt_more_read.setOnClickListener(new View.OnClickListener() {
+        txtNewsFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openRajasthanLink();

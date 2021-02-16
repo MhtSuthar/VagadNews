@@ -64,4 +64,17 @@
     <string name="e_paper_bhasker">http://m.epaper.bhaskar.com/dungarpur/90/DATEHERE/0/1/</string>
     <string name="news">News</string>
     <string name="event">Event</string>
+    <string name="more_from_patrika"><u>और पढ़ें राजस्थान पत्रिका पर</u></string>
+    <string name="privacy_policy">Privacy-Policy</string>
+    <string name="privacy_policy_url">https://sites.google.com/view/vagadnewsprivacypolicy/home</string>
+    <string name="share_app">Share App</string>
+    <string name="feedback">Feedback</string>
+    <string name="more_our_apps">More Our Apps</string>
+    <string name="like_us_on_facebook">Like us on Facebook</string>
+    <string name="favorites">Favorites</string>
+    <string name="e_paper">E-Paper</string>
+    <string name="more_news">More News</string>
+    <string name="buy_sell">Buy Sell</string>
+    <string name="buy_and_sell">Buy/Sell</string>
+    <string name="no_news_available">No News Available!</string>
 </resources>

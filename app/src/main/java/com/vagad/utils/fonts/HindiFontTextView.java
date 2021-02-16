@@ -5,11 +5,13 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatTextView;
+
 /**
  * Created by Andriod-176 on 10/21/2016.
  */
 
-public class HindiFontTextView extends TextView {
+public class HindiFontTextView extends AppCompatTextView {
 
     public HindiFontTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -27,7 +29,7 @@ public class HindiFontTextView extends TextView {
     }
 
     public void init() {
-        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidHindi.ttf");
+        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/NotoSans-Regular.ttf");
         setTypeface(tf);
     }
 }

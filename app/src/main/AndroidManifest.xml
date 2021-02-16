@@ -52,8 +52,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".dashboard.NewsListActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:launchMode="singleTask" />
         <activity
             android:name=".dashboard.FavListActivity"
             android:screenOrientation="portrait"
@@ -68,6 +67,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".music.VagadMusicActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".buysell.view.AddProductAct"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

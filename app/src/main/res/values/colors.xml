@@ -15,9 +15,9 @@
     <color name="colorPrimaryDark">#053E84</color>
     <color name="colorAccent">#F38F08</color>-->
     <color name="color_bg">#E4E4E4</color>
-    <color name="colorPrimary">#414445</color>
-    <color name="colorPrimaryDark">#2d2f2f</color>
-    <color name="colorAccent">#E7A71C</color>
+    <color name="colorPrimary">#2F24D1</color>
+    <color name="colorPrimaryDark">#252078</color>
+    <color name="colorAccent">#f47500</color>
     <color name="colorTextColor">#BCBDBE</color>
     <color name="colorButtonColor">#515557</color>
     <color name="colorPrimaryRipple">#42414445</color>

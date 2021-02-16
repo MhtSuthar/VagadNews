@@ -23,6 +23,7 @@
                 android:transitionName="profile"
                 android:text="@string/app_name"
                 android:textAllCaps="true"
+                android:textSize="14sp"
                 android:lines="1"
                 android:ellipsize="end"
                 android:textStyle="bold"

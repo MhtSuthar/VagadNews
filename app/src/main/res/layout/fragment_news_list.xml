@@ -1,9 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <com.vagad.utils.loder.CircleProgressBar
         android:id="@+id/progressBar"
@@ -49,10 +48,9 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
+                android:background="@android:color/white"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                android:elevation="16dp"
-                >
+                app:elevation="16dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -71,7 +69,7 @@
                         android:textAllCaps="true"
                         android:textStyle="bold"
                         android:textAppearance="?android:textAppearanceLarge"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/colorPrimary"
                         />
 
                 </LinearLayout>
@@ -104,6 +102,7 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="50dp"
                 android:clipToPadding="false"
+                tools:listitem="@layout/list_item_news"
                  />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

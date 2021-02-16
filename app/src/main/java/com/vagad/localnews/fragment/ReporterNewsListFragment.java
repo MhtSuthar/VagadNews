@@ -76,19 +76,6 @@ public class ReporterNewsListFragment extends BaseFragment {
         mFabAdd = (FloatingActionButton) view.findViewById(R.id.fab_add);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         mRelNoData = (RelativeLayout) view.findViewById(R.id.relNoData);
-        mFabAdd.setVisibility(View.GONE);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.menu_add:
-                        Intent intent = new Intent(getActivity(), AddNewsActivity.class);
-                        startActivityForResult(intent, Constants.REQUEST_CODE_NEWS_ADD);
-                        break;
-                }
-                return true;
-            }
-        });
         toolbar.inflateMenu(R.menu.event_menu);
         setAdapter();
         getValFromFirebase();
@@ -97,7 +84,7 @@ public class ReporterNewsListFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddNewsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, Constants.REQUEST_CODE_NEWS_ADD);
             }
         });
     }

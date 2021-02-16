@@ -194,15 +194,16 @@ public class NewsListFragment extends BaseFragment{
 
                         }
                         break;
-                    case R.id.menu_music:
-                        //startActivity(new Intent(getActivity(), VagadMusicActivity.class));
-                        showSnackbar(recyclerView, "Coming Soon!");
-                        break;
                     case R.id.menu_like:
                         Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
                         String facebookUrl = AppUtils.getFacebookPageURL(getActivity());
                         facebookIntent.setData(Uri.parse(facebookUrl));
                         startActivity(facebookIntent);
+                        break;
+                    case R.id.menu_privacy:
+                        Intent urlPrivacy = new Intent(Intent.ACTION_VIEW);
+                        urlPrivacy.setData(Uri.parse(getString(R.string.privacy_policy_url)));
+                        startActivity(urlPrivacy);
                         break;
                     case R.id.menu_more_apps:
                         //FcmUtils.sendMultipleDeviceNotification(SharedPreferenceUtil.getString(Constants.FIREBASE_USERS_TOKEN, ""));

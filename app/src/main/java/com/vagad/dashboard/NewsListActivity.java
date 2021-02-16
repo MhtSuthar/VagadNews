@@ -9,29 +9,19 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AlertDialog;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.RelativeLayout;
-
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.vagad.BuildConfig;
 import com.vagad.R;
 import com.vagad.base.BaseActivity;
 import com.vagad.base.VagadApp;
-import com.vagad.busroute.fragment.BusRouteSearchFragment;
 import com.vagad.dashboard.fragments.NewsListFragment;
 import com.vagad.localnews.fragment.ReporterNewsListFragment;
 import com.vagad.receiver.NetworkChangeReceiver;
@@ -39,8 +29,16 @@ import com.vagad.storage.SharedPreferenceUtil;
 import com.vagad.utils.Constants;
 import com.vagad.utils.rating.RateItDialogFragment;
 
+import java.util.Arrays;
+import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
-import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_SET_USER_VISIBLE_HINT;
 
 /**
  * Created by Mohit on 15-Feb-17.
@@ -52,6 +50,7 @@ public class NewsListActivity extends BaseActivity {
     private static final String TAG = "NewsListActivity";
     private FragmentStatePagerAdapter mHeaderPagerAdapter;
     private NewsListFragment newsListFragment = new NewsListFragment();
+    //private ProductFragment productFragment = new ProductFragment();
     private ReporterNewsListFragment reporterNewsListFragment = new ReporterNewsListFragment();
     private BottomNavigationView bottomNavigation;
     private AdView adView;
@@ -137,6 +136,11 @@ public class NewsListActivity extends BaseActivity {
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
 
+        List<String> testDeviceIds = Arrays.asList("CDC8EC818EDEDCB3A157F04DADD8A55E");
+        RequestConfiguration configuration =
+                new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+        MobileAds.setRequestConfiguration(configuration);
+
         adView.loadAd(adRequest);
 
         if(!isOnline(this))
@@ -148,7 +152,6 @@ public class NewsListActivity extends BaseActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-
     private void initView() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         adView = (AdView) findViewById(R.id.adView);
@@ -156,8 +159,7 @@ public class NewsListActivity extends BaseActivity {
         setViewPagerAdapter(viewPager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
             @Override
             public void onPageSelected(int position) {
@@ -166,7 +168,7 @@ public class NewsListActivity extends BaseActivity {
                         bottomNavigation.setSelectedItemId(R.id.menu_news);
                         break;
                     case 1:
-                        bottomNavigation.setSelectedItemId(R.id.menu_event);
+                        bottomNavigation.setSelectedItemId(R.id.menu_buy_sell);
                         break;
                 }
             }
@@ -183,7 +185,7 @@ public class NewsListActivity extends BaseActivity {
                     case R.id.menu_news:
                         viewPager.setCurrentItem(0);
                         break;
-                    case R.id.menu_event:
+                    case R.id.menu_buy_sell:
                         viewPager.setCurrentItem(1);
                         break;
                 }

@@ -8,8 +8,8 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menu_event"
-        android:icon="@drawable/ic_event"
-        android:title="@string/event"
+        android:id="@+id/menu_buy_sell"
+        android:icon="@drawable/ic_shake"
+        android:title="@string/buy_sell"
         app:showAsAction="ifRoom" />
 </menu>

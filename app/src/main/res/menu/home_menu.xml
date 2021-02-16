@@ -6,23 +6,23 @@
         android:id="@+id/group">
         <item
             android:id="@+id/menu_more_news"
-            android:title="More News"/>
+            android:title="@string/more_news"/>
 
         <item
             android:id="@+id/menu_e_paper"
-            android:title="E-Paper"/>
+            android:title="@string/e_paper"/>
 
         <item
             android:id="@+id/menu_favourite"
-            android:title="Favorites"/>
+            android:title="@string/favorites"/>
 
-        <item
+        <!--<item
             android:id="@+id/menu_music"
-            android:title="Vagad Music"/>
+            android:title="Vagad Music"/>-->
 
         <item
             android:id="@+id/menu_like"
-            android:title="Like us on Facebook"/>
+            android:title="@string/like_us_on_facebook"/>
 
 
         <item android:id="@+id/more"
@@ -30,16 +30,19 @@
             <menu>
                 <item
                     android:id="@+id/menu_about_us"
-                    android:title="About Us"/>
+                    android:title="@string/about_us"/>
                 <item
                     android:id="@+id/menu_feedback"
-                    android:title="Feedback"/>
+                    android:title="@string/feedback"/>
                 <item
                     android:id="@+id/menu_share"
-                    android:title="Share App"/>
+                    android:title="@string/share_app"/>
+                <item
+                    android:id="@+id/menu_privacy"
+                    android:title="@string/privacy_policy"/>
                 <item
                     android:id="@+id/menu_more_apps"
-                    android:title="More Our Apps"/>
+                    android:title="@string/more_our_apps"/>
             </menu>
         </item>
     </group>

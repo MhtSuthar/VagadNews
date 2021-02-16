@@ -5,7 +5,9 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-public class CustomFontTextView extends TextView {
+import androidx.appcompat.widget.AppCompatTextView;
+
+public class CustomFontTextView extends AppCompatTextView {
 
     public static final String ANDROID_SCHEMA = "http://schemas.android.com/apk/res/android";
 

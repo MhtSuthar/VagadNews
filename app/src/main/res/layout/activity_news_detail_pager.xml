@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
@@ -20,18 +21,82 @@
         android:background="@android:color/white"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4">
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/imgCover"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/splash_bg"
-                android:transitionName="profile" />
+                android:layout_height="300dp">
+
+                <ImageView
+                    android:id="@+id/imgCover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/splash_bg"
+                    android:transitionName="profile" />
+
+            </RelativeLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingTop="250dp"
+                android:paddingBottom="50dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/top_round_corner"
+                    android:orientation="vertical"
+                    android:padding="@dimen/activity_horizontal_margin">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <com.vagad.utils.fonts.HindiFontTextView
+                            android:id="@+id/txtTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/title_activity_home"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textColor="@android:color/black" />
+
+                        <com.vagad.utils.fonts.HindiFontTextView
+                            android:id="@+id/txtTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:textAppearanceMedium"
+                            android:textColor="@color/colorGreyText"
+                            tools:text="20 Jul 2021" />
+
+                        <com.vagad.utils.fonts.HindiFontTextView
+                            android:id="@+id/txtDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/common_margin"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textColor="@color/colorGreyText" />
+
+                        <com.vagad.utils.fonts.HindiFontTextView
+                            android:id="@+id/txtNewsFrom"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/common_margin"
+                            android:text="@string/more_from_patrika"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textColor="@color/colorAccent" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </androidx.core.widget.NestedScrollView>
 
             <RelativeLayout
                 android:id="@+id/relHeader"
@@ -40,90 +105,45 @@
 
                 <ImageView
                     android:id="@+id/imgBack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/activity_horizontal_margin"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="16dp"
+                    android:padding="@dimen/common_margin"
+                    android:background="@drawable/round_white_bg"
+                    app:tint="@color/colorPrimary"
                     android:src="@drawable/ic_back" />
 
                 <ImageView
                     android:id="@+id/imgFav"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:padding="@dimen/activity_horizontal_margin"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toStartOf="@+id/imgShare"
+                    android:layout_toLeftOf="@+id/imgShare"
+                    android:padding="@dimen/common_margin"
+                    android:background="@drawable/round_white_bg"
+                    app:tint="@color/colorPrimary"
                     android:src="@drawable/ic_tab_fav"
+                    android:tag="0" />
+
+                <ImageView
+                    android:id="@+id/imgShare"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:padding="@dimen/common_margin"
+                    app:tint="@color/colorPrimary"
+                    android:background="@drawable/round_white_bg"
+                    android:src="@drawable/ic_share"
                     android:tag="0" />
 
             </RelativeLayout>
 
-            <com.vagad.utils.fonts.HindiFontTextView
-                android:id="@+id/txt_more_read"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/round_corner_yellow_with_transparent_bg"
-                android:padding="10dp"
-                android:layout_margin="10dp"
-                android:layout_alignParentBottom="true"
-                android:text="@string/more_read"
-                android:textColor="@color/colorAccent"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:paddingBottom="50dp"
-            android:clipToPadding="false"
-            android:layout_below="@+id/imgCover"
-            android:layout_weight="6">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="@dimen/activity_horizontal_margin">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <com.vagad.utils.fonts.HindiFontTextView
-                        android:id="@+id/txtTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/common_margin"
-                        android:gravity="center"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginRight="10dp"
-                        android:text="@string/title_activity_home"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        android:textColor="@android:color/black" />
-
-                    <com.vagad.utils.fonts.HindiFontTextView
-                        android:id="@+id/txtTime"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textAppearance="?android:textAppearanceMedium"
-                        android:textColor="@color/colorGreyText" />
-
-                    <com.vagad.utils.fonts.HindiFontTextView
-                        android:id="@+id/txtDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/common_margin"
-                        android:gravity="center"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        android:textColor="@color/colorGreyText" />
-
-                </LinearLayout>
-            </RelativeLayout>
-
-        </androidx.core.widget.NestedScrollView>
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -132,20 +152,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="center"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_home_footer" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_share"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:src="@drawable/ic_share"
-        android:tag="0"
-        android:visibility="visible" />
 </RelativeLayout>

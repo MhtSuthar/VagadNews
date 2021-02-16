@@ -22,6 +22,7 @@ public class Constants {
     public static final int REQUEST_CODE_FAV_NEWS = 102;
     public static final String EXTRA_REFRESH = "is_refresh";
     public static final String FIREBASE_CHILD_NEWS = "news";
+    public static final String FIREBASE_CHILD_BUY_SELL = "buysell";
     public static final String FIREBASE_CHILD_MUSIC = "vagad_music";
     public static final String FIREBASE_USERS_TOKEN = "users_token";
     public static final int REQUEST_OPEN_GALLERY = 104;
